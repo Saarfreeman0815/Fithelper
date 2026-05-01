@@ -441,6 +441,12 @@ select.inp { cursor: pointer; }
     </select>
     
     <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">WER BIST DU?</label>
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">GESCHLECHT</label>
+    <select class="inp" id="setup-gender" style="margin-top:6px;">
+      <option value="m">♂ Männlich</option>
+      <option value="f">♀ Weiblich</option>
+    </select>
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">WER BIST DU?</label>
     <select class="inp" id="setup-cat" style="margin-top:6px;">
       <option value="">-- Bitte auswählen --</option>
       <option value="kraftsportler">💪 Kraftsportler</option>
@@ -599,7 +605,11 @@ select.inp { cursor: pointer; }
         <input class="inp" id="manual-name" placeholder="Bezeichnung (z.B. Schnitzel mit Pommes)">
         <div class="grid4">
           <div>
-            <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">KCAL</div>
+            <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">PORTION (G)</div>
+            <input class="inp" id="manual-portion" type="number" placeholder="100" style="margin:0;" oninput="calcPortion()">
+          </div>
+          <div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">KCAL</div>
             <input class="inp" id="manual-kcal" type="number" placeholder="0" style="margin:0;">
           </div>
           <div>
@@ -1049,11 +1059,12 @@ function saveSetup() {
   const height = parseFloat(document.getElementById('setup-height').value) || 175;
   const goal = document.getElementById('setup-goal').value;
   const category = document.getElementById('setup-cat').value;
+  const gender = document.getElementById('setup-gender').value;
 
   if (!name) { alert('Bitte einen Namen eingeben!'); return; }
   if (!category) { alert('Bitte eine Kategorie auswählen!'); return; }
 
-  profile = { name, age, weight, height, goal, category };
+  profile = { name, age, weight, height, goal, category, gender };
   save('fh_profile', profile);
   startApp();
 }
@@ -1124,26 +1135,44 @@ function showTab(id) {
 // CALCULATIONS
 // ================================================================
 function calcKcalTarget() {
+  const manual = load('fh_kcal_manual', 0);
+  if (manual > 0) return manual;
+  
   if (!profile) return 2000;
-  const { weight, height, age, goal, category } = profile;
-  // Harris-Benedict
-  let bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+  const { weight, height, age, goal, category, gender } = profile;
   
-  const activityMap = {
-    kraftsportler: 1.7,
-    ausdauer: 1.6,
-    normalo: 1.4,
-    senioren: 1.3,
-    hausfrau: 1.4,
-    reha: 1.2
-  };
+  // Mifflin-St Jeor Formel (genauer als Harris-Benedict)
+  let bmr;
+  if (gender === 'f') {
+    bmr = 10 * weight + 6.25 * height - 5 * age - 161; // Frauen
+  } else {
+    bmr = 10 * weight + 6.25 * height - 5 * age + 5;   // Männer
+  }
   
-  let tdee = bmr * (activityMap[category] || 1.4);
+  const activityMap = { kraftsportler:1.6, ausdauer:1.55, normalo:1.35, senioren:1.25, hausfrau:1.35, reha:1.2 };
+  let tdee = bmr * (activityMap[category] || 1.35);
   
-  if (goal === 'abnehmen') tdee -= 500;
-  if (goal === 'zunehmen' || goal === 'muskel') tdee += 300;
+  if (goal === 'abnehmen') tdee -= 650; // Mehr Defizit
+  if (goal === 'zunehmen' || goal === 'muskel') tdee += 250;
   
   return Math.round(tdee);
+}
+
+function setManualKcal() {
+  const current = calcKcalTarget();
+  const input = prompt('Kalorientagesziel manuell eingeben (leer lassen für automatisch):', current);
+  if (input === null) return;
+  if (input.trim() === '') {
+    save('fh_kcal_manual', 0);
+    status('Automatisches Kalorienziel aktiviert');
+  } else {
+    const val = parseInt(input);
+    if (val > 0) {
+      save('fh_kcal_manual', val);
+      status('Kalorienziel auf ' + val + ' kcal gesetzt');
+    }
+  }
+  updateDashboard();
 }
 
 function calcProteinTarget() {
@@ -1267,13 +1296,26 @@ async function searchFood(query) {
 
 function selectFood(name, kcal, protein, carbs, fat) {
   document.getElementById('manual-name').value = name;
-  document.getElementById('manual-kcal').value = kcal;
-  document.getElementById('manual-protein').value = protein;
-  document.getElementById('manual-carbs').value = carbs;
-  document.getElementById('manual-fat').value = fat;
+  document.getElementById('manual-portion').value = 100;
+  const setBase = (id, val) => { 
+    const el = document.getElementById('manual-' + id); 
+    el.value = val; el.dataset.base = val; 
+  };
+  setBase('kcal', kcal); setBase('protein', protein); 
+  setBase('carbs', carbs); setBase('fat', fat);
   document.getElementById('search-results').innerHTML = '';
   document.getElementById('food-search').value = '';
-  status('✓ ' + name + ' ausgewählt — Menge anpassen und hinzufügen');
+  status('✓ ' + name + ' — Portion in Gramm anpassen!');
+}
+
+function calcPortion() {
+  const portion = parseFloat(document.getElementById('manual-portion').value) || 100;
+  const factor = portion / 100;
+  ['kcal','protein','carbs','fat'].forEach(id => {
+    const el = document.getElementById('manual-' + id);
+    const base = parseFloat(el.dataset.base || 0);
+    if (base) el.value = Math.round(base * factor * 10) / 10;
+  });
 }
 
 function addManualFood() {
@@ -2194,10 +2236,18 @@ async function loadRezeptOfDay() {
 }
 
 async function searchRezepte() {
-  const q = document.getElementById('rezept-search').value.trim();
+  let q = document.getElementById('rezept-search').value.trim();
   if (!q) return;
   showRezeptLoading();
   try {
+    // Deutschen Begriff ins Englische übersetzen
+    const transUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=de&tl=en&dt=t&q=${encodeURIComponent(q)}`;
+    try {
+      const transRes = await fetch(transUrl);
+      const transData = await transRes.json();
+      if (transData && transData[0]) q = transData[0].map(p => (p&&p[0])||'').join('');
+    } catch(e) {}
+    
     const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(q)}`);
     const data = await res.json();
     renderRezeptGrid(data.meals || []);
