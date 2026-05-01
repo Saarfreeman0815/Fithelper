@@ -1000,12 +1000,20 @@ select.inp { cursor: pointer; }
 <!-- STATUSBAR -->
 <div class="statusbar">
   <span>FitHelper v1.0</span>
+  <button onclick="fhExport()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:.62rem;padding:3px 10px;border-radius:4px;cursor:pointer;">💾 Backup</button>
+  <label style="background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:.62rem;padding:3px 10px;border-radius:4px;cursor:pointer;">
+    📂 Laden <input type="file" accept=".json" onchange="fhImport(this)" style="display:none;">
+  </label>
   <a href="https://ko-fi.com/helferleinprojekt" target="_blank" 
     style="background:#FF5E5B;color:#fff;font-size:.62rem;font-weight:700;
     padding:3px 10px;border-radius:4px;text-decoration:none;">☕ Unterstützen</a>
   <a href="mailto:Helferleinprojekt@public-files.de?subject=FitHelper Feedback"
     style="color:var(--muted);font-size:.62rem;text-decoration:none;">✉️ Feedback</a>
   <span id="status-msg"></span>
+  <button onclick="exportDaten()" style="background:var(--green);border:none;color:#fff;font-size:.62rem;padding:3px 10px;border-radius:4px;cursor:pointer;">💾 Backup</button>
+  <label style="background:var(--blue);color:#fff;font-size:.62rem;padding:3px 10px;border-radius:4px;cursor:pointer;">
+    📂 Wiederherstellen<input type="file" accept=".json" onchange="importDaten(this)" style="display:none;">
+  </label>
 </div>
 
 <script>
@@ -2116,6 +2124,63 @@ function renderEinkauf() {
   el.innerHTML = html;
 }
 // ================================================================
+// BACKUP / RESTORE
+// ================================================================
+function exportDaten() {
+  const backup = {
+    version: 1,
+    datum: new Date().toLocaleDateString('de-DE'),
+    profil: load('fh_profile', null),
+    gewicht: load('fh_weight_log', []),
+    supplements: load('fh_supplements', []),
+    training: load('fh_training_plan', []),
+    plan: load('fh_my_plan', []),
+    einkauf: load('fh_einkauf', []),
+    wasser_ziel: load('fh_water_goal', 8),
+    schritte_ziel: load('fh_steps_goal', 10000),
+    fast_goal: load('fh_fast_goal', 16),
+    fast_history: load('fh_fast_history', []),
+    kcal_manual: load('fh_kcal_manual', 0),
+  };
+  
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'fithelper_backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  status('✓ Backup gespeichert!');
+}
+
+function importDaten(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const backup = JSON.parse(e.target.result);
+      if (backup.profil) save('fh_profile', backup.profil);
+      if (backup.gewicht) save('fh_weight_log', backup.gewicht);
+      if (backup.supplements) save('fh_supplements', backup.supplements);
+      if (backup.training) save('fh_training_plan', backup.training);
+      if (backup.plan) save('fh_my_plan', backup.plan);
+      if (backup.einkauf) save('fh_einkauf', backup.einkauf);
+      if (backup.wasser_ziel) save('fh_water_goal', backup.wasser_ziel);
+      if (backup.schritte_ziel) save('fh_steps_goal', backup.schritte_ziel);
+      if (backup.fast_goal) save('fh_fast_goal', backup.fast_goal);
+      if (backup.fast_history) save('fh_fast_history', backup.fast_history);
+      if (backup.kcal_manual) save('fh_kcal_manual', backup.kcal_manual);
+      alert('Backup wiederhergestellt! App wird neu geladen.');
+      location.reload();
+    } catch(e) {
+      alert('Fehler beim Laden — ist das eine gültige Backup Datei?');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ================================================================
 // INIT
 // ================================================================
 window.addEventListener('DOMContentLoaded', () => {
@@ -2539,6 +2604,45 @@ function printShoppingList() {
   const w = window.open('', '_blank');
   w.document.write('<pre style="font-family:sans-serif;font-size:14px;padding:20px;">' + text + '</pre>');
   w.print();
+}
+
+
+// BACKUP
+function fhExport() {
+  const keys = ['fh_profile','fh_weight_log','fh_supplements','fh_training_plan',
+                 'fh_my_plan','fh_water_goal','fh_steps_goal','fh_fast_goal',
+                 'fh_fast_history','fh_einkauf','fh_kcal_manual'];
+  const backup = { version:1, datum: new Date().toLocaleDateString('de-DE'), daten:{} };
+  keys.forEach(k => { const v=localStorage.getItem(k); if(v) backup.daten[k]=v; });
+  // Auch tägliche Daten
+  for(let i=0;i<30;i++) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const key = d.toISOString().slice(0,10);
+    ['fh_food_log_','fh_water_','fh_steps_'].forEach(p => {
+      const v = localStorage.getItem(p+key); if(v) backup.daten[p+key]=v;
+    });
+  }
+  const blob = new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'fithelper_backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  status('Backup erstellt!');
+}
+
+function fhImport(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const backup = JSON.parse(e.target.result);
+      if(!backup.daten){alert('Ungültige Datei!');return;}
+      Object.entries(backup.daten).forEach(([k,v])=>localStorage.setItem(k,v));
+      alert('Backup geladen! App wird neu gestartet.');
+      location.reload();
+    } catch(err){alert('Fehler: '+err.message);}
+  };
+  reader.readAsText(file);
 }
 
 </script>
