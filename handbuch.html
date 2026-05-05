@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helferlein & FitHelper — Handbuch</title>
+<style>
+:root{--bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a26;--border:#2a2a3a;--text:#e8e8f0;--muted:#6b6b8a;--accent:#7c3aed;--accent2:#a855f7;--green:#10b981;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;font-size:15px;line-height:1.7;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:10;}
+.header h1{font-size:1.2rem;color:var(--accent2);}
+.header p{font-size:.75rem;color:var(--muted);}
+.nav{display:flex;gap:8px;flex-wrap:wrap;padding:16px 24px;background:var(--surface);border-bottom:1px solid var(--border);}
+.nav a{color:var(--accent2);text-decoration:none;font-size:.78rem;padding:4px 10px;border:1px solid var(--border);border-radius:4px;}
+.content{max-width:800px;margin:0 auto;padding:24px;}
+h2{font-size:1.1rem;color:var(--accent2);margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+h3{font-size:.9rem;color:var(--text);margin:16px 0 8px;}
+p{color:var(--muted);margin-bottom:10px;font-size:.85rem;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;}
+.step-num{background:var(--accent);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;}
+.tip{background:rgba(16,185,129,.1);border-left:3px solid var(--green);padding:10px 14px;border-radius:0 6px 6px 0;font-size:.82rem;margin-bottom:8px;}
+.warn{background:rgba(239,68,68,.1);border-left:3px solid #ef4444;padding:10px 14px;border-radius:0 6px 6px 0;font-size:.82rem;margin-bottom:8px;}
+table{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:12px;}
+th{background:var(--surface2);color:var(--accent2);padding:8px 12px;text-align:left;font-size:.72rem;letter-spacing:1px;}
+td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--muted);}
+.version-badge{background:var(--accent);color:#fff;font-size:.65rem;padding:2px 8px;border-radius:10px;margin-left:8px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📖 Helferlein & FitHelper — Handbuch</h1>
+  <p>Alles was du wissen musst um die Apps optimal zu nutzen</p>
+</div>
+
+<div class="nav">
+  <a href="#helferlein">🏠 Helferlein</a>
+  <a href="#fithelper">💪 FitHelper</a>
+  <a href="#backup">💾 Backup</a>
+  <a href="#updates">📋 Updates</a>
+  <a href="#faq">❓ FAQ</a>
+</div>
+
+<div class="content">
+
+<!-- HELFERLEIN -->
+<h2 id="helferlein">🏠 Helferlein</h2>
+<p>Helferlein ist dein digitaler Alltagshelfer — entwickelt für Menschen mit Behinderungen und alle die einen zuverlässigen Begleiter brauchen. Kostenlos, werbefrei, ohne Abo.</p>
+
+<div class="card">
+  <h3>🏠 Start / Dashboard</h3>
+  <p>Die Startseite zeigt auf einen Blick alles Wichtige des Tages:</p>
+  <div class="step"><div class="step-num">1</div><div>Uhrzeit, Datum und Wochentag live aktualisiert</div></div>
+  <div class="step"><div class="step-num">2</div><div>Wetter für deinen Ort — auf das Wetter klicken um den Ort zu ändern</div></div>
+  <div class="step"><div class="step-num">3</div><div>Heutige Medikamente mit Uhrzeiten</div></div>
+  <div class="step"><div class="step-num">4</div><div>Termine heute und die nächsten Termine</div></div>
+  <div class="step"><div class="step-num">5</div><div>Offene To-Dos</div></div>
+  <div class="step"><div class="step-num">6</div><div>Witz des Tages — auf "Neuer Witz" klicken für mehr</div></div>
+  <div class="tip">💡 Auf das Datum klicken öffnet direkt den Kalender!</div>
+</div>
+
+<div class="card">
+  <h3>📖 Reader</h3>
+  <p>PDF, ePub, TXT und Markdown Dateien lesen lassen oder selbst lesen.</p>
+  <div class="step"><div class="step-num">1</div><div>Datei in den grauen Bereich ziehen oder auf "Datei wählen" klicken</div></div>
+  <div class="step"><div class="step-num">2</div><div>Stimme und Sprache auswählen</div></div>
+  <div class="step"><div class="step-num">3</div><div>▶ Play drücken — der Text wird vorgelesen</div></div>
+  <div class="tip">💡 Schriftgröße oben rechts mit A− und A+ anpassen!</div>
+</div>
+
+<div class="card">
+  <h3>🎤 Diktieren</h3>
+  <p>Sprache zu Text — einfach sprechen, App schreibt mit.</p>
+  <div class="step"><div class="step-num">1</div><div>Sprache auswählen (Standard: Deutsch)</div></div>
+  <div class="step"><div class="step-num">2</div><div>🎤 Aufnehmen klicken — beim ersten Mal Mikrofon erlauben</div></div>
+  <div class="step"><div class="step-num">3</div><div>Sprechen — Text erscheint automatisch</div></div>
+  <div class="step"><div class="step-num">4</div><div>Text kopieren oder in den Editor übertragen</div></div>
+  <div class="warn">⚠️ Mikrofon muss einmalig im Browser erlaubt werden</div>
+</div>
+
+<div class="card">
+  <h3>📅 Termine & Kalender</h3>
+  <p>Termine verwalten mit echtem Monatskalender.</p>
+  <div class="step"><div class="step-num">1</div><div>"+ TERMIN" klicken und ausfüllen</div></div>
+  <div class="step"><div class="step-num">2</div><div>Wiederholung einstellen — wöchentlich, monatlich, jährlich</div></div>
+  <div class="step"><div class="step-num">3</div><div>Im Kalender auf ein Datum klicken um direkt einen Termin hinzuzufügen</div></div>
+  <div class="tip">💡 iCal Import: Kalender vom iPhone oder Google exportieren und hier importieren!</div>
+</div>
+
+<div class="card">
+  <h3>💊 Medikamente</h3>
+  <div class="step"><div class="step-num">1</div><div>Name, Uhrzeit und Dosis eingeben</div></div>
+  <div class="step"><div class="step-num">2</div><div>"🔔 Erinnerungen erlauben" klicken für Browser-Benachrichtigungen</div></div>
+  <div class="tip">💡 App muss geöffnet sein damit Erinnerungen kommen</div>
+</div>
+
+<div class="card">
+  <h3>✅ To-Do Liste</h3>
+  <p>Zwei Spalten — links offen, rechts erledigt.</p>
+  <div class="step"><div class="step-num">1</div><div>Aufgabe eingeben und Enter drücken</div></div>
+  <div class="step"><div class="step-num">2</div><div>✓ Erledigt klicken um in die rechte Spalte zu schieben</div></div>
+  <div class="step"><div class="step-num">3</div><div>📅 auf morgen verschieben</div></div>
+  <div class="step"><div class="step-num">4</div><div>🗑 dauerhaft löschen</div></div>
+</div>
+
+<div class="card">
+  <h3>📻 Radio</h3>
+  <div class="step"><div class="step-num">1</div><div>Sender in der Liste anklicken</div></div>
+  <div class="step"><div class="step-num">2</div><div>Suchfeld oben zum Filtern der Sender</div></div>
+  <div class="step"><div class="step-num">3</div><div>"+ Hinzufügen" für eigene Sender — Name und Stream URL eingeben</div></div>
+  <div class="tip">💡 Internet erforderlich. Stream URL findest du auf der Sender-Website unter "Webradio"</div>
+</div>
+
+<div class="card">
+  <h3>🌍 Übersetzer</h3>
+  <div class="step"><div class="step-num">1</div><div>PDF oder TXT Datei hochladen — wird automatisch übersetzt</div></div>
+  <div class="step"><div class="step-num">2</div><div>Sprachen auswählen</div></div>
+  <div class="warn">⚠️ Direkte Texteingabe funktioniert nur online (CORS Einschränkung)</div>
+</div>
+
+<!-- FITHELPER -->
+<h2 id="fithelper">💪 FitHelper</h2>
+<p>Dein kostenloser Ernährungs- und Fitness-Begleiter. Kalorien tracken, Fasten, Training — alles an einem Ort.</p>
+
+<div class="card">
+  <h3>Erste Einrichtung</h3>
+  <div class="step"><div class="step-num">1</div><div>Name eingeben</div></div>
+  <div class="step"><div class="step-num">2</div><div>Alter, Gewicht und Größe eintragen</div></div>
+  <div class="step"><div class="step-num">3</div><div>Geschlecht wählen — wichtig für korrekte Kalorienberechnung</div></div>
+  <div class="step"><div class="step-num">4</div><div>Ziel auswählen: Abnehmen, Zunehmen, Halten usw.</div></div>
+  <div class="step"><div class="step-num">5</div><div>Kategorie wählen: Kraftsportler, Normalo, Reha usw.</div></div>
+  <div class="tip">💡 Kalorienziel kann nachträglich manuell geändert werden — auf "Ziel: X kcal" klicken!</div>
+</div>
+
+<div class="card">
+  <h3>🍽️ Essen tracken</h3>
+  <div class="step"><div class="step-num">1</div><div>Im Suchfeld tippen — zuerst eigene Datenbank, dann Online-Datenbank</div></div>
+  <div class="step"><div class="step-num">2</div><div>Produkt auswählen und Portionsgröße in Gramm anpassen</div></div>
+  <div class="step"><div class="step-num">3</div><div>Mahlzeit auswählen: Frühstück, Mittagessen, Abendessen, Snack</div></div>
+  <div class="step"><div class="step-num">4</div><div>+ Hinzufügen klicken</div></div>
+  <div class="tip">💡 Gebratene Kartoffeln, Schnitzel, Gulasch und viele deutsche Gerichte sind direkt eingebaut!</div>
+</div>
+
+<div class="card">
+  <h3>🏋️ Sport-Kalorien</h3>
+  <p>Auf der Startseite oben den heutigen Sport-Level auswählen:</p>
+  <table>
+    <tr><th>Level</th><th>Extra Kalorien</th><th>Beispiel</th></tr>
+    <tr><td>😴 Kein Sport</td><td>+0 kcal</td><td>Ruhetag</td></tr>
+    <tr><td>🚶 Leicht</td><td>+200 kcal</td><td>Spazieren, leichtes Stretching</td></tr>
+    <tr><td>🏃 Mittel</td><td>+400 kcal</td><td>Joggen, Radfahren, Schwimmen</td></tr>
+    <tr><td>💪 Intensiv</td><td>+650 kcal</td><td>Krafttraining, HIIT, intensiver Sport</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>⏱️ Fasten Timer</h3>
+  <div class="step"><div class="step-num">1</div><div>Methode wählen: 16:8, 18:6, 20:4 oder 24h</div></div>
+  <div class="step"><div class="step-num">2</div><div>▶ Start drücken wenn du aufhörst zu essen</div></div>
+  <div class="step"><div class="step-num">3</div><div>Timer läuft — zeigt was gerade in deinem Körper passiert</div></div>
+  <div class="step"><div class="step-num">4</div><div>⏹ Beenden wenn du wieder isst</div></div>
+  <div class="tip">💡 Wasser, schwarzer Kaffee und ungesüßter Tee brechen das Fasten nicht!</div>
+</div>
+
+<div class="card">
+  <h3>👨‍🍳 Rezepte & Einkauf</h3>
+  <div class="step"><div class="step-num">1</div><div>Kategorie auswählen oder deutschen Begriff suchen — wird automatisch übersetzt</div></div>
+  <div class="step"><div class="step-num">2</div><div>Rezept anklicken — erscheint auf Deutsch</div></div>
+  <div class="step"><div class="step-num">3</div><div>"🛒 In Einkaufsliste" klicken — alle Zutaten landen im Einkaufswagen</div></div>
+  <div class="step"><div class="step-num">4</div><div>Im Einkauf Tab abhaken was schon im Korb ist</div></div>
+</div>
+
+<!-- BACKUP -->
+<h2 id="backup">💾 Backup & Wiederherstellen</h2>
+<p>Wichtig vor jedem Update — so gehen keine Daten verloren!</p>
+
+<div class="card">
+  <h3>Backup erstellen</h3>
+  <div class="step"><div class="step-num">1</div><div>Im Dashboard auf "💾 Backup" klicken</div></div>
+  <div class="step"><div class="step-num">2</div><div>JSON Datei wird heruntergeladen und gespeichert</div></div>
+  <div class="step"><div class="step-num">3</div><td>Datei sicher aufbewahren — enthält alle deine Daten</div></div>
+</div>
+
+<div class="card">
+  <h3>Backup laden</h3>
+  <div class="step"><div class="step-num">1</div><div>Im Dashboard auf "📂 Wiederherstellen" klicken</div></div>
+  <div class="step"><div class="step-num">2</div><div>Backup JSON Datei auswählen</div></div>
+  <div class="step"><div class="step-num">3</div><div>App startet neu — alle Daten sind wieder da</div></div>
+  <div class="warn">⚠️ Backup laden überschreibt alle aktuellen Daten!</div>
+</div>
+
+<!-- UPDATES -->
+<h2 id="updates">📋 Update Verlauf</h2>
+
+<div class="card">
+  <h3>FitHelper <span class="version-badge">v1.3</span></h3>
+  <p style="color:var(--muted);font-size:.72rem;">Mai 2026</p>
+  <p>+ Sport-Tag Toggle — Kalorien passen sich dem Training an</p>
+  <p>+ Deutsche Lebensmitteldatenbank — 100+ Einträge offline verfügbar</p>
+  <p>+ Geschlecht im Profil für genauere Kalorienberechnung</p>
+  <p>+ Rezeptsuche auf Deutsch</p>
+  <p>+ Portionsgröße in Gramm bei Lebensmitteln</p>
+</div>
+
+<div class="card">
+  <h3>FitHelper <span class="version-badge">v1.2</span></h3>
+  <p>+ Einkaufsliste mit Rezept-Integration</p>
+  <p>+ Fasten Timer mit Körper-Status</p>
+  <p>+ Schritte Tracker</p>
+  <p>+ Rezepte auf Deutsch</p>
+</div>
+
+<div class="card">
+  <h3>Helferlein <span class="version-badge">v2.1</span></h3>
+  <p style="color:var(--muted);font-size:.72rem;">Mai 2026</p>
+  <p>+ Dashboard mit Wetter, Terminen, Medikamenten auf einen Blick</p>
+  <p>+ iCal Import/Export für Kalender</p>
+  <p>+ Backup & Wiederherstellen</p>
+  <p>+ Ko-fi Spendenlink</p>
+  <p>+ Mahjong Spiel</p>
+  <p>+ Wissenschaftlicher Rechner</p>
+</div>
+
+<!-- FAQ -->
+<h2 id="faq">❓ Häufige Fragen</h2>
+
+<div class="card">
+  <h3>Warum werden meine Daten gelöscht?</h3>
+  <p>Firefox löscht beim Schließen alle Daten wenn "Cookies beim Beenden löschen" aktiv ist. Lösung: Firefox Ausnahme für die App-URL setzen, oder Chrome/Edge nutzen.</p>
+</div>
+
+<div class="card">
+  <h3>Warum funktioniert der Übersetzer nur mit Dokumenten?</h3>
+  <p>Direkte Texteingabe wird vom Browser bei lokalen Dateien (file://) blockiert. Bei der Online-Version auf GitHub Pages funktioniert alles.</p>
+</div>
+
+<div class="card">
+  <h3>Kann ich die App auf dem iPhone nutzen?</h3>
+  <p>Ja! Safari öffnen → Link aufrufen → Teilen → "Zum Home-Bildschirm" → Hinzufügen. Die App liegt dann als Icon auf dem iPhone.</p>
+</div>
+
+<div class="card">
+  <h3>Wie synchronisiere ich meinen Kalender?</h3>
+  <p>Über iCal Import: Kalender als .ics Datei exportieren und in Helferlein unter Termine importieren. Google Kalender: calendar.google.com → Einstellungen → Kalender exportieren.</p>
+</div>
+
+<div class="card">
+  <h3>Wie kann ich das Projekt unterstützen?</h3>
+  <p>Über Ko-fi: <a href="https://ko-fi.com/helferleinprojekt" style="color:var(--accent2);">ko-fi.com/helferleinprojekt</a></p>
+  <p>Feedback: <a href="mailto:Helferleinprojekt@public-files.de" style="color:var(--accent2);">Helferleinprojekt@public-files.de</a></p>
+</div>
+
+</div>
+</body>
+</html>

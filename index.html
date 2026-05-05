@@ -493,6 +493,34 @@ select.inp { cursor: pointer; }
     <div id="dash-greeting" style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;margin-bottom:4px;"></div>
     <div id="dash-date" style="font-size:.75rem;color:var(--muted);margin-bottom:20px;"></div>
     
+    <!-- SPORT TOGGLE -->
+    <div class="card" style="padding:12px 16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:.75rem;font-weight:700;">🏋️ Heute Sport?</div>
+          <div style="font-size:.62rem;color:var(--muted);" id="sport-kcal-info">Kein Sport — normaler Bedarf</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button id="btn-kein-sport" onclick="setSport(0)" 
+            style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:6px 14px;border-radius:6px;cursor:pointer;">
+            😴 Nein
+          </button>
+          <button id="btn-leicht" onclick="setSport(1)"
+            style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:6px 14px;border-radius:6px;cursor:pointer;">
+            🚶 Leicht
+          </button>
+          <button id="btn-mittel" onclick="setSport(2)"
+            style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:6px 14px;border-radius:6px;cursor:pointer;">
+            🏃 Mittel
+          </button>
+          <button id="btn-intensiv" onclick="setSport(3)"
+            style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:6px 14px;border-radius:6px;cursor:pointer;">
+            💪 Intensiv
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- KALORIEN RING -->
     <div class="card">
       <div class="card-title">TAGES-KALORIEN</div>
@@ -1216,6 +1244,7 @@ function startApp() {
   supplements = load('fh_supplements', []);
   trainingPlan = load('fh_training_plan', []);
   einkaufItems = load('fh_einkauf', []);
+  sportLevel = load('fh_sport_' + today(), 0);
   myPlan = load('fh_my_plan', []);
 
   try { document.getElementById('header-name').textContent = profile.name; } catch(e) {}
@@ -1269,6 +1298,30 @@ function showTab(id) {
 // ================================================================
 // CALCULATIONS
 // ================================================================
+let sportLevel = 0; // 0=kein, 1=leicht, 2=mittel, 3=intensiv
+
+function setSport(level) {
+  sportLevel = level;
+  save('fh_sport_' + today(), level);
+  
+  // Button Styling
+  ['kein-sport','leicht','mittel','intensiv'].forEach((id, i) => {
+    const btn = document.getElementById('btn-' + id);
+    if (btn) {
+      btn.style.background = i === level ? 'var(--accent)' : 'var(--surface2)';
+      btn.style.color = i === level ? '#fff' : 'var(--muted)';
+      btn.style.borderColor = i === level ? 'var(--accent)' : 'var(--border)';
+    }
+  });
+  
+  const extras = [0, 200, 400, 650];
+  const labels = ['Kein Sport — normaler Bedarf', 'Leichter Sport +200 kcal', 'Mittleres Training +400 kcal', 'Intensives Training +650 kcal'];
+  const el = document.getElementById('sport-kcal-info');
+  if (el) el.textContent = labels[level];
+  
+  updateDashboard();
+}
+
 function calcKcalTarget() {
   const manual = load('fh_kcal_manual', 0);
   if (manual > 0) return manual;
@@ -1276,19 +1329,22 @@ function calcKcalTarget() {
   if (!profile) return 2000;
   const { weight, height, age, goal, category, gender } = profile;
   
-  // Mifflin-St Jeor Formel (genauer als Harris-Benedict)
   let bmr;
   if (gender === 'f') {
-    bmr = 10 * weight + 6.25 * height - 5 * age - 161; // Frauen
+    bmr = 10 * weight + 6.25 * height - 5 * age - 161;
   } else {
-    bmr = 10 * weight + 6.25 * height - 5 * age + 5;   // Männer
+    bmr = 10 * weight + 6.25 * height - 5 * age + 5;
   }
   
   const activityMap = { kraftsportler:1.6, ausdauer:1.55, normalo:1.35, senioren:1.25, hausfrau:1.35, reha:1.2 };
   let tdee = bmr * (activityMap[category] || 1.35);
   
-  if (goal === 'abnehmen') tdee -= 650; // Mehr Defizit
+  if (goal === 'abnehmen') tdee -= 650;
   if (goal === 'zunehmen' || goal === 'muskel') tdee += 250;
+  
+  // Sport Bonus dazurechnen
+  const sportBonus = [0, 200, 400, 650];
+  tdee += sportBonus[sportLevel] || 0;
   
   return Math.round(tdee);
 }
