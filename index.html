@@ -1029,6 +1029,133 @@ let supplements = [];
 let trainingPlan = [];
 let selectedDays = [];
 
+
+// ================================================================
+// DEUTSCHE LEBENSMITTEL DATENBANK
+// ================================================================
+const deutscheLebensmittel = [
+  // Fleisch & Geflügel
+  {name:'Hähnchenbrust (gebraten)', kcal:165, protein:31, carbs:0, fat:4},
+  {name:'Hähnchenbrust (gekocht)', kcal:150, protein:30, carbs:0, fat:3},
+  {name:'Schnitzel (Schwein)', kcal:280, protein:25, carbs:8, fat:16},
+  {name:'Schnitzel (paniert)', kcal:350, protein:24, carbs:15, fat:20},
+  {name:'Hackfleisch (gemischt)', kcal:250, protein:18, carbs:0, fat:20},
+  {name:'Rindersteak', kcal:210, protein:28, carbs:0, fat:11},
+  {name:'Gulasch (Rind)', kcal:180, protein:22, carbs:5, fat:8},
+  {name:'Bratwurst', kcal:310, protein:14, carbs:2, fat:27},
+  {name:'Wiener Würstchen', kcal:280, protein:12, carbs:1, fat:25},
+  {name:'Leberkäse', kcal:290, protein:13, carbs:5, fat:24},
+  {name:'Leberwurst', kcal:320, protein:13, carbs:2, fat:29},
+  {name:'Speck (gebraten)', kcal:540, protein:25, carbs:0, fat:48},
+  {name:'Putenbrust', kcal:135, protein:29, carbs:0, fat:2},
+  {name:'Lammkotelett', kcal:230, protein:25, carbs:0, fat:14},
+  {name:'Schweinekotelett', kcal:200, protein:27, carbs:0, fat:10},
+  
+  // Fisch
+  {name:'Lachs (gebraten)', kcal:208, protein:28, carbs:0, fat:10},
+  {name:'Thunfisch (Dose)', kcal:130, protein:28, carbs:0, fat:2},
+  {name:'Forelle (gebacken)', kcal:170, protein:24, carbs:0, fat:8},
+  {name:'Hering (gebraten)', kcal:220, protein:20, carbs:0, fat:15},
+  {name:'Fischstäbchen', kcal:230, protein:13, carbs:20, fat:10},
+  {name:'Matjeshering', kcal:260, protein:18, carbs:1, fat:20},
+  
+  // Beilagen & Kohlenhydrate
+  {name:'Kartoffeln (gekocht)', kcal:77, protein:2, carbs:17, fat:0},
+  {name:'Kartoffeln (gebraten)', kcal:150, protein:2, carbs:20, fat:7},
+  {name:'Pommes Frites', kcal:312, protein:4, carbs:41, fat:15},
+  {name:'Bratkartoffeln', kcal:170, protein:3, carbs:22, fat:8},
+  {name:'Kartoffelpüree', kcal:100, protein:2, carbs:17, fat:3},
+  {name:'Kartoffelklöße', kcal:120, protein:2, carbs:26, fat:1},
+  {name:'Reis (gekocht)', kcal:130, protein:3, carbs:28, fat:0},
+  {name:'Spaghetti (gekocht)', kcal:158, protein:6, carbs:31, fat:1},
+  {name:'Nudeln (gekocht)', kcal:158, protein:6, carbs:31, fat:1},
+  {name:'Spätzle', kcal:190, protein:7, carbs:34, fat:3},
+  {name:'Knödel (Semmel)', kcal:200, protein:6, carbs:38, fat:3},
+  {name:'Weißbrot', kcal:265, protein:8, carbs:50, fat:3},
+  {name:'Vollkornbrot', kcal:230, protein:9, carbs:42, fat:3},
+  {name:'Brötchen', kcal:270, protein:9, carbs:53, fat:2},
+  
+  // Gemüse
+  {name:'Salat (gemischt)', kcal:15, protein:1, carbs:2, fat:0},
+  {name:'Tomaten', kcal:18, protein:1, carbs:4, fat:0},
+  {name:'Gurke', kcal:12, protein:1, carbs:2, fat:0},
+  {name:'Paprika', kcal:31, protein:1, carbs:6, fat:0},
+  {name:'Brokkoli (gekocht)', kcal:35, protein:3, carbs:5, fat:0},
+  {name:'Blumenkohl (gekocht)', kcal:25, protein:2, carbs:4, fat:0},
+  {name:'Karotten (roh)', kcal:41, protein:1, carbs:10, fat:0},
+  {name:'Zwiebeln', kcal:40, protein:1, carbs:9, fat:0},
+  {name:'Spinat (gekocht)', kcal:23, protein:3, carbs:2, fat:0},
+  {name:'Zucchini (gebraten)', kcal:45, protein:2, carbs:4, fat:2},
+  {name:'Sauerkraut', kcal:19, protein:1, carbs:3, fat:0},
+  {name:'Rotkohl (gedünstet)', kcal:45, protein:1, carbs:9, fat:0},
+  {name:'Erbsen (gekocht)', kcal:81, protein:5, carbs:14, fat:0},
+  {name:'Bohnen (grün, gekocht)', kcal:35, protein:2, carbs:7, fat:0},
+  {name:'Linsen (gekocht)', kcal:116, protein:9, carbs:20, fat:0},
+  {name:'Mais (Dose)', kcal:86, protein:3, carbs:19, fat:1},
+  
+  // Milchprodukte & Eier
+  {name:'Ei (gekocht)', kcal:155, protein:13, carbs:1, fat:11},
+  {name:'Ei (gebraten)', kcal:196, protein:14, carbs:0, fat:15},
+  {name:'Rührei (2 Eier)', kcal:220, protein:14, carbs:2, fat:16},
+  {name:'Spiegelei', kcal:185, protein:13, carbs:0, fat:14},
+  {name:'Vollmilch (250ml)', kcal:162, protein:8, carbs:12, fat:8},
+  {name:'Magerquark (100g)', kcal:67, protein:13, carbs:4, fat:0},
+  {name:'Naturjoghurt', kcal:61, protein:4, carbs:5, fat:3},
+  {name:'Hüttenkäse', kcal:98, protein:11, carbs:3, fat:4},
+  {name:'Gouda', kcal:356, protein:25, carbs:2, fat:28},
+  {name:'Camembert', kcal:300, protein:20, carbs:0, fat:24},
+  {name:'Butter (10g)', kcal:74, protein:0, carbs:0, fat:8},
+  
+  // Typisch Deutsche Gerichte
+  {name:'Spaghetti Bolognese', kcal:320, protein:18, carbs:35, fat:11},
+  {name:'Lasagne', kcal:280, protein:16, carbs:25, fat:12},
+  {name:'Chili con Carne', kcal:200, protein:15, carbs:18, fat:8},
+  {name:'Currywurst mit Pommes', kcal:580, protein:18, carbs:45, fat:35},
+  {name:'Döner Kebab', kcal:480, protein:25, carbs:42, fat:22},
+  {name:'Pizza Margherita (1 Stück)', kcal:250, protein:11, carbs:33, fat:8},
+  {name:'Hamburger', kcal:450, protein:22, carbs:38, fat:22},
+  {name:'Cheeseburger', kcal:520, protein:26, carbs:39, fat:27},
+  {name:'Cordon Bleu', kcal:380, protein:28, carbs:12, fat:24},
+  {name:'Rinderroulade', kcal:230, protein:24, carbs:8, fat:12},
+  {name:'Sauerbraten', kcal:250, protein:26, carbs:10, fat:12},
+  {name:'Königsberger Klopse', kcal:280, protein:20, carbs:10, fat:18},
+  {name:'Erbsensuppe', kcal:130, protein:8, carbs:18, fat:3},
+  {name:'Linsensuppe', kcal:150, protein:9, carbs:22, fat:3},
+  {name:'Hühnersuppe', kcal:80, protein:8, carbs:5, fat:3},
+  {name:'Tomatensuppe', kcal:90, protein:2, carbs:12, fat:4},
+  {name:'Flammkuchen (1 Stück)', kcal:220, protein:8, carbs:28, fat:9},
+  {name:'Zwiebelkuchen (1 Stück)', kcal:280, protein:9, carbs:25, fat:16},
+  
+  // Frühstück
+  {name:'Müsli mit Milch', kcal:320, protein:10, carbs:55, fat:7},
+  {name:'Haferflocken (gekocht)', kcal:150, protein:5, carbs:27, fat:3},
+  {name:'Cornflakes mit Milch', kcal:280, protein:8, carbs:52, fat:4},
+  {name:'Marmelade (20g)', kcal:52, protein:0, carbs:13, fat:0},
+  {name:'Nutella (20g)', kcal:118, protein:1, carbs:12, fat:7},
+  {name:'Honig (20g)', kcal:61, protein:0, carbs:16, fat:0},
+  
+  // Snacks & Süßes
+  {name:'Apfel', kcal:52, protein:0, carbs:14, fat:0},
+  {name:'Banane', kcal:89, protein:1, carbs:23, fat:0},
+  {name:'Orange', kcal:47, protein:1, carbs:12, fat:0},
+  {name:'Erdbeeren (100g)', kcal:32, protein:1, carbs:8, fat:0},
+  {name:'Trauben (100g)', kcal:69, protein:1, carbs:18, fat:0},
+  {name:'Schokolade (Riegel)', kcal:540, protein:5, carbs:57, fat:32},
+  {name:'Gummibärchen (100g)', kcal:343, protein:6, carbs:77, fat:0},
+  {name:'Chips (100g)', kcal:536, protein:7, carbs:53, fat:33},
+  {name:'Salzstangen (100g)', kcal:378, protein:10, carbs:75, fat:4},
+  {name:'Nüsse gemischt (30g)', kcal:185, protein:5, carbs:4, fat:17},
+  
+  // Getränke
+  {name:'Kaffee (schwarz)', kcal:2, protein:0, carbs:0, fat:0},
+  {name:'Kaffee mit Milch', kcal:30, protein:2, carbs:3, fat:1},
+  {name:'Latte Macchiato', kcal:120, protein:5, carbs:12, fat:5},
+  {name:'Orangensaft (200ml)', kcal:88, protein:1, carbs:21, fat:0},
+  {name:'Cola (330ml)', kcal:139, protein:0, carbs:35, fat:0},
+  {name:'Bier (500ml)', kcal:215, protein:2, carbs:18, fat:0},
+  {name:'Wein (150ml)', kcal:108, protein:0, carbs:3, fat:0},
+];
+
 // ================================================================
 // STORAGE
 // ================================================================
@@ -1264,10 +1391,30 @@ function setWidth(id, pct) { const el = document.getElementById(id); if (el) el.
 // ================================================================
 let searchTimeout = null;
 
+function searchGermanDB(query) {
+  const q = query.toLowerCase();
+  return deutscheLebensmittel.filter(f => f.name.toLowerCase().includes(q)).slice(0, 5);
+}
+
 async function searchFood(query) {
-  if (!query || query.length < 3) {
+  if (!query || query.length < 2) {
     document.getElementById('search-results').innerHTML = '';
     return;
+  }
+
+  // Zuerst deutsche Datenbank durchsuchen
+  const localResults = searchGermanDB(query);
+  const el = document.getElementById('search-results');
+  
+  if (localResults.length) {
+    el.innerHTML = '<div style="font-size:.62rem;color:var(--accent2);padding:4px 0;letter-spacing:1px;">EIGENE DATENBANK</div>'
+      + localResults.map(f => `<div class="search-result" onclick="selectFood('${f.name}',${f.kcal},${f.protein},${f.carbs},${f.fat})">
+        <div>
+          <div style="font-size:.8rem;font-weight:600;">${f.name}</div>
+          <div style="font-size:.65rem;color:var(--muted);">pro 100g: P ${f.protein}g · K ${f.carbs}g · F ${f.fat}g</div>
+        </div>
+        <div style="font-weight:700;color:var(--accent2);">${f.kcal} kcal</div>
+      </div>`).join('');
   }
 
   clearTimeout(searchTimeout);
@@ -1277,29 +1424,33 @@ async function searchFood(query) {
       const res = await fetch(url);
       const data = await res.json();
 
-      const el = document.getElementById('search-results');
-      if (!data.products || !data.products.length) {
-        el.innerHTML = '<div style="color:var(--muted);font-size:.78rem;padding:8px;">Keine Ergebnisse — manuell eingeben</div>';
-        return;
+      const onlineResults = (data.products || []).filter(p => p.product_name && p.nutriments).slice(0,5);
+      
+      if (onlineResults.length) {
+        const onlineHTML = '<div style="font-size:.62rem;color:var(--muted);padding:4px 0 2px;letter-spacing:1px;margin-top:6px;">ONLINE DATENBANK</div>'
+          + onlineResults.map(p => {
+            const kcal = Math.round(p.nutriments['energy-kcal_100g'] || 0);
+            const protein = Math.round(p.nutriments['proteins_100g'] || 0);
+            const carbs = Math.round(p.nutriments['carbohydrates_100g'] || 0);
+            const fat = Math.round(p.nutriments['fat_100g'] || 0);
+            return `<div class="search-result" onclick="selectFood('${p.product_name.replace(/'/g,'').slice(0,50)}',${kcal},${protein},${carbs},${fat})">
+              <div>
+                <div style="font-size:.8rem;font-weight:600;">${p.product_name.slice(0,50)}</div>
+                <div style="font-size:.65rem;color:var(--muted);">pro 100g: P ${protein}g · K ${carbs}g · F ${fat}g</div>
+              </div>
+              <div style="font-weight:700;color:var(--accent2);">${kcal} kcal</div>
+            </div>`;
+          }).join('');
+        el.innerHTML = (el.innerHTML || '') + onlineHTML;
+      } else if (!localResults.length) {
+        el.innerHTML = '<div style="color:var(--muted);font-size:.78rem;padding:8px;">Nichts gefunden — manuell eingeben</div>';
       }
-
-      el.innerHTML = data.products.filter(p => p.product_name && p.nutriments).slice(0, 5).map(p => {
-        const kcal = Math.round(p.nutriments['energy-kcal_100g'] || 0);
-        const protein = Math.round(p.nutriments['proteins_100g'] || 0);
-        const carbs = Math.round(p.nutriments['carbohydrates_100g'] || 0);
-        const fat = Math.round(p.nutriments['fat_100g'] || 0);
-        return `<div class="search-result" onclick="selectFood('${p.product_name.replace(/'/g, '').slice(0,50)}',${kcal},${protein},${carbs},${fat})">
-          <div>
-            <div style="font-size:.8rem;font-weight:600;">${p.product_name.slice(0,50)}</div>
-            <div style="font-size:.65rem;color:var(--muted);">pro 100g: P ${protein}g · K ${carbs}g · F ${fat}g</div>
-          </div>
-          <div style="font-weight:700;color:var(--accent2);">${kcal} kcal</div>
-        </div>`;
-      }).join('');
     } catch(e) {
-      document.getElementById('search-results').innerHTML = '<div style="color:var(--muted);font-size:.78rem;padding:8px;">Kein Internet — bitte manuell eingeben</div>';
+      if (!localResults.length) {
+        el.innerHTML = '<div style="color:var(--muted);font-size:.78rem;padding:8px;">Kein Internet — nur lokale Ergebnisse</div>';
+      }
     }
-  }, 500);
+  }, 600);
 }
 
 function selectFood(name, kcal, protein, carbs, fat) {
