@@ -450,6 +450,13 @@ select.inp { cursor: pointer; }
       <option value="muskel">Muskelaufbau</option>
       <option value="gesund">Gesund ernähren</option>
     </select>
+
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">MAKRO-FOKUS</label>
+    <select class="inp" id="setup-makro" style="margin-top:6px;">
+      <option value="standard">⚖️ Standard (ausgewogen)</option>
+      <option value="high_protein">💪 High Protein (40% Eiweiß)</option>
+      <option value="low_carb">🥑 Low Carb (15% KH)</option>
+    </select>
     
     <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">WER BIST DU?</label>
     <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">GESCHLECHT</label>
@@ -497,6 +504,7 @@ select.inp { cursor: pointer; }
   <button class="tab" onclick="showTab('fasten')">⏱️ Fasten</button>
   <button class="tab" onclick="showTab('einkauf')">🛒 Einkauf</button>
   <button class="tab" onclick="showTab('koerper')">📊 Körper</button>
+  <button class="tab" onclick="showTab('vorrat')">📦 Vorrat</button>
 </div>
 
 <!-- DASHBOARD -->
@@ -1082,6 +1090,7 @@ select.inp { cursor: pointer; }
         <span>🛒 EINKAUFSLISTE</span>
         <div style="display:flex;gap:6px;">
           <button class="btn outline small" onclick="printShoppingList()">🖨️ Drucken</button>
+          <button class="btn outline small" onclick="sortiereUndRenderEinkauf()">🗂️ Sortieren</button>
           <button class="btn outline small" onclick="clearBought()">✓ Erledigte löschen</button>
           <button class="btn red small" onclick="clearShoppingList()">🗑 Alles</button>
         </div>
@@ -1155,6 +1164,53 @@ select.inp { cursor: pointer; }
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- VORRAT -->
+<div class="panel" id="p-vorrat">
+  <div class="panel-content">
+    <div class="card">
+      <div class="card-title">📦 MEAL PREP & VORRATS-TRACKER</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">ARTIKEL / BOX</div>
+          <input class="inp" id="vorrat-name" placeholder="z.B. Hähnchen Meal Prep" style="margin:0;">
+        </div>
+        <div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">HALTBAR (TAGE)</div>
+          <input class="inp" type="number" id="vorrat-tage" placeholder="z.B. 5" min="1" max="365" style="margin:0;">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">PORTIONEN</div>
+          <input class="inp" type="number" id="vorrat-portionen" placeholder="z.B. 4" min="1" style="margin:0;">
+        </div>
+        <div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">KCAL/PORTION</div>
+          <input class="inp" type="number" id="vorrat-kcal" placeholder="z.B. 450" style="margin:0;">
+        </div>
+      </div>
+      <button onclick="vorratSpeichern()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:#00ffcc;color:#000;border-radius:10px;border:none;cursor:pointer;">📦 BOX SPEICHERN</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>🧊 MEIN VORRAT</span>
+        <button class="btn outline small" onclick="vorratAllesLoeschen()" style="color:var(--red);">🗑 Alles löschen</button>
+      </div>
+      <div id="vorrat-liste">
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Boxen eingetragen 📦</div>
+      </div>
+    </div>
+
+    <!-- CHALLENGE TEILEN -->
+    <div class="card">
+      <div class="card-title">🏆 TAGES-CHALLENGE TEILEN</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px;">Exportiere deinen heutigen Erfolg als Code — schick ihn deinem Kumpel!</div>
+      <button onclick="exportiereTagesErfolg()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:10px;border:none;cursor:pointer;">📤 CHALLENGE CODE TEILEN</button>
+    </div>
   </div>
 </div>
 
@@ -2066,11 +2122,12 @@ function saveSetup() {
   const goal = document.getElementById('setup-goal').value;
   const category = document.getElementById('setup-cat').value;
   const gender = document.getElementById('setup-gender').value;
+  const makroFokus = document.getElementById('setup-makro')?.value || 'standard';
 
   if (!name) { alert('Bitte einen Namen eingeben!'); return; }
   if (!category) { alert('Bitte eine Kategorie auswählen!'); return; }
 
-  profile = { name, age, weight, height, goal, category, gender };
+  profile = { name, age, weight, height, goal, category, gender, makroFokus };
   save('fh_profile', profile);
   startApp();
 }
@@ -2113,7 +2170,7 @@ function today() {
 // ================================================================
 // TABS
 // ================================================================
-const TABS = ['dashboard','essen','wasser','gewicht','training','supplemente','tipps','rezepte','schritte','fasten','einkauf','koerper'];
+const TABS = ['dashboard','essen','wasser','gewicht','training','supplemente','tipps','rezepte','schritte','fasten','einkauf','koerper','vorrat'];
 
 function showTab(id) {
   TABS.forEach(t => {
@@ -2137,6 +2194,7 @@ function showTab(id) {
   if (id === 'fasten') { fastGoalHours=load('fh_fast_goal',16); fastHistory=load('fh_fast_history',[]); fastStart=load('fh_fast_start',null); setText('fast-goal-display',fastGoalHours); if(fastStart)startFastTimer(); renderFastHistory(); }
   if (id === 'einkauf') { renderEinkauf(); }
   if (id === 'koerper') { renderKoerperVerlauf(); koerperRehaCheck(); }
+  if (id === 'vorrat') { renderVorrat(); }
 }
 
 // ================================================================
@@ -2781,6 +2839,7 @@ function renderSupplements() {
         <div style="font-size:.82rem;font-weight:600;">💊 ${s.name}</div>
         <div style="font-size:.65rem;color:var(--muted);">${s.dose}${s.time?' · '+s.time:''}${s.note?' · '+s.note:''}</div>
       </div>
+      ${s.time ? `<button onclick="triggerSuppsAlarm('${s.name}')" style="background:rgba(251,191,36,.15);border:1px solid var(--gold);color:var(--gold);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:.7rem;margin-right:4px;" title="Jetzt erinnern">🔔</button>` : ''}
       <button onclick="removeSupp(${s.id})" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:.85rem;">✕</button>
     </div>`).join('');
 }
@@ -4355,6 +4414,207 @@ function verarbeiteSprachAktivitaet(text) {
   } else {
     statusEl.textContent = '✗ Sag "Schritte" oder "Minuten Kurbeln" dazu!';
   }
+}
+
+// ================================================================
+// FEATURE 3: DYNAMISCHE MAKRO-ZIELE
+// ================================================================
+function berechneMakroZiele(kalorienZiel, fokusModus) {
+  let proteinZiel, khZiel, fettZiel;
+  if (fokusModus === 'high_protein') {
+    proteinZiel = Math.round((kalorienZiel * 0.40) / 4);
+    khZiel      = Math.round((kalorienZiel * 0.35) / 4);
+    fettZiel    = Math.round((kalorienZiel * 0.25) / 9);
+  } else if (fokusModus === 'low_carb') {
+    proteinZiel = Math.round((kalorienZiel * 0.35) / 4);
+    khZiel      = Math.round((kalorienZiel * 0.15) / 4);
+    fettZiel    = Math.round((kalorienZiel * 0.50) / 9);
+  } else {
+    proteinZiel = Math.round((kalorienZiel * 0.25) / 4);
+    khZiel      = Math.round((kalorienZiel * 0.50) / 4);
+    fettZiel    = Math.round((kalorienZiel * 0.25) / 9);
+  }
+  return { protein: proteinZiel, kh: khZiel, fett: fettZiel };
+}
+
+function getMakroZiele() {
+  const p = load('fh_profile', {});
+  const kcalZiel = berechneKcalZiel();
+  return berechneMakroZiele(kcalZiel, p.makroFokus || 'standard');
+}
+
+// ================================================================
+// FEATURE 4: EINKAUFSLISTE SORTIEREN
+// ================================================================
+function sortiereEinkaufsliste(liste) {
+  const kategorien = {'🥦 Gemüse & Obst':[], '❄️ Kühlung':[], '🥫 Trockenware':[], '🛒 Sonstiges':[]};
+  liste.forEach(a => {
+    const n = a.name ? a.name.toLowerCase() : '';
+    if (['apfel','banane','spinat','salat','tomate','gurke','paprika','brokkoli','karotte','obst','gemüse','beere','zucchini','avocado','mango'].some(w => n.includes(w))) {
+      kategorien['🥦 Gemüse & Obst'].push(a);
+    } else if (['quark','hähnchen','fleisch','milch','joghurt','käse','ei','fisch','lachs','skyr','butter','sahne','tofu'].some(w => n.includes(w))) {
+      kategorien['❄️ Kühlung'].push(a);
+    } else if (['reis','haferflocken','nudeln','pulver','mehl','öl','dose','konserve','chia','quinoa','nuss','mandel'].some(w => n.includes(w))) {
+      kategorien['🥫 Trockenware'].push(a);
+    } else {
+      kategorien['🛒 Sonstiges'].push(a);
+    }
+  });
+  return kategorien;
+}
+
+function sortiereUndRenderEinkauf() {
+  const liste = load('fh_einkauf', []).filter(i => !i.done);
+  if (!liste.length) { status('Keine Artikel zum Sortieren!'); return; }
+  const sortiert = sortiereEinkaufsliste(liste);
+  const el = document.getElementById('einkauf-list');
+  if (!el) return;
+  let html = '';
+  Object.entries(sortiert).forEach(([kat, items]) => {
+    if (!items.length) return;
+    html += `<div style="font-size:.65rem;color:var(--accent2);letter-spacing:1px;padding:8px 0 4px;">${kat}</div>`;
+    html += items.map(i => `
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--surface2);border-radius:8px;margin-bottom:4px;width:100%;box-sizing:border-box;">
+        <input type="checkbox" onchange="toggleEinkaufItem(${i.id})" style="width:22px;height:22px;cursor:pointer;flex-shrink:0;">
+        <span style="flex:1;font-size:.85rem;word-wrap:break-word;min-width:0;">${i.text || i.name}</span>
+      </div>`).join('');
+  });
+  el.innerHTML = html;
+  status('✓ Einkaufsliste nach Supermarkt-Gängen sortiert!');
+}
+
+// ================================================================
+// FEATURE 5: TAGES-CHALLENGE TEILEN
+// ================================================================
+function exportiereTagesErfolg() {
+  const schritte = load('fh_steps_' + today(), 0);
+  const profile = load('fh_profile', {});
+  const isReha = profile.category === 'reha';
+  const foodLog = load('fh_food_log_' + today(), []);
+  const kcalGesamt = foodLog.reduce((s, f) => s + (f.kcal || 0), 0);
+
+  const daten = {
+    name: profile.name || 'FitHelper User',
+    datum: new Date().toLocaleDateString('de-DE'),
+    schritte,
+    kcal: kcalGesamt,
+    reha: isReha,
+    app: 'FitHelper — kostenlos!'
+  };
+
+  try {
+    const code = 'FITHELPER-CHALLENGE:' + btoa(unescape(encodeURIComponent(JSON.stringify(daten))));
+    navigator.clipboard.writeText(code).then(() => {
+      alert('Challenge-Code kopiert! 🏆\n\n"' + profile.name + ' hat heute ' + schritte.toLocaleString('de-DE') + ' Schritte und ' + kcalGesamt + ' kcal geloggt!"\n\nSchick den Code per WhatsApp!');
+    }).catch(() => { prompt('Code kopieren:', code); });
+  } catch(e) { alert('Fehler: ' + e.message); }
+}
+
+// ================================================================
+// FEATURE 6: VIBRATIONS-REMINDER FÜR SUPPLEMENTE
+// ================================================================
+function triggerSuppsAlarm(suppName) {
+  if ('vibrate' in navigator) {
+    navigator.vibrate([500, 250, 500, 250, 500]);
+  }
+  alert('🚨 ZEIT FÜR DEINE SUPPLEMENTS!\n\n' + suppName + ' einnehmen, Osterhase! 💊');
+}
+
+function checkSuppsReminder() {
+  const supps = load('fh_supplements', []);
+  if (!supps.length) return;
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+  supps.forEach(s => {
+    if (!s.time) return;
+    const [sh, sm] = s.time.split(':').map(Number);
+    if (sh === h && Math.abs(sm - m) <= 1) {
+      triggerSuppsAlarm(s.name + (s.dose ? ' · ' + s.dose : ''));
+    }
+  });
+}
+
+// Supplemente alle 60 Sekunden prüfen
+setInterval(checkSuppsReminder, 60000);
+
+// ================================================================
+// FEATURE 7: MEAL PREP VORRATS-TRACKER
+// ================================================================
+let vorratListe = JSON.parse(localStorage.getItem('fithelper_vorrat') || '[]');
+
+function vorratSpeichern() {
+  const name = document.getElementById('vorrat-name').value.trim();
+  const tage = parseInt(document.getElementById('vorrat-tage').value) || 5;
+  const portionen = parseInt(document.getElementById('vorrat-portionen').value) || 1;
+  const kcal = parseInt(document.getElementById('vorrat-kcal').value) || 0;
+
+  if (!name) { alert('Bitte einen Namen eingeben!'); return; }
+
+  const zielDatum = new Date();
+  zielDatum.setDate(zielDatum.getDate() + tage);
+
+  vorratListe.push({
+    id: Date.now(),
+    name,
+    laeuftAus: zielDatum.toLocaleDateString('de-DE'),
+    timestamp: zielDatum.getTime(),
+    portionen,
+    kcal
+  });
+
+  localStorage.setItem('fithelper_vorrat', JSON.stringify(vorratListe));
+  ['vorrat-name','vorrat-tage','vorrat-portionen','vorrat-kcal'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  renderVorrat();
+  status('✓ Box gespeichert!');
+}
+
+function renderVorrat() {
+  const el = document.getElementById('vorrat-liste');
+  if (!el) return;
+  vorratListe = JSON.parse(localStorage.getItem('fithelper_vorrat') || '[]');
+  vorratListe.sort((a, b) => a.timestamp - b.timestamp);
+
+  if (!vorratListe.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Boxen eingetragen 📦</div>';
+    return;
+  }
+
+  const jetzt = Date.now();
+  el.innerHTML = vorratListe.map(v => {
+    const restMs = v.timestamp - jetzt;
+    const restH = Math.floor(restMs / 3600000);
+    const restTage = Math.floor(restH / 24);
+    const abgelaufen = restMs < 0;
+    const kritisch = !abgelaufen && restMs < 86400000;
+    const farbe = abgelaufen ? 'var(--red)' : kritisch ? 'var(--gold)' : 'var(--green)';
+    const statusText = abgelaufen ? '⚠️ ABGELAUFEN!' : kritisch ? '⏰ Noch < 24h!' : `✅ Noch ${restTage} Tag${restTage !== 1 ? 'e' : ''}`;
+
+    return `
+    <div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border-radius:8px;margin-bottom:6px;border-left:3px solid ${farbe};">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:.85rem;font-weight:700;">${v.name}</div>
+        <div style="font-size:.65rem;color:var(--muted);">📅 Bis: ${v.laeuftAus} · 🍱 ${v.portionen} Port. · 🔥 ${v.kcal} kcal</div>
+        <div style="font-size:.72rem;color:${farbe};font-weight:700;margin-top:2px;">${statusText}</div>
+      </div>
+      <button onclick="vorratLoeschen(${v.id})" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;flex-shrink:0;">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+function vorratLoeschen(id) {
+  vorratListe = vorratListe.filter(v => v.id !== id);
+  localStorage.setItem('fithelper_vorrat', JSON.stringify(vorratListe));
+  renderVorrat();
+}
+
+function vorratAllesLoeschen() {
+  if (!confirm('Alle Vorrats-Boxen löschen?')) return;
+  vorratListe = [];
+  localStorage.setItem('fithelper_vorrat', JSON.stringify(vorratListe));
+  renderVorrat();
 }
 
 </script>
