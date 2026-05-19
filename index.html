@@ -413,9 +413,9 @@ select.inp { cursor: pointer; }
 .category-btn.sel { border-color: var(--accent2); background: rgba(124,58,237,.15); color: var(--accent2); }
 .category-btn .cat-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 </head>
 <body>
 
@@ -3815,15 +3815,16 @@ function gpsStart() {
     if (gpsRouteCoords.length === 1) {
       const mapEl = document.getElementById('gps-map');
       mapEl.style.display = 'block';
-      if (!gpsMap) {
-        gpsMap = L.map('gps-map', {zoomControl: true, attributionControl: false}).setView([lat, lon], 16);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 19
-        }).addTo(gpsMap);
-      } else {
-        gpsMap.setView([lat, lon], 16);
+      // Alte Karte entfernen falls vorhanden
+      if (gpsMap !== null) {
+        try { gpsMap.remove(); } catch(e) {}
+        gpsMap = null;
+        mapEl.innerHTML = '';
       }
-      // InvalidateSize Fix — Kacheln laden vollständig
+      gpsMap = L.map('gps-map', {zoomControl: true, attributionControl: false}).setView([lat, lon], 16);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+      }).addTo(gpsMap);
       setTimeout(() => { gpsMap.invalidateSize(); }, 400);
     }
 
@@ -3936,7 +3937,9 @@ function gpsStop() {
   gpsRouteCoords = [];
   if (gpsPolyline) { gpsPolyline.remove(); gpsPolyline = null; }
   if (gpsMarker) { gpsMarker.remove(); gpsMarker = null; }
+  if (gpsMap) { try { gpsMap.remove(); } catch(e) {} gpsMap = null; }
   document.getElementById('gps-map').style.display = 'none';
+  document.getElementById('gps-map').innerHTML = '';
   setTimeout(() => {
     document.getElementById('gps-status').textContent = 'GPS bereit — drücke Start';
   }, 3000);
