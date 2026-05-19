@@ -902,6 +902,17 @@ select.inp { cursor: pointer; }
     </div>
     <div id="rezept-results" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;"></div>
     <div id="rezept-detail" style="display:none;"></div>
+
+    <!-- REZEPT TEILEN / IMPORTIEREN -->
+    <div class="card" style="margin-top:14px;">
+      <div class="card-title">🔗 REZEPT TEILEN & IMPORTIEREN</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px;">Rezept-Code per WhatsApp teilen — Kumpel fügt ihn einfach ein!</div>
+      <div style="display:flex;gap:8px;">
+        <input class="inp" id="import-code-input" placeholder="Rezept-Code hier einfügen..." style="flex:1;margin:0;font-size:.8rem;">
+        <button class="btn green" onclick="importiereRezept()" style="white-space:nowrap;">📥 Importieren</button>
+      </div>
+      <div id="eigene-rezepte-liste" style="margin-top:12px;"></div>
+    </div>
   </div>
 </div>
 
@@ -925,6 +936,14 @@ select.inp { cursor: pointer; }
         <button class="btn green" onclick="addSteps(5000)">+ 5.000</button>
         <button class="btn outline" onclick="addStepsCustom()">Eigene Zahl</button>
         <button class="btn outline" onclick="resetSteps()">Zurücksetzen</button>
+      </div>
+      <!-- VOICE DIKTAT -->
+      <div style="border-top:1px solid var(--border);padding-top:12px;margin-bottom:12px;">
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">🎤 PER SPRACHE LOGGEN</div>
+        <button id="voice-steps-btn" onclick="voiceStepsStart()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:rgba(0,255,204,.15);border:2px solid #00ffcc;color:#00ffcc;border-radius:10px;cursor:pointer;">
+          🎤 Sag: "6000 Schritte" oder "30 Minuten Kurbeln"
+        </button>
+        <div id="voice-steps-status" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:6px;min-height:20px;"></div>
       </div>
       <div style="border-top:1px solid var(--border);padding-top:12px;">
         <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">TAGESZIEL & PROFIL</div>
@@ -2113,7 +2132,7 @@ function showTab(id) {
   if (id === 'supplemente') renderSupplements();
   if (id === 'tipps') renderTipps();
   if (id === 'training') { renderTraining(); showMuscle('brust'); renderMyPlan(); }
-  if (id === 'rezepte') { loadRezeptOfDay(); renderDeutscheRezepte(deutscheRezepte.slice(0,20)); }
+  if (id === 'rezepte') { loadRezeptOfDay(); renderDeutscheRezepte(deutscheRezepte.slice(0,20)); renderEigeneRezepte(); }
   if (id === 'schritte') { stepsToday=load('fh_steps_'+today(),0); stepsGoal=load('fh_steps_goal',10000); renderSteps(); renderGpsHistory(); }
   if (id === 'fasten') { fastGoalHours=load('fh_fast_goal',16); fastHistory=load('fh_fast_history',[]); fastStart=load('fh_fast_start',null); setText('fast-goal-display',fastGoalHours); if(fastStart)startFastTimer(); renderFastHistory(); }
   if (id === 'einkauf') { renderEinkauf(); }
@@ -3499,7 +3518,10 @@ function showDeutschesRezept(id) {
       </ul>
       <div style="font-size:.65rem;color:var(--accent2);letter-spacing:1px;margin-bottom:6px;">ZUBEREITUNG</div>
       <div style="font-size:.82rem;line-height:1.7;margin-bottom:14px;">${r.anleitung}</div>
-      <button class="btn green" onclick="addRezeptToEinkauf(window._lastZutaten.map(z=>z.ing))">🛒 Zur Einkaufsliste</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn green" onclick="addRezeptToEinkauf(window._lastZutaten.map(z=>z.ing))">🛒 Zur Einkaufsliste</button>
+        <button class="btn outline" onclick="exportiereRezept(deutscheRezepte.find(x=>x.id==='${r.id}'))">📤 Teilen</button>
+      </div>
     </div>`;
 }
 
@@ -4178,6 +4200,161 @@ function koerperLoeschen(index) {
   koerperStats.splice(index, 1);
   localStorage.setItem('fithelper_body_stats', JSON.stringify(koerperStats));
   renderKoerperVerlauf();
+}
+
+// ================================================================
+// MODUL 2: REZEPT TEILEN & IMPORTIEREN
+// ================================================================
+let eigeneRezepte = JSON.parse(localStorage.getItem('fithelper_user_rezepte') || '[]');
+
+function exportiereRezept(r) {
+  if (!r) return;
+  try {
+    const jsonStr = JSON.stringify(r);
+    const shareCode = btoa(unescape(encodeURIComponent(jsonStr)));
+    navigator.clipboard.writeText(shareCode).then(() => {
+      alert('✓ Rezept-Code kopiert, Osterhase! 🐰\nSchick ihn per WhatsApp an deinen Kumpel!');
+    }).catch(() => {
+      prompt('Code kopieren:', shareCode);
+    });
+  } catch(e) {
+    alert('Fehler beim Exportieren: ' + e.message);
+  }
+}
+
+function importiereRezept() {
+  const shareCode = document.getElementById('import-code-input').value.trim();
+  if (!shareCode) return;
+  try {
+    const jsonStr = decodeURIComponent(escape(atob(shareCode)));
+    const r = JSON.parse(jsonStr);
+    if (!r.name) throw new Error('Kein gültiges Rezept');
+    // Neue ID vergeben
+    r.id = 'user_' + Date.now();
+    eigeneRezepte.push(r);
+    localStorage.setItem('fithelper_user_rezepte', JSON.stringify(eigeneRezepte));
+    document.getElementById('import-code-input').value = '';
+    renderEigeneRezepte();
+    status('✓ Rezept "' + r.name + '" importiert!');
+    alert('Boom! 💥 Rezept "' + r.name + '" erfolgreich importiert!');
+  } catch(e) {
+    alert('Ungültiger Code! Da hat Yazio wohl manipuliert. 😉');
+  }
+}
+
+function renderEigeneRezepte() {
+  const el = document.getElementById('eigene-rezepte-liste');
+  if (!el) return;
+  eigeneRezepte = JSON.parse(localStorage.getItem('fithelper_user_rezepte') || '[]');
+  if (!eigeneRezepte.length) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div style="font-size:.65rem;color:var(--accent2);letter-spacing:1px;margin-bottom:8px;">MEINE IMPORTIERTEN REZEPTE</div>' +
+    eigeneRezepte.map((r, i) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface2);border-radius:8px;margin-bottom:4px;">
+      <div style="flex:1;">
+        <div style="font-size:.82rem;font-weight:700;">${r.name}</div>
+        <div style="font-size:.65rem;color:var(--muted);">${r.kategorie || ''} · ${r.kcal || '?'} kcal</div>
+      </div>
+      <button onclick="exportiereRezept(eigeneRezepte[${i}])" style="background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:.7rem;">📤</button>
+      <button onclick="eigeneRezeptLoeschen(${i})" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.8rem;">🗑</button>
+    </div>`).join('');
+}
+
+function eigeneRezeptLoeschen(i) {
+  eigeneRezepte.splice(i, 1);
+  localStorage.setItem('fithelper_user_rezepte', JSON.stringify(eigeneRezepte));
+  renderEigeneRezepte();
+}
+
+// ================================================================
+// MODUL 3: VOICE SCHRITTE LOG
+// ================================================================
+let voiceStepsRec = null;
+let voiceStepsActive = false;
+
+function voiceStepsStart() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert('Spracherkennung nicht verfügbar auf diesem Gerät.');
+    return;
+  }
+  if (voiceStepsActive) {
+    if (voiceStepsRec) voiceStepsRec.stop();
+    return;
+  }
+  voiceStepsRec = new SpeechRecognition();
+  voiceStepsRec.lang = 'de-DE';
+  voiceStepsRec.continuous = false;
+  voiceStepsRec.interimResults = false;
+
+  const btn = document.getElementById('voice-steps-btn');
+  const statusEl = document.getElementById('voice-steps-status');
+
+  voiceStepsRec.onstart = () => {
+    voiceStepsActive = true;
+    btn.textContent = '🔴 Lausche... (nochmal tippen zum Stoppen)';
+    btn.style.background = 'rgba(248,113,113,.15)';
+    btn.style.borderColor = 'var(--red)';
+    btn.style.color = 'var(--red)';
+  };
+
+  voiceStepsRec.onresult = e => {
+    const text = e.results[0][0].transcript;
+    statusEl.textContent = '🎤 Erkannt: "' + text + '"';
+    verarbeiteSprachAktivitaet(text);
+  };
+
+  voiceStepsRec.onerror = () => {
+    statusEl.textContent = '✗ Nicht erkannt — nochmal versuchen!';
+    voiceStepsReset();
+  };
+
+  voiceStepsRec.onend = () => voiceStepsReset();
+  voiceStepsRec.start();
+}
+
+function voiceStepsReset() {
+  voiceStepsActive = false;
+  const btn = document.getElementById('voice-steps-btn');
+  if (btn) {
+    btn.textContent = '🎤 Sag: "6000 Schritte" oder "30 Minuten Kurbeln"';
+    btn.style.background = 'rgba(0,255,204,.15)';
+    btn.style.borderColor = '#00ffcc';
+    btn.style.color = '#00ffcc';
+  }
+}
+
+function verarbeiteSprachAktivitaet(text) {
+  const statusEl = document.getElementById('voice-steps-status');
+  const zahlenMatch = text.match(/\d+/);
+  if (!zahlenMatch) {
+    statusEl.textContent = '✗ Keine Zahl erkannt — sag z.B. "6000 Schritte"!';
+    return;
+  }
+  const anzahl = parseInt(zahlenMatch[0], 10);
+  const lower = text.toLowerCase();
+
+  if (lower.includes('schritt')) {
+    addSteps(anzahl);
+    const kcal = Math.round(anzahl * 0.04);
+    statusEl.textContent = '✓ ' + anzahl.toLocaleString('de-DE') + ' Schritte geloggt! (≈ ' + kcal + ' kcal)';
+    status('✓ ' + anzahl.toLocaleString('de-DE') + ' Schritte per Sprache geloggt!');
+  } else if (lower.includes('minute') || lower.includes('kurb') || lower.includes('min')) {
+    const kcal = Math.round(anzahl * 5);
+    // Als manuelle Aktivität ins Dashboard
+    foodLog.push({
+      id: Date.now(), name: '♿ Reha/Bewegung (' + anzahl + ' Min)',
+      kcal: -kcal, protein: 0, carbs: 0, fat: 0,
+      meal: 'Aktivität',
+      time: new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'})
+    });
+    save('fh_food_log_' + today(), foodLog);
+    renderFoodLog();
+    updateDashboard();
+    statusEl.textContent = '✓ ' + anzahl + ' Min Bewegung geloggt! (≈ ' + kcal + ' kcal verbrannt)';
+    status('✓ ' + anzahl + ' Min Bewegung per Sprache geloggt!');
+  } else {
+    statusEl.textContent = '✗ Sag "Schritte" oder "Minuten Kurbeln" dazu!';
+  }
 }
 
 </script>
