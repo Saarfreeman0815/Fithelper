@@ -4501,8 +4501,10 @@ function sortiereUndRenderEinkauf() {
   const el = document.getElementById('einkauf-list');
   if (!el) return;
   let html = '';
-  Object.entries(sortiert).forEach(([kat, items]) => {
-    if (!items.length) return;
+  const festeReihenfolge = ['🥦 Gemüse & Obst','❄️ Kühlung','🥫 Trockenware','🛒 Sonstiges'];
+  festeReihenfolge.forEach(kat => {
+    const items = sortiert[kat];
+    if (!items || !items.length) return;
     html += `<div style="font-size:.65rem;color:var(--accent2);letter-spacing:1px;padding:8px 0 4px;">${kat}</div>`;
     html += items.map(i => `
       <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--surface2);border-radius:8px;margin-bottom:4px;width:100%;box-sizing:border-box;">
@@ -4546,7 +4548,7 @@ function exportiereTagesErfolg() {
 // ================================================================
 function triggerSuppsAlarm(suppName) {
   if ('vibrate' in navigator) {
-    navigator.vibrate([500, 250, 500, 250, 500]);
+    navigator.vibrate([500, 300, 500, 300, 500]);
   }
   alert('🚨 ZEIT FÜR DEINE SUPPLEMENTS!\n\n' + suppName + ' einnehmen, Osterhase! 💊');
 }
@@ -4554,19 +4556,24 @@ function triggerSuppsAlarm(suppName) {
 function checkSuppsReminder() {
   const supps = load('fh_supplements', []);
   if (!supps.length) return;
-  const now = new Date();
-  const h = now.getHours();
-  const m = now.getMinutes();
+  const jetzt = new Date();
+  const aktuelleZeit = jetzt.toTimeString().slice(0, 5); // "HH:MM"
+  const heute = jetzt.toLocaleDateString('de-DE');
+  let geaendert = false;
+
   supps.forEach(s => {
     if (!s.time) return;
-    const [sh, sm] = s.time.split(':').map(Number);
-    if (sh === h && Math.abs(sm - m) <= 1) {
-      triggerSuppsAlarm(s.name + (s.dose ? ' · ' + s.dose : ''));
+    if (s.time === aktuelleZeit && s.letzterAlarm !== heute) {
+      s.letzterAlarm = heute;
+      geaendert = true;
+      if ('vibrate' in navigator) navigator.vibrate([500, 300, 500]);
+      setTimeout(() => triggerSuppsAlarm(s.name + (s.dose ? ' · ' + s.dose : '')), 100);
     }
   });
+
+  if (geaendert) save('fh_supplements', supps);
 }
 
-// Supplemente alle 60 Sekunden prüfen
 setInterval(checkSuppsReminder, 60000);
 
 // ================================================================
