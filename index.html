@@ -4333,12 +4333,12 @@ function verarbeiteSprachAktivitaet(text) {
   const anzahl = parseInt(zahlenMatch[0], 10);
   const lower = text.toLowerCase();
 
-  if (lower.includes('schritt')) {
+  if (lower.includes('schritt') || lower.includes('schritte') || lower.includes('steps')) {
     addSteps(anzahl);
     const kcal = Math.round(anzahl * 0.04);
     statusEl.textContent = '✓ ' + anzahl.toLocaleString('de-DE') + ' Schritte geloggt! (≈ ' + kcal + ' kcal)';
     status('✓ ' + anzahl.toLocaleString('de-DE') + ' Schritte per Sprache geloggt!');
-  } else if (lower.includes('minute') || lower.includes('kurb') || lower.includes('min')) {
+  } else if (lower.includes('minute') || lower.includes('minuten') || lower.includes('min') || lower.includes('kurb')) {
     const kcal = Math.round(anzahl * 5);
     // Als manuelle Aktivität ins Dashboard
     foodLog.push({
