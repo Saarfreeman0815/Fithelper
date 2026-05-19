@@ -3882,7 +3882,7 @@ function gpsStart() {
     if (gpsPoints.length > 0) {
       const last = gpsPoints[gpsPoints.length - 1];
       const dist = haversine(last.lat, last.lon, lat, lon);
-      if (dist > 0.003) {
+      if (dist > 0.002) { // Unter 2 Meter ignorieren — keine Phantom-Meter!
         gpsTotalKm += dist;
         document.getElementById('gps-km').textContent = gpsTotalKm.toFixed(2);
         gpsUpdateKcal();
@@ -4155,7 +4155,7 @@ function speichereKoerperDaten() {
 }
 
 function koerperDiff(neu, alt) {
-  if (neu === '-' || alt === '-') return '';
+  if (!neu || !alt || neu === '-' || alt === '-') return '';
   const diff = parseFloat(neu) - parseFloat(alt);
   if (isNaN(diff) || diff === 0) return '';
   const farbe = diff < 0 ? 'var(--green)' : 'var(--red)';
@@ -4228,7 +4228,7 @@ function importiereRezept() {
   try {
     const jsonStr = decodeURIComponent(escape(atob(shareCode)));
     const r = JSON.parse(jsonStr);
-    if (!r.name) throw new Error('Kein gültiges Rezept');
+    if (!r || !r.name || typeof r.name !== 'string') throw new Error('Kein gültiges Rezept');
     // Neue ID vergeben
     r.id = 'user_' + Date.now();
     eigeneRezepte.push(r);
