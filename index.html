@@ -934,7 +934,49 @@ select.inp { cursor: pointer; }
         </div>
       </div>
     </div>
-    
+
+    <!-- GPS STRECKEN TRACKER -->
+    <div class="card">
+      <div class="card-title">📍 GPS STRECKEN-TRACKER</div>
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:12px;">
+          <div style="text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--accent2);" id="gps-km">0.00</div>
+            <div style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">KM</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--green);" id="gps-time">00:00</div>
+            <div style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">ZEIT</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--gold);" id="gps-pace">--:--</div>
+            <div style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">MIN/KM</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--red);" id="gps-kcal">0</div>
+            <div style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">KCAL</div>
+          </div>
+        </div>
+        <div id="gps-status" style="font-size:.78rem;color:var(--muted);margin-bottom:12px;">GPS bereit — drücke Start</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn green" id="gps-start-btn" onclick="gpsStart()" style="min-height:52px;font-size:1rem;padding:12px 28px;font-weight:700;">▶ START</button>
+          <button class="btn red" id="gps-stop-btn" onclick="gpsStop()" style="display:none;min-height:52px;font-size:1rem;padding:12px 28px;font-weight:700;">⏹ STOPP</button>
+          <button class="btn outline" id="gps-pause-btn" onclick="gpsPause()" style="display:none;min-height:52px;font-size:1rem;padding:12px 24px;">⏸ PAUSE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEINE STRECKEN -->
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>🗺️ MEINE STRECKEN</span>
+        <button class="btn outline small" onclick="gpsLoeschen()" style="color:var(--red);">🗑 Alle löschen</button>
+      </div>
+      <div id="gps-history">
+        <div style="text-align:center;padding:16px;color:var(--muted);font-size:.8rem;">Noch keine Strecken gespeichert</div>
+      </div>
+    </div>
+
     <div class="card">
       <div class="card-title">VERLAUF (LETZTE 7 TAGE)</div>
       <div id="steps-history">
@@ -2010,7 +2052,7 @@ function showTab(id) {
   if (id === 'tipps') renderTipps();
   if (id === 'training') { renderTraining(); showMuscle('brust'); renderMyPlan(); }
   if (id === 'rezepte') { loadRezeptOfDay(); renderDeutscheRezepte(deutscheRezepte.slice(0,20)); }
-  if (id === 'schritte') { stepsToday=load('fh_steps_'+today(),0); stepsGoal=load('fh_steps_goal',10000); renderSteps(); }
+  if (id === 'schritte') { stepsToday=load('fh_steps_'+today(),0); stepsGoal=load('fh_steps_goal',10000); renderSteps(); renderGpsHistory(); }
   if (id === 'fasten') { fastGoalHours=load('fh_fast_goal',16); fastHistory=load('fh_fast_history',[]); fastStart=load('fh_fast_start',null); setText('fast-goal-display',fastGoalHours); if(fastStart)startFastTimer(); renderFastHistory(); }
   if (id === 'einkauf') { renderEinkauf(); }
 }
@@ -3677,6 +3719,192 @@ function fhImport(input) {
     } catch(err){alert('Fehler: '+err.message);}
   };
   reader.readAsText(file);
+}
+
+// ================================================================
+// GPS STRECKEN-TRACKER
+// ================================================================
+let gpsWatchId = null;
+let gpsRunning = false;
+let gpsPaused = false;
+let gpsPoints = [];
+let gpsTotalKm = 0;
+let gpsStartTime = null;
+let gpsPauseTime = 0;
+let gpsPauseStart = null;
+let gpsTimerInterval = null;
+let gpsStrecken = JSON.parse(localStorage.getItem('fh_gps_strecken') || '[]');
+
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function gpsStart() {
+  if (!navigator.geolocation) {
+    document.getElementById('gps-status').textContent = '✗ GPS nicht verfügbar auf diesem Gerät';
+    return;
+  }
+  gpsRunning = true;
+  gpsPaused = false;
+  gpsPoints = [];
+  gpsTotalKm = 0;
+  gpsStartTime = Date.now();
+  gpsPauseTime = 0;
+
+  document.getElementById('gps-start-btn').style.display = 'none';
+  document.getElementById('gps-stop-btn').style.display = 'inline-block';
+  document.getElementById('gps-pause-btn').style.display = 'inline-block';
+  document.getElementById('gps-status').textContent = '📍 GPS wird gesucht...';
+  document.getElementById('gps-km').textContent = '0.00';
+  document.getElementById('gps-kcal').textContent = '0';
+  document.getElementById('gps-pace').textContent = '--:--';
+
+  gpsWatchId = navigator.geolocation.watchPosition(pos => {
+    if (!gpsRunning || gpsPaused) return;
+    const {latitude: lat, longitude: lon, accuracy} = pos.coords;
+    if (accuracy > 50) return; // Zu ungenau ignorieren
+
+    if (gpsPoints.length > 0) {
+      const last = gpsPoints[gpsPoints.length - 1];
+      const dist = haversine(last.lat, last.lon, lat, lon);
+      if (dist > 0.003) { // Mindestens 3 Meter
+        gpsTotalKm += dist;
+        document.getElementById('gps-km').textContent = gpsTotalKm.toFixed(2);
+        gpsUpdateKcal();
+        gpsUpdatePace();
+      }
+    }
+    gpsPoints.push({lat, lon, t: Date.now()});
+    document.getElementById('gps-status').textContent = '📍 Aktiv · ' + gpsPoints.length + ' Punkte · ±' + Math.round(accuracy) + 'm';
+  }, err => {
+    const msgs = {1:'GPS-Zugriff verweigert — bitte in Einstellungen erlauben', 2:'GPS Signal nicht gefunden', 3:'GPS Timeout'};
+    document.getElementById('gps-status').textContent = '✗ ' + (msgs[err.code] || err.message);
+  }, {
+    enableHighAccuracy: true,
+    timeout: 10000,
+    maximumAge: 0
+  });
+
+  // Timer
+  gpsTimerInterval = setInterval(() => {
+    if (!gpsRunning || gpsPaused) return;
+    const elapsed = Math.floor((Date.now() - gpsStartTime - gpsPauseTime) / 1000);
+    const m = Math.floor(elapsed / 60).toString().padStart(2,'0');
+    const s = (elapsed % 60).toString().padStart(2,'0');
+    document.getElementById('gps-time').textContent = m + ':' + s;
+  }, 1000);
+}
+
+function gpsPause() {
+  if (!gpsRunning) return;
+  if (!gpsPaused) {
+    gpsPaused = true;
+    gpsPauseStart = Date.now();
+    document.getElementById('gps-pause-btn').textContent = '▶ Weiter';
+    document.getElementById('gps-status').textContent = '⏸ Pausiert';
+  } else {
+    gpsPaused = false;
+    gpsPauseTime += Date.now() - gpsPauseStart;
+    document.getElementById('gps-pause-btn').textContent = '⏸ PAUSE';
+    document.getElementById('gps-status').textContent = '📍 Aktiv';
+  }
+}
+
+function gpsStop() {
+  if (!gpsRunning) return;
+  gpsRunning = false;
+  if (gpsWatchId !== null) { navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId = null; }
+  clearInterval(gpsTimerInterval);
+
+  document.getElementById('gps-start-btn').style.display = 'inline-block';
+  document.getElementById('gps-stop-btn').style.display = 'none';
+  document.getElementById('gps-pause-btn').style.display = 'none';
+  document.getElementById('gps-pause-btn').textContent = '⏸ PAUSE';
+
+  if (gpsTotalKm < 0.01) {
+    document.getElementById('gps-status').textContent = 'Zu kurze Strecke — nicht gespeichert';
+    return;
+  }
+
+  const elapsed = Math.floor((Date.now() - gpsStartTime - gpsPauseTime) / 1000);
+  const profile = load('fh_profile', {});
+  const isReha = profile.mobility === 'reha';
+  const typ = isReha ? '♿ Rollstuhl-Runde' : '🏃 Strecke';
+
+  const eintrag = {
+    id: Date.now(),
+    datum: new Date().toLocaleDateString('de-DE', {weekday:'short', day:'numeric', month:'short'}),
+    uhrzeit: new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}),
+    typ,
+    km: Math.round(gpsTotalKm * 100) / 100,
+    dauer: document.getElementById('gps-time').textContent,
+    kcal: parseInt(document.getElementById('gps-kcal').textContent) || 0,
+    pace: document.getElementById('gps-pace').textContent
+  };
+
+  gpsStrecken.unshift(eintrag);
+  if (gpsStrecken.length > 50) gpsStrecken.pop();
+  localStorage.setItem('fh_gps_strecken', JSON.stringify(gpsStrecken));
+  renderGpsHistory();
+  document.getElementById('gps-status').textContent = '✓ Gespeichert: ' + eintrag.km + ' km · ' + eintrag.dauer;
+  status('✓ Strecke gespeichert: ' + eintrag.km + ' km');
+}
+
+function gpsUpdateKcal() {
+  const profile = load('fh_profile', {});
+  const weight = profile.weight || 75;
+  const kcal = Math.round(gpsTotalKm * weight * 0.9);
+  document.getElementById('gps-kcal').textContent = kcal;
+}
+
+function gpsUpdatePace() {
+  if (gpsTotalKm < 0.1) return;
+  const elapsed = (Date.now() - gpsStartTime - gpsPauseTime) / 1000 / 60;
+  const paceMin = elapsed / gpsTotalKm;
+  const m = Math.floor(paceMin);
+  const s = Math.round((paceMin - m) * 60).toString().padStart(2,'0');
+  document.getElementById('gps-pace').textContent = m + ':' + s;
+}
+
+function renderGpsHistory() {
+  const el = document.getElementById('gps-history');
+  if (!el) return;
+  if (!gpsStrecken.length) {
+    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:.8rem;">Noch keine Strecken gespeichert</div>';
+    return;
+  }
+  el.innerHTML = gpsStrecken.map(s => `
+    <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--surface2);border-radius:8px;margin-bottom:6px;flex-wrap:wrap;">
+      <div style="font-size:1.2rem;">${s.typ.split(' ')[0]}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:.82rem;font-weight:700;">${s.typ.slice(2)}</div>
+        <div style="font-size:.65rem;color:var(--muted);">${s.datum} · ${s.uhrzeit}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:.9rem;font-weight:700;color:var(--accent2);">${s.km} km</div>
+        <div style="font-size:.65rem;color:var(--muted);">${s.dauer} · ${s.kcal} kcal · ${s.pace} /km</div>
+      </div>
+      <button onclick="gpsLoeschenEintrag(${s.id})" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.8rem;flex-shrink:0;">🗑</button>
+    </div>`).join('');
+}
+
+function gpsLoeschenEintrag(id) {
+  gpsStrecken = gpsStrecken.filter(s => s.id !== id);
+  localStorage.setItem('fh_gps_strecken', JSON.stringify(gpsStrecken));
+  renderGpsHistory();
+}
+
+function gpsLoeschen() {
+  if (!confirm('Alle Strecken löschen?')) return;
+  gpsStrecken = [];
+  localStorage.setItem('fh_gps_strecken', JSON.stringify(gpsStrecken));
+  renderGpsHistory();
 }
 
 </script>
