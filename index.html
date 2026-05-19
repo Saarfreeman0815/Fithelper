@@ -967,15 +967,17 @@ select.inp { cursor: pointer; }
         </div>
       </div>
       <!-- LIVE KARTE -->
-      <div id="gps-map" style="display:none;height:280px;border-radius:10px;overflow:hidden;margin-top:12px;border:1px solid var(--border);"></div>
+      <div id="gps-map" style="display:none;width:100%;height:350px !important;border-radius:12px;overflow:hidden;margin-top:12px;border:1px solid var(--border);"></div>
     </div>
 
     <!-- MEINE STRECKEN -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>🗺️ MEINE STRECKEN</span>
+        <span>🗺️ MEINE STRECKEN (max. 10)</span>
         <button class="btn outline small" onclick="gpsLoeschen()" style="color:var(--red);">🗑 Alle löschen</button>
       </div>
+      <!-- Route Karte Vorschau -->
+      <div id="gps-route-preview" style="display:none;width:100%;height:300px;border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid var(--border);"></div>
       <div id="gps-history">
         <div style="text-align:center;padding:16px;color:var(--muted);font-size:.8rem;">Noch keine Strecken gespeichert</div>
       </div>
@@ -3821,6 +3823,8 @@ function gpsStart() {
       } else {
         gpsMap.setView([lat, lon], 16);
       }
+      // InvalidateSize Fix — Kacheln laden vollständig
+      setTimeout(() => { gpsMap.invalidateSize(); }, 400);
     }
 
     // Route live zeichnen
@@ -3913,11 +3917,12 @@ function gpsStop() {
     km: Math.round(gpsTotalKm * 100) / 100,
     dauer: document.getElementById('gps-time').textContent,
     kcal: parseInt(document.getElementById('gps-kcal').textContent) || 0,
-    pace: document.getElementById('gps-pace').textContent
+    pace: document.getElementById('gps-pace').textContent,
+    coords: gpsRouteCoords.slice() // Route für spätere Anzeige speichern
   };
 
   gpsStrecken.unshift(eintrag);
-  if (gpsStrecken.length > 50) gpsStrecken.pop();
+  if (gpsStrecken.length > 10) gpsStrecken.pop(); // Max 10!
   localStorage.setItem('fh_gps_strecken', JSON.stringify(gpsStrecken));
   renderGpsHistory();
   document.getElementById('gps-status').textContent = '✓ Gespeichert: ' + eintrag.km + ' km · ' + eintrag.dauer;
@@ -3971,8 +3976,38 @@ function renderGpsHistory() {
         <div style="font-size:.9rem;font-weight:700;color:var(--accent2);">${s.km} km</div>
         <div style="font-size:.65rem;color:var(--muted);">${s.dauer} · ${s.kcal} kcal · ${s.pace} /km</div>
       </div>
+      ${s.coords && s.coords.length > 1 ? `<button onclick="gpsZeigeRoute(${s.id})" style="background:rgba(0,255,204,.15);border:1px solid #00ffcc;color:#00ffcc;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:.72rem;flex-shrink:0;">🗺️ Route</button>` : ''}
       <button onclick="gpsLoeschenEintrag(${s.id})" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.8rem;flex-shrink:0;">🗑</button>
     </div>`).join('');
+}
+
+function gpsZeigeRoute(id) {
+  const strecke = gpsStrecken.find(s => s.id === id);
+  if (!strecke || !strecke.coords || strecke.coords.length < 2) return;
+
+  const preview = document.getElementById('gps-route-preview');
+  preview.style.display = 'block';
+  preview.scrollIntoView({behavior: 'smooth', block: 'center'});
+
+  // Kurz warten damit div sichtbar ist
+  setTimeout(() => {
+    // Alte Karte entfernen falls vorhanden
+    preview.innerHTML = '';
+    const mapDiv = document.createElement('div');
+    mapDiv.style.cssText = 'width:100%;height:300px;';
+    preview.appendChild(mapDiv);
+
+    const m = L.map(mapDiv, {zoomControl:true, attributionControl:false});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19}).addTo(m);
+    const poly = L.polyline(strecke.coords, {color:'#00ffcc', weight:4, opacity:.9}).addTo(m);
+    m.fitBounds(poly.getBounds(), {padding:[20,20]});
+
+    // Start und End Marker
+    L.circleMarker(strecke.coords[0], {radius:8, fillColor:'#34d399', color:'#fff', weight:2, fillOpacity:1}).addTo(m).bindPopup('Start').openPopup();
+    L.circleMarker(strecke.coords[strecke.coords.length-1], {radius:8, fillColor:'#f87171', color:'#fff', weight:2, fillOpacity:1}).addTo(m).bindPopup('Ziel');
+
+    setTimeout(() => { m.invalidateSize(); }, 300);
+  }, 100);
 }
 
 function gpsLoeschenEintrag(id) {
