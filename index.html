@@ -492,19 +492,43 @@ select.inp { cursor: pointer; }
 </div>
 
 <div class="tabbar">
-  <button class="tab on" onclick="showTab('dashboard')">📊 Übersicht</button>
-  <button class="tab" onclick="showTab('essen')">🍽️ Essen</button>
-  <button class="tab" onclick="showTab('wasser')">💧 Wasser</button>
-  <button class="tab" onclick="showTab('gewicht')">⚖️ Gewicht</button>
-  <button class="tab" onclick="showTab('training')">🏋️ Training</button>
-  <button class="tab" onclick="showTab('supplemente')">💊 Supplemente</button>
-  <button class="tab" onclick="showTab('tipps')">💡 Tipps</button>
-  <button class="tab" onclick="showTab('rezepte')">👨‍🍳 Rezepte</button>
-  <button class="tab" onclick="showTab('schritte')">👟 Schritte</button>
-  <button class="tab" onclick="showTab('fasten')">⏱️ Fasten</button>
-  <button class="tab" onclick="showTab('einkauf')">🛒 Einkauf</button>
-  <button class="tab" onclick="showTab('koerper')">📊 Körper</button>
-  <button class="tab" onclick="showTab('vorrat')">📦 Vorrat</button>
+  <button class="tab on" onclick="showMainTab('dashboard')">🏠 Start</button>
+  <button class="tab" onclick="showMainTab('ernaehrung')">🥗 Ernährung</button>
+  <button class="tab" onclick="showMainTab('aktivitaet')">🏃 Sport & Körper</button>
+  <button class="tab" onclick="showMainTab('mehr')">⚙️ Mehr</button>
+</div>
+
+<!-- ERNÄHRUNG HAUPT-PANEL -->
+<div class="panel" id="p-ernaehrung">
+  <div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;">
+    <button class="tab on" id="sub-essen" onclick="showSub('ernaehrung','essen')">🍽️ Essen</button>
+    <button class="tab" id="sub-rezepte" onclick="showSub('ernaehrung','rezepte')">👨‍🍳 Rezepte</button>
+    <button class="tab" id="sub-einkauf" onclick="showSub('ernaehrung','einkauf')">🛒 Einkauf</button>
+    <button class="tab" id="sub-wasser" onclick="showSub('ernaehrung','wasser')">💧 Wasser</button>
+  </div>
+  <div id="sub-content-ernaehrung" style="flex:1;overflow:hidden;display:flex;flex-direction:column;"></div>
+</div>
+
+<!-- SPORT & KÖRPER HAUPT-PANEL -->
+<div class="panel" id="p-aktivitaet">
+  <div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;">
+    <button class="tab on" id="sub-schritte" onclick="showSub('aktivitaet','schritte')">👟 GPS & Schritte</button>
+    <button class="tab" id="sub-koerper" onclick="showSub('aktivitaet','koerper')">📊 Körper</button>
+    <button class="tab" id="sub-gewicht" onclick="showSub('aktivitaet','gewicht')">⚖️ Gewicht</button>
+    <button class="tab" id="sub-training" onclick="showSub('aktivitaet','training')">🏋️ Training</button>
+  </div>
+  <div id="sub-content-aktivitaet" style="flex:1;overflow:hidden;display:flex;flex-direction:column;"></div>
+</div>
+
+<!-- MEHR HAUPT-PANEL -->
+<div class="panel" id="p-mehr">
+  <div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;">
+    <button class="tab on" id="sub-fasten" onclick="showSub('mehr','fasten')">⏱️ Fasten</button>
+    <button class="tab" id="sub-supplemente" onclick="showSub('mehr','supplemente')">💊 Supps</button>
+    <button class="tab" id="sub-vorrat" onclick="showSub('mehr','vorrat')">📦 Vorrat</button>
+    <button class="tab" id="sub-tipps" onclick="showSub('mehr','tipps')">💡 Tipps</button>
+  </div>
+  <div id="sub-content-mehr" style="flex:1;overflow:hidden;display:flex;flex-direction:column;"></div>
 </div>
 
 <!-- DASHBOARD -->
@@ -595,27 +619,40 @@ select.inp { cursor: pointer; }
       </div>
     </div>
     
-    <!-- WASSER + GEWICHT MINI -->
-    <div class="grid2">
-      <div class="card">
-        <div class="card-title">WASSER HEUTE</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--blue);" id="dash-water">0 / 8</div>
-        <div style="font-size:.65rem;color:var(--muted);">Gläser (à 250ml)</div>
-        <div class="progress-bar" style="margin-top:8px;"><div class="progress-fill" id="dash-water-bar" style="background:var(--blue);width:0%"></div></div>
+    <!-- QUICK ACCESS KACHELN -->
+    <div class="grid2" style="margin-bottom:0;">
+      <!-- WASSER DIREKT-LOG -->
+      <div class="card" style="text-align:center;cursor:pointer;" onclick="addWater()">
+        <div style="font-size:.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">WASSER TIPPEN = +1 GLAS</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--blue);" id="dash-water">0 / 8</div>
+        <div class="progress-bar" style="margin:6px 0;"><div class="progress-fill" id="dash-water-bar" style="background:var(--blue);width:0%"></div></div>
+        <div style="display:flex;gap:6px;justify-content:center;margin-top:6px;">
+          <button onclick="event.stopPropagation();addWater()" style="background:var(--blue);border:none;color:#fff;border-radius:6px;padding:6px 14px;cursor:pointer;font-weight:700;">+1</button>
+          <button onclick="event.stopPropagation();removeWater()" style="background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 10px;cursor:pointer;">−</button>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-title">LETZTES GEWICHT</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--green);" id="dash-weight-val">--</div>
-        <div style="font-size:.65rem;color:var(--muted);" id="dash-weight-date">Noch kein Eintrag</div>
-        <button class="btn outline small" onclick="showTab('gewicht')" style="margin-top:10px;width:100%;">Eintragen</button>
+      <!-- GEWICHT MINI -->
+      <div class="card" style="text-align:center;">
+        <div style="font-size:.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">LETZTES GEWICHT</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--green);" id="dash-weight-val">--</div>
+        <div style="font-size:.62rem;color:var(--muted);" id="dash-weight-date">Noch kein Eintrag</div>
+        <button class="btn outline small" onclick="showMainTab('aktivitaet')" style="margin-top:8px;width:100%;">Eintragen</button>
       </div>
     </div>
-    
+
+    <!-- VOICE QUICK-LOG -->
+    <div class="card" style="padding:12px;">
+      <button id="voice-steps-btn" onclick="voiceStepsStart()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:rgba(0,255,204,.15);border:2px solid #00ffcc;color:#00ffcc;border-radius:10px;cursor:pointer;">
+        🎤 Sag: "6000 Schritte" oder "30 Minuten Kurbeln"
+      </button>
+      <div id="voice-steps-status" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:6px;min-height:18px;"></div>
+    </div>
+
     <!-- REZEPT DES TAGES -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;">
         <span>👨‍🍳 REZEPT DES TAGES</span>
-        <button class="btn outline small" onclick="loadRezeptOfDay();showTab('rezepte')">Mehr Rezepte</button>
+        <button class="btn outline small" onclick="showMainTab('ernaehrung');setTimeout(()=>showSub('ernaehrung','rezepte'),100)">Mehr Rezepte</button>
       </div>
       <div id="dash-rezept">
         <div style="text-align:center;padding:10px;color:var(--muted);font-size:.8rem;">Wird geladen...</div>
@@ -626,7 +663,7 @@ select.inp { cursor: pointer; }
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;">
         <span>HEUTIGE MAHLZEITEN</span>
-        <button class="btn small" onclick="showTab('essen')">+ Hinzufügen</button>
+        <button class="btn small" onclick="showMainTab('ernaehrung')">+ Hinzufügen</button>
       </div>
       <div id="dash-meals">
         <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch nichts gegessen heute 🍽️</div>
@@ -2159,7 +2196,7 @@ function startApp() {
   // Kurz warten damit DOM sichtbar ist bevor wir updaten
   setTimeout(() => {
     try { updateAll(); } catch(e) { console.error('updateAll:', e); }
-    showTab('dashboard');
+    showMainTab('dashboard');
   }, 50);
 }
 
@@ -2178,6 +2215,77 @@ function today() {
 // TABS
 // ================================================================
 const TABS = ['dashboard','essen','wasser','gewicht','training','supplemente','tipps','rezepte','schritte','fasten','einkauf','koerper','vorrat'];
+const MAIN_TABS = ['dashboard','ernaehrung','aktivitaet','mehr'];
+
+// Sub-Tab Zuordnung
+const SUB_MAP = {
+  ernaehrung: ['essen','rezepte','einkauf','wasser'],
+  aktivitaet: ['schritte','koerper','gewicht','training'],
+  mehr: ['fasten','supplemente','vorrat','tipps']
+};
+
+function showMainTab(id) {
+  // Alle Haupt-Panels verstecken
+  [...TABS, ...MAIN_TABS].forEach(t => {
+    const p = document.getElementById('p-' + t);
+    if (p) { p.style.display = 'none'; p.classList.remove('on'); }
+  });
+  document.querySelectorAll('.tabbar .tab').forEach(b => b.classList.remove('on'));
+
+  // Aktives Panel zeigen
+  const panel = document.getElementById('p-' + id);
+  if (panel) { panel.style.display = 'flex'; panel.classList.add('on'); }
+
+  // Aktiven Tab markieren
+  const tabs = document.querySelectorAll('.tabbar .tab');
+  const idx = MAIN_TABS.indexOf(id);
+  if (idx >= 0 && tabs[idx]) tabs[idx].classList.add('on');
+
+  // Dashboard init
+  if (id === 'dashboard') { updateDashboard(); loadRezeptOfDay(); renderDashMeals(); }
+
+  // Sub-Panel: ersten Sub-Tab laden
+  if (SUB_MAP[id]) showSub(id, SUB_MAP[id][0]);
+}
+
+function showSub(mainId, subId) {
+  const container = document.getElementById('sub-content-' + mainId);
+  if (!container) return;
+
+  // Sub-Tab Buttons aktualisieren
+  if (SUB_MAP[mainId]) {
+    SUB_MAP[mainId].forEach(s => {
+      const btn = document.getElementById('sub-' + s);
+      if (btn) btn.classList.toggle('on', s === subId);
+    });
+  }
+
+  // Panel in Container klonen/verschieben
+  const panel = document.getElementById('p-' + subId);
+  if (!panel) return;
+
+  // Panel Inhalt direkt anzeigen
+  container.innerHTML = '';
+  const clone = panel.cloneNode(true);
+  clone.style.display = 'flex';
+  clone.classList.add('on');
+  clone.id = 'sub-panel-' + subId;
+  container.appendChild(clone);
+
+  // Render-Funktionen aufrufen
+  if (subId === 'essen') { renderFoodLog(); updateDashboard(); }
+  if (subId === 'wasser') renderWater();
+  if (subId === 'gewicht') renderWeightLog();
+  if (subId === 'training') renderTraining();
+  if (subId === 'supplemente') renderSupplements();
+  if (subId === 'tipps') renderTipps();
+  if (subId === 'rezepte') { loadRezeptOfDay(); renderDeutscheRezepte(deutscheRezepte.slice(0,20)); renderEigeneRezepte(); }
+  if (subId === 'schritte') { stepsToday=load('fh_steps_'+today(),0); stepsGoal=load('fh_steps_goal',10000); renderSteps(); renderGpsHistory(); }
+  if (subId === 'fasten') { fastGoalHours=load('fh_fast_goal',16); fastHistory=load('fh_fast_history',[]); fastStart=load('fh_fast_start',null); setText('fast-goal-display',fastGoalHours); if(fastStart)startFastTimer(); renderFastHistory(); }
+  if (subId === 'einkauf') renderEinkauf();
+  if (subId === 'koerper') { renderKoerperVerlauf(); koerperRehaCheck(); }
+  if (subId === 'vorrat') renderVorrat();
+}
 
 function showTab(id) {
   TABS.forEach(t => {
