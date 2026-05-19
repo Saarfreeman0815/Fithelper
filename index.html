@@ -496,6 +496,7 @@ select.inp { cursor: pointer; }
   <button class="tab" onclick="showTab('schritte')">👟 Schritte</button>
   <button class="tab" onclick="showTab('fasten')">⏱️ Fasten</button>
   <button class="tab" onclick="showTab('einkauf')">🛒 Einkauf</button>
+  <button class="tab" onclick="showTab('koerper')">📊 Körper</button>
 </div>
 
 <!-- DASHBOARD -->
@@ -1082,6 +1083,61 @@ select.inp { cursor: pointer; }
 </div>
 
 <!-- EINKAUF -->
+
+<!-- KÖRPER -->
+<div class="panel" id="p-koerper">
+  <div class="panel-content">
+
+    <!-- EINGABE -->
+    <div class="card">
+      <div class="card-title">📊 KÖRPERWERTE EINTRAGEN</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">GEWICHT (KG)</div>
+          <input class="inp" type="number" id="stats-gewicht" placeholder="z.B. 84.5" step="0.1" style="margin:0;font-size:1rem;">
+        </div>
+        <div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">BAUCHUMFANG (CM)</div>
+          <input class="inp" type="number" id="stats-bauch" placeholder="z.B. 92" style="margin:0;font-size:1rem;">
+        </div>
+        <div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">BIZEPS (CM)</div>
+          <input class="inp" type="number" id="stats-bizeps" placeholder="z.B. 38" style="margin:0;font-size:1rem;">
+        </div>
+        <div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">OBERSCHENKEL (CM)</div>
+          <input class="inp" type="number" id="stats-oberschenkel" placeholder="z.B. 58" style="margin:0;font-size:1rem;">
+        </div>
+      </div>
+
+      <!-- REHA FELDER — nur sichtbar wenn Profil eingeschränkt -->
+      <div id="stats-reha-felder" style="display:none;border-top:1px solid var(--border);padding-top:10px;margin-bottom:10px;">
+        <div style="font-size:.62rem;color:var(--accent2);letter-spacing:1px;margin-bottom:8px;">♿ REHA-MODUS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">SCHMERZLEVEL (1-10)</div>
+            <input class="inp" type="number" id="stats-schmerz" placeholder="1-10" min="1" max="10" style="margin:0;font-size:1rem;">
+          </div>
+          <div>
+            <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">AKTIVE MINUTEN</div>
+            <input class="inp" type="number" id="stats-reha-min" placeholder="z.B. 30" style="margin:0;font-size:1rem;">
+          </div>
+        </div>
+      </div>
+
+      <button onclick="speichereKoerperDaten()" style="width:100%;padding:16px;font-size:1.1rem;font-weight:700;background:#00ffcc;color:#000;border-radius:10px;border:none;margin-top:10px;cursor:pointer;letter-spacing:1px;">💾 WERTE SPEICHERN</button>
+    </div>
+
+    <!-- VERLAUF -->
+    <div class="card">
+      <div class="card-title">📈 VERLAUF & VERGLEICH</div>
+      <div id="koerper-verlauf">
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Einträge — trag deine ersten Werte ein!</div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 </div><!-- end main-app -->
 
@@ -2038,7 +2094,7 @@ function today() {
 // ================================================================
 // TABS
 // ================================================================
-const TABS = ['dashboard','essen','wasser','gewicht','training','supplemente','tipps','rezepte','schritte','fasten','einkauf'];
+const TABS = ['dashboard','essen','wasser','gewicht','training','supplemente','tipps','rezepte','schritte','fasten','einkauf','koerper'];
 
 function showTab(id) {
   TABS.forEach(t => {
@@ -2061,6 +2117,7 @@ function showTab(id) {
   if (id === 'schritte') { stepsToday=load('fh_steps_'+today(),0); stepsGoal=load('fh_steps_goal',10000); renderSteps(); renderGpsHistory(); }
   if (id === 'fasten') { fastGoalHours=load('fh_fast_goal',16); fastHistory=load('fh_fast_history',[]); fastStart=load('fh_fast_start',null); setText('fast-goal-display',fastGoalHours); if(fastStart)startFastTimer(); renderFastHistory(); }
   if (id === 'einkauf') { renderEinkauf(); }
+  if (id === 'koerper') { renderKoerperVerlauf(); koerperRehaCheck(); }
 }
 
 // ================================================================
@@ -3118,6 +3175,7 @@ function exportDaten() {
     fast_goal: load('fh_fast_goal', 16),
     fast_history: load('fh_fast_history', []),
     kcal_manual: load('fh_kcal_manual', 0),
+    koerper_stats: load('fithelper_body_stats', []),
   };
   
   const blob = new Blob([JSON.stringify(backup, null, 2)], {type: 'application/json'});
@@ -3148,6 +3206,7 @@ function importDaten(input) {
       if (backup.fast_goal) save('fh_fast_goal', backup.fast_goal);
       if (backup.fast_history) save('fh_fast_history', backup.fast_history);
       if (backup.kcal_manual) save('fh_kcal_manual', backup.kcal_manual);
+      if (backup.koerper_stats) localStorage.setItem('fithelper_body_stats', JSON.stringify(backup.koerper_stats));
       alert('Backup wiederhergestellt! App wird neu geladen.');
       location.reload();
     } catch(e) {
@@ -4024,6 +4083,101 @@ function gpsLoeschen() {
   gpsStrecken = [];
   localStorage.setItem('fh_gps_strecken', JSON.stringify(gpsStrecken));
   renderGpsHistory();
+}
+
+// ================================================================
+// KÖRPER TRACKER
+// ================================================================
+let koerperStats = JSON.parse(localStorage.getItem('fithelper_body_stats') || '[]');
+
+function koerperRehaCheck() {
+  const profile = load('fh_profile', {});
+  const isReha = profile.mobility === 'reha';
+  const rehaFelder = document.getElementById('stats-reha-felder');
+  if (rehaFelder) rehaFelder.style.display = isReha ? 'block' : 'none';
+}
+
+function speichereKoerperDaten() {
+  const gewicht = document.getElementById('stats-gewicht').value;
+  const bauch = document.getElementById('stats-bauch').value;
+  const bizeps = document.getElementById('stats-bizeps').value;
+  const oberschenkel = document.getElementById('stats-oberschenkel').value;
+  const schmerz = document.getElementById('stats-schmerz')?.value || '';
+  const rehaMin = document.getElementById('stats-reha-min')?.value || '';
+
+  if (!gewicht && !bauch && !bizeps && !oberschenkel && !schmerz && !rehaMin) {
+    alert('Bitte trag mindestens einen Wert ein, Osterhase! 😄');
+    return;
+  }
+
+  const neuerEintrag = {
+    datum: new Date().toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', year:'numeric'}),
+    uhrzeit: new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}),
+    gewicht: gewicht || '-',
+    bauch: bauch || '-',
+    bizeps: bizeps || '-',
+    oberschenkel: oberschenkel || '-',
+    schmerz: schmerz || '-',
+    rehaMin: rehaMin || '-'
+  };
+
+  koerperStats.unshift(neuerEintrag);
+  if (koerperStats.length > 10) koerperStats.pop();
+  localStorage.setItem('fithelper_body_stats', JSON.stringify(koerperStats));
+
+  ['stats-gewicht','stats-bauch','stats-bizeps','stats-oberschenkel','stats-schmerz','stats-reha-min']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+
+  renderKoerperVerlauf();
+  status('✓ Körperwerte gespeichert!');
+}
+
+function koerperDiff(neu, alt) {
+  if (neu === '-' || alt === '-') return '';
+  const diff = parseFloat(neu) - parseFloat(alt);
+  if (isNaN(diff) || diff === 0) return '';
+  const farbe = diff < 0 ? 'var(--green)' : 'var(--red)';
+  const pfeil = diff < 0 ? '▼' : '▲';
+  return `<span style="color:${farbe};font-size:.7rem;margin-left:4px;">${pfeil} ${Math.abs(diff).toFixed(1)}</span>`;
+}
+
+function renderKoerperVerlauf() {
+  const el = document.getElementById('koerper-verlauf');
+  if (!el) return;
+  koerperStats = JSON.parse(localStorage.getItem('fithelper_body_stats') || '[]');
+
+  if (!koerperStats.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Einträge — trag deine ersten Werte ein!</div>';
+    return;
+  }
+
+  const profile = load('fh_profile', {});
+  const isReha = profile.mobility === 'reha';
+
+  el.innerHTML = koerperStats.map((e, i) => {
+    const prev = koerperStats[i + 1];
+    return `
+    <div style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:8px;border-left:3px solid var(--accent2);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-size:.72rem;font-weight:700;color:var(--accent2);">${e.datum} · ${e.uhrzeit}</div>
+        <button onclick="koerperLoeschen(${i})" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;">🗑</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        ${e.gewicht !== '-' ? `<div style="font-size:.82rem;">⚖️ <b>${e.gewicht}</b> kg${prev ? koerperDiff(e.gewicht, prev.gewicht) : ''}</div>` : ''}
+        ${e.bauch !== '-' ? `<div style="font-size:.82rem;">📏 Bauch: <b>${e.bauch}</b> cm${prev ? koerperDiff(e.bauch, prev.bauch) : ''}</div>` : ''}
+        ${e.bizeps !== '-' ? `<div style="font-size:.82rem;">💪 Bizeps: <b>${e.bizeps}</b> cm${prev ? koerperDiff(e.bizeps, prev.bizeps) : ''}</div>` : ''}
+        ${e.oberschenkel !== '-' ? `<div style="font-size:.82rem;">🦵 Oberschenkel: <b>${e.oberschenkel}</b> cm${prev ? koerperDiff(e.oberschenkel, prev.oberschenkel) : ''}</div>` : ''}
+        ${isReha && e.schmerz !== '-' ? `<div style="font-size:.82rem;">😣 Schmerz: <b>${e.schmerz}</b>/10${prev ? koerperDiff(e.schmerz, prev.schmerz) : ''}</div>` : ''}
+        ${isReha && e.rehaMin !== '-' ? `<div style="font-size:.82rem;">⏱️ Aktiv: <b>${e.rehaMin}</b> Min${prev ? koerperDiff(e.rehaMin, prev.rehaMin) : ''}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function koerperLoeschen(index) {
+  koerperStats.splice(index, 1);
+  localStorage.setItem('fithelper_body_stats', JSON.stringify(koerperStats));
+  renderKoerperVerlauf();
 }
 
 </script>
