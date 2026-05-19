@@ -3757,6 +3757,23 @@ function gpsStart() {
   gpsStartTime = Date.now();
   gpsPauseTime = 0;
 
+  // Unterbrochene Tour wiederherstellen
+  try {
+    const gespeichert = JSON.parse(localStorage.getItem('fh_gps_aktiv') || 'null');
+    if (gespeichert && gespeichert.km > 0.01) {
+      const weiter = confirm('Unterbrochene Tour gefunden (' + gespeichert.km.toFixed(2) + ' km). Weitermachen?');
+      if (weiter) {
+        gpsPoints = gespeichert.punkte || [];
+        gpsTotalKm = gespeichert.km;
+        gpsStartTime = gespeichert.start;
+        gpsPauseTime = gespeichert.pause || 0;
+        document.getElementById('gps-km').textContent = gpsTotalKm.toFixed(2);
+      } else {
+        localStorage.removeItem('fh_gps_aktiv');
+      }
+    }
+  } catch(e) {}
+
   document.getElementById('gps-start-btn').style.display = 'none';
   document.getElementById('gps-stop-btn').style.display = 'inline-block';
   document.getElementById('gps-pause-btn').style.display = 'inline-block';
@@ -3781,6 +3798,13 @@ function gpsStart() {
       }
     }
     gpsPoints.push({lat, lon, t: Date.now()});
+    // Punkte im localStorage sichern — Schutz gegen Browser-Hintergrund-Pause
+    localStorage.setItem('fh_gps_aktiv', JSON.stringify({
+      punkte: gpsPoints.slice(-100), // Letzte 100 Punkte
+      km: gpsTotalKm,
+      start: gpsStartTime,
+      pause: gpsPauseTime
+    }));
     document.getElementById('gps-status').textContent = '📍 Aktiv · ' + gpsPoints.length + ' Punkte · ±' + Math.round(accuracy) + 'm';
   }, err => {
     const msgs = {1:'GPS-Zugriff verweigert — bitte in Einstellungen erlauben', 2:'GPS Signal nicht gefunden', 3:'GPS Timeout'};
@@ -3819,6 +3843,7 @@ function gpsPause() {
 function gpsStop() {
   if (!gpsRunning) return;
   gpsRunning = false;
+  localStorage.removeItem('fh_gps_aktiv');
   if (gpsWatchId !== null) { navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId = null; }
   clearInterval(gpsTimerInterval);
 
@@ -3854,6 +3879,15 @@ function gpsStop() {
   renderGpsHistory();
   document.getElementById('gps-status').textContent = '✓ Gespeichert: ' + eintrag.km + ' km · ' + eintrag.dauer;
   status('✓ Strecke gespeichert: ' + eintrag.km + ' km');
+
+  // AUTO-RESET — Anzeige nach 3 Sekunden zurücksetzen
+  setTimeout(() => {
+    document.getElementById('gps-km').textContent = '0.00';
+    document.getElementById('gps-time').textContent = '00:00';
+    document.getElementById('gps-pace').textContent = '--:--';
+    document.getElementById('gps-kcal').textContent = '0';
+    document.getElementById('gps-status').textContent = 'GPS bereit — drücke Start';
+  }, 3000);
 }
 
 function gpsUpdateKcal() {
