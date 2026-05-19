@@ -148,12 +148,13 @@ select.inp { cursor: pointer; }
   border: none;
   color: #fff;
   font-family: 'Inter', sans-serif;
-  font-size: .78rem;
+  font-size: .85rem;
   font-weight: 600;
-  padding: 10px 20px;
+  padding: 12px 22px;
   border-radius: 8px;
   cursor: pointer;
   transition: all .2s;
+  min-height: 44px;
 }
 
 .btn:hover { background: var(--accent2); }
@@ -161,7 +162,7 @@ select.inp { cursor: pointer; }
 .btn.outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
 .btn.outline:hover { border-color: var(--accent2); color: var(--accent2); }
 .btn.red { background: var(--red); }
-.btn.small { padding: 6px 12px; font-size: .7rem; }
+.btn.small { padding: 8px 14px; font-size: .75rem; min-height: 36px; }
 
 /* GRID */
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -689,10 +690,10 @@ select.inp { cursor: pointer; }
         </div>
       </div>
       <div class="water-cups" id="water-cups" style="justify-content:center;"></div>
-      <div style="display:flex;gap:10px;margin-top:16px;justify-content:center;">
-        <button class="btn green" onclick="addWater()">+ 1 Glas</button>
-        <button class="btn outline" onclick="removeWater()">- 1 Glas</button>
-        <button class="btn outline" onclick="resetWater()">Zurücksetzen</button>
+      <div style="display:flex;gap:10px;margin-top:16px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn green" onclick="addWater()" style="min-height:52px;font-size:1rem;padding:12px 24px;font-weight:700;">💧 + 1 Glas</button>
+        <button class="btn outline" onclick="removeWater()" style="min-height:52px;font-size:1rem;padding:12px 24px;">− 1 Glas</button>
+        <button class="btn outline" onclick="resetWater()" style="min-height:52px;font-size:.85rem;padding:12px 20px;">Zurücksetzen</button>
       </div>
       <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
         <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">TAGESZIEL ANPASSEN</div>
@@ -947,8 +948,8 @@ select.inp { cursor: pointer; }
     <div style="display:flex;flex-direction:column;gap:14px;">
       <div class="card" style="margin:0;">
         <div class="card-title">⏱️ FASTEN TIMER</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--accent2);letter-spacing:4px;text-align:center;" id="fast-timer">00:00:00</div>
-        <div style="font-size:.75rem;color:var(--muted);text-align:center;margin:4px 0 10px;" id="fast-status">Kein aktives Fasten</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:#00ffcc;letter-spacing:4px;text-align:center;text-shadow:0 0 20px rgba(0,255,204,.4);font-weight:700;" id="fast-timer">00:00:00</div>
+        <div style="font-size:.8rem;color:#00ffcc;text-align:center;margin:4px 0 10px;font-weight:600;" id="fast-status">Kein aktives Fasten</div>
         <div class="progress-bar" style="height:10px;margin-bottom:6px;">
           <div class="progress-fill" id="fast-bar" style="background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%"></div>
         </div>
@@ -1014,7 +1015,7 @@ select.inp { cursor: pointer; }
         <button class="btn green" onclick="addShopItem()">+</button>
       </div>
       
-      <div id="shop-list">
+      <div id="shop-list" style="max-width:100%;box-sizing:border-box;overflow-x:hidden;">
         <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Artikel — Rezept öffnen und "Zur Einkaufsliste" klicken 🛒</div>
       </div>
     </div>
@@ -1175,14 +1176,721 @@ const deutscheLebensmittel = [
   {name:'Salzstangen (100g)', kcal:378, protein:10, carbs:75, fat:4},
   {name:'Nüsse gemischt (30g)', kcal:185, protein:5, carbs:4, fat:17},
   
-  // Getränke
-  {name:'Kaffee (schwarz)', kcal:2, protein:0, carbs:0, fat:0},
-  {name:'Kaffee mit Milch', kcal:30, protein:2, carbs:3, fat:1},
-  {name:'Latte Macchiato', kcal:120, protein:5, carbs:12, fat:5},
-  {name:'Orangensaft (200ml)', kcal:88, protein:1, carbs:21, fat:0},
-  {name:'Cola (330ml)', kcal:139, protein:0, carbs:35, fat:0},
-  {name:'Bier (500ml)', kcal:215, protein:2, carbs:18, fat:0},
-  {name:'Wein (150ml)', kcal:108, protein:0, carbs:3, fat:0},
+  // Superfoods & Körner
+  {name:'Chiasamen (15g)', kcal:72, protein:2, carbs:6, fat:5},
+  {name:'Leinsamen (15g)', kcal:80, protein:3, carbs:4, fat:6},
+  {name:'Hanfsamen (30g)', kcal:166, protein:10, carbs:3, fat:13},
+  {name:'Quinoa (gekocht)', kcal:120, protein:4, carbs:22, fat:2},
+  {name:'Amaranth (gekocht)', kcal:102, protein:4, carbs:19, fat:2},
+  {name:'Hirse (gekocht)', kcal:119, protein:4, carbs:24, fat:1},
+  {name:'Buchweizen (gekocht)', kcal:92, protein:3, carbs:20, fat:1},
+  {name:'Haferflocken (roh, 50g)', kcal:187, protein:7, carbs:32, fat:4},
+  {name:'Walnüsse (30g)', kcal:196, protein:5, carbs:4, fat:19},
+  {name:'Mandeln (30g)', kcal:173, protein:6, carbs:5, fat:15},
+  {name:'Cashews (30g)', kcal:163, protein:4, carbs:9, fat:13},
+  {name:'Erdnüsse (30g)', kcal:171, protein:8, carbs:5, fat:15},
+  {name:'Erdnussbutter (20g)', kcal:119, protein:5, carbs:4, fat:10},
+  {name:'Mandelmus (20g)', kcal:122, protein:4, carbs:4, fat:11},
+  {name:'Sonnenblumenkerne (30g)', kcal:175, protein:5, carbs:5, fat:15},
+  {name:'Kürbiskerne (30g)', kcal:171, protein:9, carbs:4, fat:14},
+  {name:'Sesam (15g)', kcal:87, protein:3, carbs:3, fat:8},
+  {name:'Kokosöl (10g)', kcal:90, protein:0, carbs:0, fat:10},
+  {name:'Olivenöl (10ml)', kcal:90, protein:0, carbs:0, fat:10},
+  {name:'Avocado (150g)', kcal:240, protein:3, carbs:9, fat:22},
+  {name:'Avocado (halbe)', kcal:120, protein:2, carbs:5, fat:11},
+
+  // Hülsenfrüchte
+  {name:'Kichererbsen (gekocht)', kcal:164, protein:9, carbs:27, fat:3},
+  {name:'Kidneybohnen (Dose)', kcal:127, protein:8, carbs:22, fat:1},
+  {name:'Schwarze Bohnen (gekocht)', kcal:132, protein:9, carbs:24, fat:1},
+  {name:'Edamame (100g)', kcal:121, protein:11, carbs:10, fat:5},
+  {name:'Tofu (100g)', kcal:76, protein:8, carbs:2, fat:4},
+  {name:'Tempeh (100g)', kcal:193, protein:19, carbs:9, fat:11},
+  {name:'Seitan (100g)', kcal:143, protein:25, carbs:7, fat:2},
+
+  // Milchersatz & Vegan
+  {name:'Hafermilch (200ml)', kcal:90, protein:2, carbs:16, fat:2},
+  {name:'Mandelmilch (200ml)', kcal:50, protein:1, carbs:5, fat:3},
+  {name:'Kokosmilch (100ml)', kcal:152, protein:1, carbs:3, fat:15},
+  {name:'Sojajoghurt (150g)', kcal:90, protein:5, carbs:10, fat:3},
+  {name:'Skyr (150g)', kcal:96, protein:16, carbs:6, fat:0},
+  {name:'Skyr (200g)', kcal:128, protein:21, carbs:8, fat:0},
+  {name:'Proteinpulver (30g)', kcal:110, protein:22, carbs:3, fat:2},
+  {name:'Whey Protein (30g)', kcal:120, protein:24, carbs:3, fat:2},
+
+  // Mehr Gemüse
+  {name:'Süßkartoffel (gebacken)', kcal:103, protein:2, carbs:24, fat:0},
+  {name:'Kürbis (gebacken)', kcal:45, protein:1, carbs:10, fat:0},
+  {name:'Aubergine (gebraten)', kcal:55, protein:1, carbs:6, fat:3},
+  {name:'Rote Bete (gekocht)', kcal:44, protein:2, carbs:10, fat:0},
+  {name:'Feldsalat (50g)', kcal:12, protein:1, carbs:1, fat:0},
+  {name:'Rucola (50g)', kcal:13, protein:1, carbs:2, fat:0},
+  {name:'Champignons (100g)', kcal:22, protein:3, carbs:3, fat:0},
+  {name:'Lauch (100g)', kcal:61, protein:2, carbs:14, fat:0},
+  {name:'Sellerie (100g)', kcal:16, protein:1, carbs:3, fat:0},
+  {name:'Fenchel (100g)', kcal:31, protein:1, carbs:7, fat:0},
+
+  // Mehr Obst
+  {name:'Blaubeeren (100g)', kcal:57, protein:1, carbs:14, fat:0},
+  {name:'Himbeeren (100g)', kcal:52, protein:1, carbs:12, fat:1},
+  {name:'Kirschen (100g)', kcal:63, protein:1, carbs:16, fat:0},
+  {name:'Mango (100g)', kcal:60, protein:1, carbs:15, fat:0},
+  {name:'Ananas (100g)', kcal:50, protein:1, carbs:13, fat:0},
+  {name:'Wassermelone (100g)', kcal:30, protein:1, carbs:8, fat:0},
+  {name:'Kiwi (100g)', kcal:61, protein:1, carbs:15, fat:1},
+  {name:'Granatapfel (100g)', kcal:83, protein:2, carbs:19, fat:1},
+  {name:'Datteln (30g)', kcal:83, protein:1, carbs:22, fat:0},
+  {name:'Trockenfrüchte gemischt (30g)', kcal:90, protein:1, carbs:22, fat:0},
+
+  // Saucen & Dips
+  {name:'Hummus (50g)', kcal:117, protein:4, carbs:9, fat:7},
+  {name:'Guacamole (50g)', kcal:80, protein:1, carbs:4, fat:7},
+  {name:'Tzatziki (50g)', kcal:50, protein:2, carbs:3, fat:4},
+  {name:'Pesto (20g)', kcal:96, protein:2, carbs:2, fat:10},
+  {name:'Tomatensoße (100g)', kcal:35, protein:1, carbs:7, fat:1},
+];
+
+// ================================================================
+// DEUTSCHE REZEPTE DATENBANK (OFFLINE)
+// ================================================================
+const deutscheRezepte = [
+  // FLEISCH
+  {id:'de001', name:'Spaghetti Bolognese', kategorie:'Pasta', kcal:520, zeit:'45 min', portionen:4,
+   zutaten:['500g Rinderhackfleisch','400g Spaghetti','1 Dose Tomaten','2 Zwiebeln','3 Knoblauchzehen','2 EL Olivenöl','Salz, Pfeffer, Oregano'],
+   anleitung:'Zwiebeln und Knoblauch hacken und in Öl anschwitzen. Hackfleisch dazugeben und krümelig braten. Tomaten hinzufügen und 20 Min köcheln. Spaghetti nach Packung kochen. Mit Soße servieren.'},
+  {id:'de002', name:'Hähnchen Curry', kategorie:'Geflügel', kcal:420, zeit:'35 min', portionen:4,
+   zutaten:['800g Hähnchenbrust','400ml Kokosmilch','2 EL Currypulver','1 Zwiebel','2 Knoblauchzehen','1 Dose Tomaten','Ingwer','Salz'],
+   anleitung:'Hähnchen würfeln. Zwiebeln und Knoblauch anschwitzen. Curry und Ingwer dazugeben. Hähnchen anbraten. Kokosmilch und Tomaten hinzufügen. 20 Min köcheln. Mit Reis servieren.'},
+  {id:'de003', name:'Rinderroulade', kategorie:'Fleisch', kcal:480, zeit:'120 min', portionen:4,
+   zutaten:['4 Rinderrouladen','4 TL Senf','4 Scheiben Speck','2 Zwiebeln','Essiggurken','500ml Rinderbrühe','Salz, Pfeffer'],
+   anleitung:'Rouladen flachklopfen, mit Senf bestreichen. Speck, Zwiebeln und Gurken drauflegen. Aufrollen und feststecken. Anbraten und mit Brühe schmoren. 90 Min köcheln lassen.'},
+  {id:'de004', name:'Königsberger Klopse', kategorie:'Fleisch', kcal:420, zeit:'60 min', portionen:4,
+   zutaten:['600g Hackfleisch','2 Eier','1 Brötchen','1 Zwiebel','500ml Brühe','100ml Sahne','2 EL Kapern','Salz, Pfeffer'],
+   anleitung:'Hackfleisch mit eingeweichtem Brötchen, Ei und Zwiebeln vermengen. Klopse formen. In Brühe 20 Min garen. Sahnesoße mit Kapern zubereiten. Mit Kartoffeln servieren.'},
+  {id:'de005', name:'Sauerbraten', kategorie:'Fleisch', kcal:510, zeit:'180 min', portionen:6,
+   zutaten:['1,5 kg Rinderbraten','250ml Rotweinessig','500ml Rotwein','2 Zwiebeln','Lorbeer','Nelken','Pfeffer','Zucker'],
+   anleitung:'Fleisch 3 Tage in Marinade einlegen. Anbraten und mit Marinade schmoren. 2-3 Std köcheln. Soße mit Lebkuchen abbinden. Mit Rotkohl und Klößen servieren.'},
+  {id:'de006', name:'Schnitzel Wiener Art', kategorie:'Fleisch', kcal:580, zeit:'30 min', portionen:4,
+   zutaten:['4 Schweinekoteletts','2 Eier','Paniermehl','Mehl','Butterschmalz','Zitrone','Salz, Pfeffer'],
+   anleitung:'Fleisch flachklopfen und würzen. In Mehl, Ei und Paniermehl wenden. In heißem Butterschmalz goldbraun braten. Mit Zitrone und Petersilienkartoffeln servieren.'},
+  {id:'de007', name:'Gulasch', kategorie:'Fleisch', kcal:380, zeit:'120 min', portionen:4,
+   zutaten:['800g Rindfleisch','4 Zwiebeln','2 EL Paprikapulver','500ml Rinderbrühe','2 EL Tomatenmark','Knoblauch','Kümmel','Salz'],
+   anleitung:'Fleisch würfeln. Zwiebeln goldbraun anbraten. Fleisch dazugeben und anbraten. Paprika und Tomatenmark einrühren. Mit Brühe aufgießen und 90 Min schmoren.'},
+  {id:'de008', name:'Hackbraten', kategorie:'Fleisch', kcal:460, zeit:'75 min', portionen:6,
+   zutaten:['1kg Hackfleisch','2 Eier','2 Brötchen','1 Zwiebel','Senf','Salz, Pfeffer','Paprikapulver'],
+   anleitung:'Brötchen einweichen. Alle Zutaten vermengen. Braten formen. Im Ofen 200°C 60 Min backen. Mit Bratensoße und Kartoffelpüree servieren.'},
+  {id:'de009', name:'Schweinekotelett mit Kräuterbutter', kategorie:'Fleisch', kcal:490, zeit:'25 min', portionen:2,
+   zutaten:['2 Schweinekotelettle','50g Butter','Petersilie','Knoblauch','Zitronensaft','Salz, Pfeffer'],
+   anleitung:'Kotelettle würzen und in der Pfanne 4-5 Min je Seite braten. Butter mit Petersilie, Knoblauch und Zitronensaft verrühren. Kräuterbutter auf das heiße Fleisch geben.'},
+  {id:'de010', name:'Bratwurst mit Sauerkraut', kategorie:'Fleisch', kcal:520, zeit:'30 min', portionen:4,
+   zutaten:['8 Bratwürste','500g Sauerkraut','1 Zwiebel','100ml Weißwein','Kümmel','Lorbeer','Salz, Pfeffer'],
+   anleitung:'Bratwürste in der Pfanne braten. Zwiebeln anbraten. Sauerkraut mit Weißwein und Gewürzen 20 Min schmoren. Mit Senfund Brot servieren.'},
+
+  // GEFLÜGEL
+  {id:'de011', name:'Hähnchen Geschnetzeltes', kategorie:'Geflügel', kcal:380, zeit:'30 min', portionen:4,
+   zutaten:['600g Hähnchenbrust','200g Champignons','1 Zwiebel','200ml Sahne','1 EL Mehl','Salz, Pfeffer','Petersilie'],
+   anleitung:'Hähnchen in Streifen schneiden und anbraten. Pilze und Zwiebeln dazugeben. Mit Mehl bestäuben. Sahne einrühren und aufkochen. Mit Nudeln oder Reis servieren.'},
+  {id:'de012', name:'Hähnchenschenkel aus dem Ofen', kategorie:'Geflügel', kcal:410, zeit:'60 min', portionen:4,
+   zutaten:['4 Hähnchenschenkel','2 EL Olivenöl','Paprikapulver','Knoblauch','Rosmarin','Thymian','Salz, Pfeffer'],
+   anleitung:'Schenkel mit Öl und Gewürzen einreiben. Bei 200°C 45-50 Min backen. Mit Ofenkartoffeln und Salat servieren.'},
+  {id:'de013', name:'Pute mit Gemüse', kategorie:'Geflügel', kcal:340, zeit:'45 min', portionen:4,
+   zutaten:['600g Putenbrust','2 Paprika','1 Zucchini','1 Zwiebel','Olivenöl','Kräuter der Provence','Salz, Pfeffer'],
+   anleitung:'Pute würfeln und anbraten. Gemüse dazugeben und mitbraten. Mit Kräutern würzen. Alles zusammen 15 Min schmoren. Mit Reis servieren.'},
+  {id:'de014', name:'Chicken Wings BBQ', kategorie:'Geflügel', kcal:480, zeit:'50 min', portionen:4,
+   zutaten:['1,2 kg Chicken Wings','4 EL BBQ-Sauce','2 EL Honig','1 EL Sojasauce','Paprikapulver','Knoblauch','Salz'],
+   anleitung:'Wings marinieren. Bei 220°C 30 Min backen. BBQ-Sauce auftragen und weitere 10 Min backen bis knusprig.'},
+  {id:'de015', name:'Hähnchen Tikka Masala', kategorie:'Geflügel', kcal:440, zeit:'50 min', portionen:4,
+   zutaten:['800g Hähnchenbrust','400ml Kokosmilch','1 Dose Tomaten','Tikka Masala Gewürz','Joghurt','Zwiebeln','Knoblauch','Ingwer'],
+   anleitung:'Hähnchen marinieren. Anbraten. Soße aus Zwiebeln, Tomaten, Gewürzen und Kokosmilch kochen. Hähnchen einlegen und 20 Min garen. Mit Naan servieren.'},
+
+  // PASTA & NUDELN
+  {id:'de016', name:'Carbonara', kategorie:'Pasta', kcal:560, zeit:'25 min', portionen:4,
+   zutaten:['400g Spaghetti','200g Speck','4 Eier','100g Parmesan','Schwarzer Pfeffer','Salz'],
+   anleitung:'Spaghetti kochen. Speck anbraten. Eier mit Parmesan verquirlen. Nudeln vom Herd nehmen und Ei-Mischung einrühren. Speck dazugeben. Sofort servieren.'},
+  {id:'de017', name:'Lasagne', kategorie:'Pasta', kcal:580, zeit:'90 min', portionen:6,
+   zutaten:['500g Hackfleisch','Lasagneplatten','400g Tomaten','500ml Béchamel','100g Käse','Zwiebeln','Knoblauch','Oregano'],
+   anleitung:'Hackfleischsoße kochen. Béchamelsauce zubereiten. Schichten: Nudelplatten, Hackfleisch, Béchamel. Mit Käse abschließen. 45 Min bei 180°C backen.'},
+  {id:'de018', name:'Penne Arrabiata', kategorie:'Pasta', kcal:420, zeit:'20 min', portionen:4,
+   zutaten:['400g Penne','2 Dosen Tomaten','4 Knoblauchzehen','Chili','Olivenöl','Basilikum','Salz'],
+   anleitung:'Knoblauch und Chili in Öl anbraten. Tomaten dazugeben und 15 Min einkochen. Penne al dente kochen. Mit Soße vermischen.'},
+  {id:'de019', name:'Tortellini in Sahnesoße', kategorie:'Pasta', kcal:520, zeit:'20 min', portionen:4,
+   zutaten:['500g Tortellini','200ml Sahne','100g Schinken','50g Parmesan','Knoblauch','Petersilie','Salz, Pfeffer'],
+   anleitung:'Tortellini kochen. Knoblauch anbraten. Sahne einrühren und aufkochen. Schinken und Parmesan dazugeben. Tortellini in Soße schwenken.'},
+  {id:'de020', name:'Pasta al Forno', kategorie:'Pasta', kcal:540, zeit:'60 min', portionen:6,
+   zutaten:['400g Penne','500g Hackfleisch','400g Tomaten','200ml Sahne','150g Käse','Zwiebeln','Basilikum'],
+   anleitung:'Nudeln vorkochen. Hackfleischsoße mit Tomaten kochen. Alles in Auflaufform schichten. Mit Käse bedecken. 30 Min bei 200°C backen.'},
+
+  // SUPPEN
+  {id:'de021', name:'Minestrone', kategorie:'Suppe', kcal:220, zeit:'45 min', portionen:6,
+   zutaten:['2 Karotten','2 Zucchini','1 Dose Tomaten','200g Bohnen','100g Nudeln','1 Zwiebel','Knoblauch','Gemüsebrühe','Basilikum'],
+   anleitung:'Gemüse würfeln. Zwiebeln und Knoblauch anbraten. Gemüse dazugeben. Mit Brühe aufgießen. 20 Min kochen. Nudeln dazugeben und garen.'},
+  {id:'de022', name:'Tomatensuppe', kategorie:'Suppe', kcal:140, zeit:'30 min', portionen:4,
+   zutaten:['800g Tomaten','1 Zwiebel','2 Knoblauchzehen','500ml Brühe','100ml Sahne','Basilikum','Salz, Pfeffer','Olivenöl'],
+   anleitung:'Tomaten und Zwiebeln anbraten. Mit Brühe aufgießen. 20 Min kochen. Pürieren. Sahne einrühren. Mit Basilikum servieren.'},
+  {id:'de023', name:'Kürbissuppe', kategorie:'Suppe', kcal:180, zeit:'40 min', portionen:4,
+   zutaten:['1 kg Hokkaido-Kürbis','1 Zwiebel','2 Knoblauchzehen','600ml Gemüsebrühe','200ml Kokosmilch','Ingwer','Currypulver','Salz'],
+   anleitung:'Kürbis schälen und würfeln. Mit Zwiebeln anbraten. Curry und Ingwer dazugeben. Mit Brühe 20 Min kochen. Pürieren. Kokosmilch einrühren.'},
+  {id:'de024', name:'Linsensuppe', kategorie:'Suppe', kcal:280, zeit:'50 min', portionen:4,
+   zutaten:['300g Rote Linsen','2 Karotten','2 Selleriestangen','1 Zwiebel','1L Gemüsebrühe','Cumin','Kurkuma','Zitronensaft'],
+   anleitung:'Zwiebeln und Gemüse anbraten. Linsen und Brühe dazugeben. 30 Min kochen bis Linsen weich. Teilweise pürieren. Mit Zitrone abschmecken.'},
+  {id:'de025', name:'Hühnersuppe', kategorie:'Suppe', kcal:190, zeit:'90 min', portionen:6,
+   zutaten:['1 Suppenhuhn','3 Karotten','2 Selleriestangen','1 Zwiebel','Petersilienwurzel','Lorbeer','Salz, Pfeffer','Petersilie'],
+   anleitung:'Huhn mit Gemüse 60-90 Min auskochen. Huhn herausnehmen und Fleisch ablösen. Brühe durch Sieb gießen. Fleisch und Gemüse wieder dazugeben.'},
+  {id:'de026', name:'Kartoffelsuppe', kategorie:'Suppe', kcal:260, zeit:'45 min', portionen:4,
+   zutaten:['800g Kartoffeln','1 Zwiebel','2 Karotten','1L Brühe','200ml Sahne','Speck','Majoran','Salz'],
+   anleitung:'Kartoffeln und Gemüse würfeln. Speck anbraten. Gemüse dazugeben. Mit Brühe aufgießen. 20 Min kochen. Teilweise pürieren. Mit Sahne verfeinern.'},
+  {id:'de027', name:'Erbsensuppe', kategorie:'Suppe', kcal:300, zeit:'60 min', portionen:4,
+   zutaten:['400g getrocknete Erbsen','200g Speck','2 Karotten','1 Sellerie','1 Lauch','2L Wasser','Salz, Pfeffer','Majoran'],
+   anleitung:'Erbsen über Nacht einweichen. Mit Speck und Gemüse 60 Min kochen. Teilweise pürieren. Mit Majoran würzen.'},
+  {id:'de028', name:'Zwiebelsuppe', kategorie:'Suppe', kcal:240, zeit:'50 min', portionen:4,
+   zutaten:['6 Zwiebeln','50g Butter','200ml Weißwein','1L Rinderbrühe','Thymian','Lorbeer','4 Scheiben Baguette','Gruyère'],
+   anleitung:'Zwiebeln langsam in Butter goldbraun karamellisieren. Mit Wein ablöschen. Brühe dazugeben. 20 Min köcheln. Mit Brot und Käse überbacken.'},
+
+  // VEGETARISCH & VEGAN
+  {id:'de029', name:'Gemüse Curry', kategorie:'Vegetarisch', kcal:320, zeit:'40 min', portionen:4,
+   zutaten:['1 Paprika','1 Zucchini','200g Kichererbsen','400ml Kokosmilch','2 EL Currypaste','1 Zwiebel','Knoblauch','Ingwer','Reis'],
+   anleitung:'Zwiebeln, Knoblauch und Ingwer anbraten. Currypaste dazugeben. Gemüse dazugeben. Mit Kokosmilch aufgießen. 20 Min kochen. Mit Reis servieren.'},
+  {id:'de030', name:'Falafel mit Tzatziki', kategorie:'Vegetarisch', kcal:380, zeit:'30 min', portionen:4,
+   zutaten:['400g Kichererbsen','1 Zwiebel','3 Knoblauchzehen','Petersilie','Koriander','Kreuzkümmel','Mehl','Salz'],
+   anleitung:'Kichererbsen mit Zwiebeln und Kräutern mixen. Mit Mehl binden. Bällchen formen und frittieren. Mit Tzatziki und Fladenbrot servieren.'},
+  {id:'de031', name:'Gemüse Lasagne', kategorie:'Vegetarisch', kcal:440, zeit:'80 min', portionen:6,
+   zutaten:['Lasagneplatten','2 Zucchini','2 Paprika','1 Aubergine','400g Tomaten','500ml Béchamel','150g Käse'],
+   anleitung:'Gemüse anbraten. Tomatensoße kochen. Schichten wie bei normaler Lasagne. Mit Béchamel und Käse abschließen. 45 Min backen.'},
+  {id:'de032', name:'Spinat Quiche', kategorie:'Vegetarisch', kcal:360, zeit:'60 min', portionen:6,
+   zutaten:['250g Mürbeteig','300g Spinat','3 Eier','200ml Sahne','100g Käse','1 Zwiebel','Muskat','Salz, Pfeffer'],
+   anleitung:'Teig in Form drücken. Spinat mit Zwiebeln anbraten. Ei-Sahne-Mischung drüber gießen. Käse drauf. 35 Min bei 180°C backen.'},
+  {id:'de033', name:'Shakshuka', kategorie:'Vegetarisch', kcal:280, zeit:'30 min', portionen:4,
+   zutaten:['6 Eier','1 Dose Tomaten','2 Paprika','1 Zwiebel','3 Knoblauchzehen','Kreuzkümmel','Paprikapulver','Harissa'],
+   anleitung:'Zwiebeln und Paprika anbraten. Tomaten dazugeben. Gewürzen einrühren. Mulden formen. Eier hineingeben. Zudecken und 8-10 Min garen.'},
+  {id:'de034', name:'Vegane Bolognese', kategorie:'Vegan', kcal:380, zeit:'45 min', portionen:4,
+   zutaten:['400g Spaghetti','300g Linsen (rot)','1 Dose Tomaten','2 Zwiebeln','3 Karotten','Sellerie','Oregano','Basilikum'],
+   anleitung:'Gemüse anbraten. Linsen dazugeben. Tomaten hinzufügen. 30 Min köcheln. Mit Spaghetti servieren.'},
+  {id:'de035', name:'Avocado Toast', kategorie:'Vegetarisch', kcal:320, zeit:'10 min', portionen:2,
+   zutaten:['2 Scheiben Vollkornbrot','1 Avocado','2 Eier','Zitronensaft','Chili','Salz, Pfeffer','Sesam'],
+   anleitung:'Brot toasten. Avocado mit Zitrone und Gewürzen zerdrücken. Eier pochieren. Auf Toast streichen und Ei drauflegen.'},
+  {id:'de036', name:'Buddha Bowl', kategorie:'Vegetarisch', kcal:450, zeit:'40 min', portionen:2,
+   zutaten:['200g Quinoa','1 Süßkartoffel','100g Kichererbsen','1 Avocado','100g Spinat','Tahini','Zitrone','Sesam'],
+   anleitung:'Quinoa kochen. Süßkartoffel würfeln und backen. Kichererbsen würzen und backen. Bowl zusammenstellen. Mit Tahini-Dressing beträufeln.'},
+  {id:'de037', name:'Zucchini-Nudeln Pesto', kategorie:'Vegetarisch', kcal:280, zeit:'20 min', portionen:2,
+   zutaten:['3 Zucchini','4 EL Pesto','50g Parmesan','Kirschtomaten','Knoblauch','Olivenöl','Salz, Pfeffer','Basilikum'],
+   anleitung:'Zucchini spiralisieren. In Pfanne kurz anbraten. Pesto einrühren. Tomaten halbieren und dazugeben. Mit Parmesan servieren.'},
+  {id:'de038', name:'Linsen Dhal', kategorie:'Vegan', kcal:340, zeit:'40 min', portionen:4,
+   zutaten:['300g Rote Linsen','400ml Kokosmilch','1 Dose Tomaten','1 Zwiebel','Kurkuma','Kreuzkümmel','Koriander','Ingwer','Knoblauch'],
+   anleitung:'Zwiebeln und Gewürze anbraten. Linsen dazugeben. Kokosmilch und Tomaten hinzufügen. 25 Min köcheln bis Linsen weich. Mit Reis und Naan servieren.'},
+  {id:'de039', name:'Stuffed Peppers Vegetarisch', kategorie:'Vegetarisch', kcal:360, zeit:'60 min', portionen:4,
+   zutaten:['4 Paprika','200g Reis','1 Dose Tomaten','100g Käse','1 Zwiebel','Knoblauch','Petersilie','Salz, Pfeffer'],
+   anleitung:'Paprika halbieren. Reis mit Tomaten und Zwiebeln mischen. In Paprika füllen. Mit Käse belegen. 40 Min bei 180°C backen.'},
+  {id:'de040', name:'Kartoffel Gratin', kategorie:'Vegetarisch', kcal:420, zeit:'70 min', portionen:6,
+   zutaten:['1 kg Kartoffeln','300ml Sahne','100ml Milch','150g Käse','2 Knoblauchzehen','Butter','Muskat','Salz, Pfeffer'],
+   anleitung:'Kartoffeln dünn schneiden. Form buttern. Kartoffeln schichten. Sahne-Milch-Mischung drübergießen. Käse drauf. 60 Min bei 180°C backen.'},
+
+  // FISCH
+  {id:'de041', name:'Lachs mit Zitronensoße', kategorie:'Fisch', kcal:380, zeit:'25 min', portionen:4,
+   zutaten:['4 Lachsfilets','2 Zitronen','50g Butter','200ml Fischbrühe','Kapern','Petersilie','Salz, Pfeffer','Olivenöl'],
+   anleitung:'Lachs würzen und in Öl braten. Butter schmelzen. Zitronensaft und Brühe einrühren. Kapern dazugeben. Soße über Lachs geben.'},
+  {id:'de042', name:'Thunfisch Pasta', kategorie:'Fisch', kcal:440, zeit:'20 min', portionen:4,
+   zutaten:['400g Penne','2 Dosen Thunfisch','1 Dose Tomaten','1 Zwiebel','2 Knoblauchzehen','Kapern','Oliven','Basilikum'],
+   anleitung:'Nudeln kochen. Zwiebeln anbraten. Tomaten dazugeben. Thunfisch, Kapern und Oliven einrühren. Mit Pasta vermischen.'},
+  {id:'de043', name:'Fischfilet in Kräuterkruste', kategorie:'Fisch', kcal:320, zeit:'30 min', portionen:4,
+   zutaten:['4 Weißfischfilets','50g Semmelbrösel','Kräuter','Parmesan','Zitrone','Olivenöl','Salz, Pfeffer'],
+   anleitung:'Kräuterkruste aus Brösel, Kräuter und Parmesan mischen. Auf Fisch drücken. Bei 200°C 20 Min backen.'},
+  {id:'de044', name:'Garnelenpfanne', kategorie:'Fisch', kcal:340, zeit:'20 min', portionen:4,
+   zutaten:['500g Garnelen','3 Knoblauchzehen','1 Chili','Olivenöl','Petersilie','Zitronensaft','Weißwein','Salz, Pfeffer'],
+   anleitung:'Knoblauch und Chili in Öl anbraten. Garnelen dazugeben und 3 Min braten. Mit Wein ablöschen. Zitronensaft und Petersilie dazugeben.'},
+  {id:'de045', name:'Forelle Müllerin', kategorie:'Fisch', kcal:360, zeit:'25 min', portionen:2,
+   zutaten:['2 Forellen','Mehl','Butter','Zitrone','Petersilie','Salz, Pfeffer','Mandeln (optional)'],
+   anleitung:'Forellen in Mehl wenden. In Butter goldbraun braten. Braune Butter mit Zitronensaft und Petersilie aufschäumen. Über Forellen geben.'},
+
+  // SALATE
+  {id:'de046', name:'Griechischer Salat', kategorie:'Salat', kcal:280, zeit:'15 min', portionen:4,
+   zutaten:['3 Tomaten','1 Gurke','1 Paprika','1 Zwiebel','200g Feta','Oliven','Olivenöl','Oregano','Zitronensaft'],
+   anleitung:'Gemüse grob schneiden. Feta und Oliven dazugeben. Mit Olivenöl, Zitrone und Oregano anmachen.'},
+  {id:'de047', name:'Cäsarsalat', kategorie:'Salat', kcal:320, zeit:'20 min', portionen:4,
+   zutaten:['1 Romana-Salat','200g Hähnchenbrust','Croutons','Parmesan','2 EL Mayonnaise','Worcestersauce','Knoblauch','Zitrone'],
+   anleitung:'Hähnchen grillen. Dressing aus Mayo, Worcestershire, Knoblauch und Zitrone. Salat damit anmachen. Parmesan und Croutons drüber.'},
+  {id:'de048', name:'Kartoffelsalat Bayrisch', kategorie:'Salat', kcal:220, zeit:'40 min', portionen:6,
+   zutaten:['1 kg Kartoffeln','1 Zwiebel','200ml Brühe','4 EL Essig','4 EL Öl','Senf','Salz, Pfeffer','Schnittlauch'],
+   anleitung:'Kartoffeln kochen und scheiben. Heißes Dressing aus Brühe, Essig, Öl und Senf darüber. Mindestens 30 Min ziehen lassen.'},
+  {id:'de049', name:'Linsensalat', kategorie:'Salat', kcal:280, zeit:'30 min', portionen:4,
+   zutaten:['300g Beluga Linsen','1 Paprika','1 Gurke','Petersilie','Olivenöl','Zitronensaft','Senf','Salz, Pfeffer'],
+   anleitung:'Linsen kochen und abkühlen. Gemüse würfeln. Dressing aus Öl, Zitrone und Senf. Alles vermengen.'},
+  {id:'de050', name:'Nudelsalat', kategorie:'Salat', kcal:380, zeit:'30 min', portionen:6,
+   zutaten:['300g Nudeln','1 Gurke','2 Tomaten','1 Paprika','100g Schinken','100ml Mayonnaise','Senf','Salz, Pfeffer'],
+   anleitung:'Nudeln kochen. Gemüse und Schinken würfeln. Dressing aus Mayo und Senf. Alles vermengen und kaltstellen.'},
+
+  // FRÜHSTÜCK
+  {id:'de051', name:'Overnight Oats', kategorie:'Frühstück', kcal:380, zeit:'5 min', portionen:1,
+   zutaten:['80g Haferflocken','200ml Milch','150g Joghurt','1 EL Chiasamen','1 EL Honig','Beeren','Nüsse'],
+   anleitung:'Haferflocken mit Milch und Joghurt verrühren. Chiasamen und Honig dazugeben. Über Nacht kühlstellen. Mit Beeren und Nüssen servieren.'},
+  {id:'de052', name:'Smoothie Bowl', kategorie:'Frühstück', kcal:340, zeit:'10 min', portionen:1,
+   zutaten:['1 Banane','150g Beeren','100ml Mandelmilch','1 EL Chiasamen','Granola','Kokosflocken','Früchte zum Belegen'],
+   anleitung:'Banane und Beeren mit Mandelmilch mixen. In Schüssel geben. Mit Chiasamen, Granola und Früchten belegen.'},
+  {id:'de053', name:'Rührei mit Gemüse', kategorie:'Frühstück', kcal:280, zeit:'15 min', portionen:2,
+   zutaten:['4 Eier','1 Paprika','1 Tomate','50g Feta','2 EL Milch','Olivenöl','Salz, Pfeffer','Schnittlauch'],
+   anleitung:'Gemüse anbraten. Eier mit Milch verquirlen. Dazugeben und rühren. Feta einrühren. Mit Schnittlauch servieren.'},
+  {id:'de054', name:'Pancakes', kategorie:'Frühstück', kcal:420, zeit:'20 min', portionen:4,
+   zutaten:['200g Mehl','2 Eier','300ml Milch','1 TL Backpulver','1 EL Zucker','Prise Salz','Butter'],
+   anleitung:'Alle Zutaten zu Teig verrühren. Portionsweise in Butter ausbacken. Mit Ahornsirup und Früchten servieren.'},
+  {id:'de055', name:'Protein Porridge', kategorie:'Frühstück', kcal:380, zeit:'10 min', portionen:1,
+   zutaten:['80g Haferflocken','250ml Milch','30g Proteinpulver','1 Banane','1 EL Nussmus','Zimt','Beeren'],
+   anleitung:'Haferflocken in Milch kochen. Proteinpulver einrühren. Mit Banana, Nussmus und Beeren servieren.'},
+
+  // SNACKS & KLEINIGKEITEN
+  {id:'de056', name:'Hummus mit Gemüse', kategorie:'Snack', kcal:220, zeit:'10 min', portionen:4,
+   zutaten:['400g Kichererbsen','3 EL Tahini','2 Knoblauchzehen','Zitronensaft','Olivenöl','Cumin','Salz','Gemüse zum Dippen'],
+   anleitung:'Kichererbsen mit Tahini, Knoblauch, Zitronensaft und Öl mixen. Mit Salz und Cumin abschmecken. Mit Gemüse servieren.'},
+  {id:'de057', name:'Energy Balls', kategorie:'Snack', kcal:180, zeit:'15 min', portionen:12,
+   zutaten:['200g Datteln','100g Haferflocken','50g Mandeln','2 EL Kakao','1 EL Chiasamen','Kokosflocken'],
+   anleitung:'Datteln und Mandeln mixen. Haferflocken, Kakao und Chiasamen einmengen. Kugeln formen. In Kokosflocken wälzen. Kühlstellen.'},
+  {id:'de058', name:'Guacamole', kategorie:'Snack', kcal:160, zeit:'10 min', portionen:4,
+   zutaten:['2 Avocados','1 Zitrone','1 Knoblauchzehe','1 Tomate','Chili','Koriander','Salz, Pfeffer'],
+   anleitung:'Avocados zerdrücken. Zitronensaft, Knoblauch, gewürfelte Tomate und Gewürze untermengen. Mit Chips oder Gemüse servieren.'},
+  {id:'de059', name:'Caprese Spieße', kategorie:'Snack', kcal:200, zeit:'10 min', portionen:4,
+   zutaten:['250g Mozzarella','20 Kirschtomaten','Basilikum','Olivenöl','Balsamico','Salz, Pfeffer'],
+   anleitung:'Mozzarella und Tomaten auf Spieße stecken. Mit Basilikum wechseln. Mit Öl und Balsamico beträufeln.'},
+  {id:'de060', name:'Protein Riegel DIY', kategorie:'Snack', kcal:240, zeit:'20 min', portionen:8,
+   zutaten:['200g Haferflocken','100g Proteinpulver','100g Nussmus','60ml Honig','50g Schokolade','Salz'],
+   anleitung:'Alle Zutaten vermengen. In Form drücken. 2 Std kühlen. In Riegel schneiden.'},
+
+  // DESSERTS
+  {id:'de061', name:'Apfelkuchen', kategorie:'Dessert', kcal:340, zeit:'70 min', portionen:10,
+   zutaten:['300g Mehl','200g Butter','150g Zucker','3 Eier','4 Äpfel','1 TL Backpulver','Zimt','Vanille'],
+   anleitung:'Teig kneten. Äpfel schälen und schneiden. Teig in Form geben. Äpfel drauflegen. 50 Min bei 175°C backen.'},
+  {id:'de062', name:'Mousse au Chocolat', kategorie:'Dessert', kcal:420, zeit:'30 min', portionen:6,
+   zutaten:['200g dunkle Schokolade','4 Eier','50g Zucker','200ml Sahne','Prise Salz'],
+   anleitung:'Schokolade schmelzen. Eigelb und Zucker schaumig schlagen. Sahne und Eiweiß steif schlagen. Alles vorsichtig unterheben. Kühlstellen.'},
+  {id:'de063', name:'Tiramisu', kategorie:'Dessert', kcal:460, zeit:'30 min', portionen:8,
+   zutaten:['500g Mascarpone','4 Eier','100g Zucker','Espresso','Löffelbiskuits','Kakao','Amaretto'],
+   anleitung:'Eigelb mit Zucker schaumig. Mascarpone einrühren. Eiweiß steif schlagen und unterheben. Biskuits in Kaffee tauchen. Schichten. Mit Kakao bestreuen.'},
+  {id:'de064', name:'Bananenbrot', kategorie:'Dessert', kcal:280, zeit:'65 min', portionen:10,
+   zutaten:['3 reife Bananen','200g Mehl','100g Zucker','2 Eier','80g Butter','1 TL Backpulver','Zimt','Walnüsse'],
+   anleitung:'Bananen zerdrücken. Mit Eiern und Butter verrühren. Mehl und Backpulver einmengen. In Kastenform 55 Min bei 175°C backen.'},
+  {id:'de065', name:'Chia Pudding', kategorie:'Dessert', kcal:220, zeit:'5 min', portionen:2,
+   zutaten:['60g Chiasamen','400ml Kokosmilch','2 EL Ahornsirup','Vanille','Mango','Beeren'],
+   anleitung:'Chiasamen mit Kokosmilch und Sirup vermengen. Über Nacht kühlstellen. Mit Früchten servieren.'},
+
+  // GRILLEN
+  {id:'de066', name:'Gegrillte Hähnchenbrust', kategorie:'Grill', kcal:310, zeit:'25 min', portionen:4,
+   zutaten:['4 Hähnchenbrüste','Olivenöl','Paprikapulver','Knoblauch','Zitrone','Rosmarin','Salz, Pfeffer'],
+   anleitung:'Hähnchen mit Öl und Gewürzen marinieren. 5-6 Min je Seite grillen. Mit Salat servieren.'},
+  {id:'de067', name:'Halloumi Burger', kategorie:'Grill', kcal:480, zeit:'20 min', portionen:4,
+   zutaten:['400g Halloumi','4 Burgerbrötchen','Salat','Tomaten','Zwiebeln','Guacamole','Sriracha'],
+   anleitung:'Halloumi in Scheiben schneiden und grillen. Brötchen toasten. Burger belegen.'},
+  {id:'de068', name:'Gegrillte Rippchen', kategorie:'Grill', kcal:560, zeit:'180 min', portionen:4,
+   zutaten:['1,5 kg Rippchen','BBQ-Sauce','Paprikapulver','Knoblauchpulver','Zwiebelpulver','Salz, Pfeffer','Honig'],
+   anleitung:'Rippchen mit Gewürzen einreiben. Im Ofen 2 Std bei 150°C garen. BBQ-Sauce auftragen. Nochmals grillen.'},
+  {id:'de069', name:'Gegrillte Maiskölben', kategorie:'Grill', kcal:180, zeit:'20 min', portionen:4,
+   zutaten:['4 Maiskölben','Butter','Salz','Paprikapulver','Limette','Koriander'],
+   anleitung:'Mais auf dem Grill 15 Min grillen. Mit Butter und Gewürzen bestreichen. Mit Limette servieren.'},
+  {id:'de070', name:'Gegrillte Lammspieße', kategorie:'Grill', kcal:420, zeit:'30 min', portionen:4,
+   zutaten:['600g Lammhackfleisch','1 Zwiebel','Knoblauch','Petersilie','Koriander','Kreuzkümmel','Paprika','Salz'],
+   anleitung:'Hackfleisch mit Gewürzen vermengen. Um Spieße formen. 8-10 Min auf dem Grill. Mit Pita und Tzatziki servieren.'},
+
+  // BROT & BACKEN
+  {id:'de071', name:'Bananenprotein Muffins', kategorie:'Backen', kcal:180, zeit:'30 min', portionen:12,
+   zutaten:['3 Bananen','200g Haferflocken','2 Eier','30g Proteinpulver','1 EL Backpulver','1 EL Honig','Blaubeeren'],
+   anleitung:'Bananen zerdrücken. Mit Eiern, Honig und Proteinpulver verrühren. Hafer und Backpulver einmengen. In Muffinformen füllen. 20 Min bei 180°C backen.'},
+  {id:'de072', name:'Vollkornbrot selbst gebacken', kategorie:'Backen', kcal:220, zeit:'120 min', portionen:12,
+   zutaten:['400g Vollkornmehl','100g Roggenschrot','1 Päckchen Hefe','300ml Wasser','1 TL Salz','Sonnenblumenkerne','Sesam'],
+   anleitung:'Teig kneten und 60 Min gehen lassen. Nochmals kneten. In Kastenform. 60 Min bei 200°C backen.'},
+  {id:'de073', name:'Proteinbrot', kategorie:'Backen', kcal:190, zeit:'70 min', portionen:12,
+   zutaten:['200g Mandelmehl','100g Proteinpulver','3 Eier','1 TL Backpulver','Salz','Leinsamen','Chiasamen'],
+   anleitung:'Alle Zutaten vermengen. In Kastenform füllen. 50 Min bei 175°C backen. Abkühlen lassen.'},
+
+  // INTERNATIONALE KLASSIKER
+  {id:'de074', name:'Chili con Carne', kategorie:'International', kcal:420, zeit:'60 min', portionen:6,
+   zutaten:['600g Rinderhackfleisch','2 Dosen Kidneybohnen','1 Dose Tomaten','2 Zwiebeln','3 Knoblauchzehen','Chilipulver','Cumin','Paprika'],
+   anleitung:'Hackfleisch anbraten. Zwiebeln und Knoblauch dazugeben. Gewürzen einrühren. Tomaten und Bohnen dazugeben. 30 Min köcheln.'},
+  {id:'de075', name:'Paella', kategorie:'International', kcal:480, zeit:'60 min', portionen:6,
+   zutaten:['400g Paellareis','500g Hähnchen','300g Garnelen','1 Paprika','1 Tomate','Safran','Paprika','Olivenöl','Brühe'],
+   anleitung:'Hähnchen anbraten. Gemüse dazugeben. Reis einrühren. Brühe angießen. Safran dazugeben. 20 Min köcheln. Garnelen drauflegen.'},
+  {id:'de076', name:'Griechische Moussaka', kategorie:'International', kcal:460, zeit:'90 min', portionen:6,
+   zutaten:['3 Auberginen','500g Hackfleisch','400g Tomaten','500ml Béchamel','Zimt','Lorbeer','Zwiebeln','Käse'],
+   anleitung:'Auberginen in Scheiben braten. Hackfleischsoße mit Tomaten und Gewürzen kochen. Schichten. Béchamel und Käse drüber. 45 Min backen.'},
+  {id:'de077', name:'Japanische Ramen', kategorie:'International', kcal:520, zeit:'60 min', portionen:4,
+   zutaten:['400g Ramennudeln','1L Hühnerbrühe','200g Hähnchen','4 Eier','Nori','Frühlingszwiebeln','Sojasoße','Ingwer'],
+   anleitung:'Brühe mit Sojasoße und Ingwer würzen. Hähnchen garen. Eier 6 Min kochen. Nudeln kochen. Alles in Schüssel anrichten.'},
+  {id:'de078', name:'Mexikanische Burritos', kategorie:'International', kcal:560, zeit:'40 min', portionen:4,
+   zutaten:['400g Hähnchen','4 Tortillas','1 Dose Bohnen','Reis','Paprika','Mais','Guacamole','Salsa','Käse'],
+   anleitung:'Hähnchen würzen und anbraten. Reis kochen. Bohnen erwärmen. Tortillas belegen und einrollen.'},
+  {id:'de079', name:'Indisches Dhal', kategorie:'International', kcal:360, zeit:'45 min', portionen:4,
+   zutaten:['300g Linsen','400ml Kokosmilch','Cumin','Koriander','Kurkuma','Ingwer','Knoblauch','Zwiebeln','Tomaten'],
+   anleitung:'Zwiebeln und Gewürze anbraten. Linsen dazugeben. Kokosmilch und Tomaten hinzufügen. 30 Min köcheln.'},
+  {id:'de080', name:'Türkisches Köfte', kategorie:'International', kcal:380, zeit:'30 min', portionen:4,
+   zutaten:['600g Rinderhackfleisch','1 Zwiebel','Petersilie','Kreuzkümmel','Paprikapulver','Oregano','Salz, Pfeffer'],
+   anleitung:'Alle Zutaten vermengen. Köfte formen. In der Pfanne oder auf dem Grill braten. Mit Pita und Salat servieren.'},
+
+  // SCHNELLE GERICHTE
+  {id:'de081', name:'Omelett', kategorie:'Schnell', kcal:280, zeit:'10 min', portionen:1,
+   zutaten:['3 Eier','2 EL Milch','Butter','Salz, Pfeffer','Kräuter nach Wahl'],
+   anleitung:'Eier mit Milch und Gewürzen verquirlen. In Butter ausbacken. Sobald die Mitte fest ist, zusammenfalten.'},
+  {id:'de082', name:'Pfannkuchen', kategorie:'Schnell', kcal:320, zeit:'20 min', portionen:4,
+   zutaten:['200g Mehl','3 Eier','400ml Milch','Prise Salz','Butter','Zuckersüße nach Wahl'],
+   anleitung:'Teig aus Mehl, Eiern und Milch glattühren. Portionsweise in Butter dünn ausbacken.'},
+  {id:'de083', name:'Wrap mit Hähnchen', kategorie:'Schnell', kcal:380, zeit:'15 min', portionen:2,
+   zutaten:['2 Wraps','200g Hähnchenbrust','Salat','Tomaten','Gurke','Tzatziki','Paprikapulver'],
+   anleitung:'Hähnchen anbraten und würzen. Wraps mit Tzatziki bestreichen. Hähnchen und Gemüse drauflegen. Einrollen.'},
+  {id:'de084', name:'Rührei Toast', kategorie:'Schnell', kcal:340, zeit:'10 min', portionen:2,
+   zutaten:['4 Eier','2 Scheiben Toast','Butter','Salz, Pfeffer','Schnittlauch'],
+   anleitung:'Eier verquirlen. In Butter unter Rühren stocken lassen. Auf Toast servieren.'},
+  {id:'de085', name:'Kichererbsen Pfanne', kategorie:'Schnell', kcal:320, zeit:'20 min', portionen:2,
+   zutaten:['1 Dose Kichererbsen','1 Paprika','1 Tomate','Knoblauch','Olivenöl','Cumin','Paprikapulver','Petersilie'],
+   anleitung:'Kichererbsen abgießen. Mit Knoblauch anbraten. Gewürze dazugeben. Gemüse einrühren. 10 Min braten.'},
+
+  // MEAL PREP
+  {id:'de086', name:'Hähnchen Meal Prep Bowl', kategorie:'Meal Prep', kcal:480, zeit:'45 min', portionen:4,
+   zutaten:['800g Hähnchenbrust','300g Quinoa','2 Paprika','1 Zucchini','Brokkoli','Olivenöl','Gewürze'],
+   anleitung:'Quinoa kochen. Hähnchen würzen und braten. Gemüse rösten. Auf Boxen aufteilen. 4 Tage haltbar im Kühlschrank.'},
+  {id:'de087', name:'Vegane Meal Prep Box', kategorie:'Meal Prep', kcal:420, zeit:'50 min', portionen:4,
+   zutaten:['300g Quinoa','2 Dosen Kichererbsen','Brokkoli','Süßkartoffeln','Tahini','Zitrone','Gewürze'],
+   anleitung:'Quinoa kochen. Süßkartoffeln und Brokkoli rösten. Kichererbsen würzen und backen. Mit Tahini-Dressing aufteilen.'},
+  {id:'de088', name:'Lachsbowl Meal Prep', kategorie:'Meal Prep', kcal:520, zeit:'40 min', portionen:4,
+   zutaten:['600g Lachs','300g Reis','Avocado','Gurke','Edamame','Sojasoße','Sesam','Ingwer'],
+   anleitung:'Reis kochen. Lachs in Sojasoße marinieren und backen. Gemüse vorbereiten. In Boxen aufteilen.'},
+
+  // GETREIDE & KÖRNER
+  {id:'de089', name:'Quinoa Salat', kategorie:'Salat', kcal:360, zeit:'25 min', portionen:4,
+   zutaten:['300g Quinoa','1 Gurke','2 Tomaten','Petersilie','Minze','Olivenöl','Zitronensaft','Feta'],
+   anleitung:'Quinoa kochen und abkühlen. Gemüse würfeln. Kräuter hacken. Mit Öl und Zitrone anmachen. Feta drüber.'},
+  {id:'de090', name:'Tabbouleh', kategorie:'Salat', kcal:240, zeit:'30 min', portionen:4,
+   zutaten:['200g Couscous','3 Tomaten','1 Gurke','viel Petersilie','Minze','Olivenöl','Zitronensaft','Salz'],
+   anleitung:'Couscous mit kochend Wasser übergießen. Abkühlen. Gemüse und Kräuter fein hacken. Dressing drüber. Vermengen.'},
+  {id:'de091', name:'Gebratener Reis', kategorie:'International', kcal:420, zeit:'25 min', portionen:4,
+   zutaten:['400g gekochter Reis','3 Eier','200g Erbsen','2 Frühlingszwiebeln','Sojasoße','Sesamöl','Ingwer','Knoblauch'],
+   anleitung:'Öl erhitzen. Eier scrameln. Knoblauch und Ingwer anbraten. Reis dazugeben. Sojasoße einrühren. Erbsen und Zwiebeln dazugeben.'},
+  {id:'de092', name:'Hirse Gemüse Bowl', kategorie:'Vegetarisch', kcal:340, zeit:'35 min', portionen:4,
+   zutaten:['300g Hirse','Brokkoli','Karotten','Zucchini','Olivenöl','Kurkuma','Ingwer','Zitrone'],
+   anleitung:'Hirse kochen. Gemüse rösten. Mit Gewürzen vermengen. In Bowls anrichten.'},
+
+  // RESTE & RESTEVERWERTUNG
+  {id:'de093', name:'Frittata', kategorie:'Schnell', kcal:320, zeit:'30 min', portionen:4,
+   zutaten:['6 Eier','Restgemüse nach Wahl','100g Käse','Olivenöl','Salz, Pfeffer','Kräuter'],
+   anleitung:'Eier verquirlen. Gemüse anbraten. Eiermasse drüber. Käse drüber. 15 Min bei 180°C im Ofen fertig backen.'},
+  {id:'de094', name:'Restsuppe', kategorie:'Suppe', kcal:180, zeit:'30 min', portionen:4,
+   zutaten:['Restgemüse nach Wahl','1L Brühe','Gewürze','Nudeln oder Reis','Olivenöl','Salz'],
+   anleitung:'Gemüse klein schneiden. In Brühe 20 Min kochen. Nudeln oder Reis dazugeben. Mit Gewürzen abschmecken.'},
+  {id:'de095', name:'Gebratene Knödel', kategorie:'Schnell', kcal:280, zeit:'15 min', portionen:2,
+   zutaten:['4 Knödel (vom Vortag)','Butter','Speck','Zwiebeln','Salz, Pfeffer'],
+   anleitung:'Knödel in Scheiben schneiden. In Butter mit Speck und Zwiebeln goldbraun braten.'},
+
+  // DRINKS & SHAKES
+  {id:'de096', name:'Protein Shake Erdbeere', kategorie:'Shake', kcal:320, zeit:'5 min', portionen:1,
+   zutaten:['30g Proteinpulver Vanille','200ml Mandelmilch','150g Erdbeeren','1 Banane','1 EL Chiasamen','Eis'],
+   anleitung:'Alle Zutaten in Mixer geben und cremig mixen.'},
+  {id:'de097', name:'Grüner Smoothie', kategorie:'Shake', kcal:220, zeit:'5 min', portionen:1,
+   zutaten:['1 Handvoll Spinat','1 Banane','1 Apfel','200ml Wasser','1 EL Leinsamen','Ingwer','Zitronensaft'],
+   anleitung:'Alle Zutaten mixen. Bei Bedarf mehr Wasser zugeben.'},
+  {id:'de098', name:'Mango Lassi', kategorie:'Shake', kcal:280, zeit:'5 min', portionen:2,
+   zutaten:['1 Mango','300g Joghurt','200ml Milch','1 EL Honig','Kardamom','Eis'],
+   anleitung:'Mango schälen. Mit Joghurt, Milch und Honig mixen. Mit Eis servieren.'},
+  {id:'de099', name:'Haferflocken Shake', kategorie:'Shake', kcal:380, zeit:'5 min', portionen:1,
+   zutaten:['50g Haferflocken','30g Proteinpulver','300ml Milch','1 Banane','2 EL Nussmus','Zimt'],
+   anleitung:'Alle Zutaten mixen. Sofort trinken.'},
+  {id:'de100', name:'Beerenantioxidant Smoothie', kategorie:'Shake', kcal:240, zeit:'5 min', portionen:1,
+   zutaten:['100g Blaubeeren','100g Himbeeren','1 EL Chiasamen','200ml Kokosmilch','1 EL Honig','Spinat'],
+   anleitung:'Alle Zutaten mixen. Mit Beeren garnieren.'},
+
+  // WEITERE 100 REZEPTE
+  {id:'de101', name:'Zucchini Fritters', kategorie:'Vegetarisch', kcal:240, zeit:'25 min', portionen:4,
+   zutaten:['2 Zucchini','2 Eier','50g Mehl','50g Feta','Knoblauch','Minze','Salz, Pfeffer','Öl'],
+   anleitung:'Zucchini reiben und ausdrücken. Mit Eiern, Mehl, Feta und Gewürzen vermengen. Plätzchen in Öl braten.'},
+  {id:'de102', name:'Süßkartoffel Fries', kategorie:'Beilage', kcal:260, zeit:'35 min', portionen:4,
+   zutaten:['2 Süßkartoffeln','2 EL Olivenöl','Paprikapulver','Knoblauchpulver','Rosmarin','Salz'],
+   anleitung:'Süßkartoffeln in Stifte schneiden. Mit Öl und Gewürzen vermengen. Bei 220°C 25 Min backen.'},
+  {id:'de103', name:'Couscous Salat', kategorie:'Salat', kcal:320, zeit:'20 min', portionen:4,
+   zutaten:['300g Couscous','1 Paprika','1 Gurke','Kirschtomaten','Petersilie','Minze','Olivenöl','Zitrone','Feta'],
+   anleitung:'Couscous mit kochend Wasser zubereiten. Abkühlen. Gemüse würfeln. Mit Dressing anmachen.'},
+  {id:'de104', name:'Brokkoli Auflauf', kategorie:'Vegetarisch', kcal:380, zeit:'50 min', portionen:4,
+   zutaten:['1 Kopf Brokkoli','4 Eier','200ml Sahne','150g Käse','1 Zwiebel','Muskat','Salz, Pfeffer'],
+   anleitung:'Brokkoli blanchieren. Eier und Sahne verquirlen. Brokkoli in Form geben. Eimasse drüber. Käse drüber. 30 Min backen.'},
+  {id:'de105', name:'Zitronenhuhn', kategorie:'Geflügel', kcal:360, zeit:'50 min', portionen:4,
+   zutaten:['4 Hähnchenteile','2 Zitronen','4 Knoblauchzehen','Rosmarin','Thymian','Olivenöl','Salz, Pfeffer'],
+   anleitung:'Hähnchen mit Zitrone, Knoblauch und Kräutern marinieren. Im Ofen 40 Min bei 200°C braten.'},
+  {id:'de106', name:'Spinat Ricotta Cannelloni', kategorie:'Pasta', kcal:480, zeit:'70 min', portionen:6,
+   zutaten:['Cannelloni','300g Spinat','250g Ricotta','2 Eier','400g Tomatensoße','150g Käse','Muskat','Salz'],
+   anleitung:'Spinat blanchieren und hacken. Mit Ricotta und Eiern füllen. Cannelloni damit befüllen. In Tomatensoße legen. Mit Käse überbacken. 40 Min backen.'},
+  {id:'de107', name:'Hähnchen Saltimbocca', kategorie:'Geflügel', kcal:380, zeit:'30 min', portionen:4,
+   zutaten:['4 Hähnchenbrüste','4 Scheiben Prosciutto','Salbei','Butter','Weißwein','Salz, Pfeffer'],
+   anleitung:'Hähnchen mit Salbei und Prosciutto belegen und feststecken. In Butter anbraten. Mit Wein ablöschen.'},
+  {id:'de108', name:'Gefüllte Paprika', kategorie:'Fleisch', kcal:420, zeit:'65 min', portionen:4,
+   zutaten:['4 Paprika','400g Hackfleisch','200g Reis','1 Dose Tomaten','1 Zwiebel','Salz, Pfeffer','Käse'],
+   anleitung:'Paprika aushöhlen. Hackfleisch mit Reis und Tomaten mischen. Paprika füllen. Mit Käse belegen. 45 Min bei 180°C backen.'},
+  {id:'de109', name:'Kichererbsen Tikka', kategorie:'Vegan', kcal:340, zeit:'35 min', portionen:4,
+   zutaten:['2 Dosen Kichererbsen','400ml Tomaten','200ml Kokosmilch','Tikka Gewürz','Zwiebeln','Knoblauch','Ingwer','Koriander'],
+   anleitung:'Zwiebeln anbraten. Gewürzen dazugeben. Kichererbsen einrühren. Tomaten und Kokosmilch dazugeben. 20 Min köcheln.'},
+  {id:'de110', name:'Pfannenkuchen herzhaft', kategorie:'Schnell', kcal:340, zeit:'20 min', portionen:2,
+   zutaten:['200g Mehl','3 Eier','300ml Milch','Schinken','Käse','Salz','Butter'],
+   anleitung:'Teig zubereiten. Dünn ausbacken. Mit Schinken und Käse belegen. Zusammenklappen.'},
+  {id:'de111', name:'Miso Suppe', kategorie:'Suppe', kcal:120, zeit:'15 min', portionen:4,
+   zutaten:['4 EL Miso','1L Dashi-Brühe','200g Tofu','Wakame','Frühlingszwiebeln','Sesam'],
+   anleitung:'Brühe erhitzen. Miso einrühren. Tofu und Wakame dazugeben. Mit Frühlingszwiebeln servieren.'},
+  {id:'de112', name:'Blumenkohl Steak', kategorie:'Vegetarisch', kcal:240, zeit:'30 min', portionen:2,
+   zutaten:['1 Blumenkohl','Olivenöl','Kurkuma','Paprikapulver','Knoblauch','Zitrone','Petersilie','Salz'],
+   anleitung:'Blumenkohl in Scheiben schneiden. Mit Öl und Gewürzen einreiben. In Pfanne 5 Min je Seite braten.'},
+  {id:'de113', name:'Schwarze Bohnen Burger', kategorie:'Vegan', kcal:440, zeit:'35 min', portionen:4,
+   zutaten:['2 Dosen schwarze Bohnen','1 Zwiebel','Knoblauch','Cumin','Paprika','Haferflocken','4 Brötchen','Salat','Tomate'],
+   anleitung:'Bohnen zerdrücken. Mit Zwiebeln, Knoblauch und Hafer vermengen. Pattys formen. Braten. Im Brötchen servieren.'},
+  {id:'de114', name:'Brokkoli Stir Fry', kategorie:'Schnell', kcal:280, zeit:'15 min', portionen:2,
+   zutaten:['400g Brokkoli','200g Hähnchen','3 Knoblauchzehen','Sojasoße','Sesamöl','Ingwer','Sesam'],
+   anleitung:'Hähnchen in Streifen schneiden und braten. Brokkoli dazugeben. Knoblauch und Ingwer einrühren. Sojasoße und Sesamöl dazugeben.'},
+  {id:'de115', name:'Gazpacho', kategorie:'Suppe', kcal:120, zeit:'15 min', portionen:4,
+   zutaten:['800g reife Tomaten','1 Gurke','1 Paprika','1 Zwiebel','2 Knoblauchzehen','Olivenöl','Essig','Salz'],
+   anleitung:'Alles grob würfeln. Mixen. Mit Öl und Essig abschmecken. Kalt servieren.'},
+  {id:'de116', name:'Thai Curry Grün', kategorie:'International', kcal:420, zeit:'30 min', portionen:4,
+   zutaten:['800g Hähnchen','400ml Kokosmilch','3 EL Grüne Currypaste','Bambus','Zuckerschoten','Basilikum','Fischsoße','Reis'],
+   anleitung:'Currypaste in Kokosmilch anbraten. Hähnchen dazugeben. Gemüse einrühren. 15 Min köcheln. Mit Basilikum und Reis servieren.'},
+  {id:'de117', name:'Shakshuka Grün', kategorie:'Vegetarisch', kcal:260, zeit:'25 min', portionen:4,
+   zutaten:['6 Eier','Spinat','Zucchini','Feta','Knoblauch','Olivenöl','Cumin','Koriander','Salz'],
+   anleitung:'Gemüse anbraten. Mulden formen. Eier hineingeben. Zudecken und 8 Min garen. Mit Feta servieren.'},
+  {id:'de118', name:'Linsen Burger', kategorie:'Vegan', kcal:400, zeit:'40 min', portionen:4,
+   zutaten:['200g Linsen','1 Möhre','1 Zwiebel','Knoblauch','Cumin','Paniermehl','4 Brötchen','Salat','Senf'],
+   anleitung:'Linsen kochen. Mit Möhre und Zwiebeln zerdrücken. Mit Gewürzen und Paniermehl binden. Braten.'},
+  {id:'de119', name:'Gebratene Gnocchi', kategorie:'Pasta', kcal:380, zeit:'20 min', portionen:4,
+   zutaten:['500g Gnocchi','200g Kirschtomaten','Spinat','Knoblauch','Butter','Parmesan','Basilikum','Salz'],
+   anleitung:'Gnocchi in Butter knusprig braten. Tomaten und Spinat dazugeben. Mit Knoblauch und Basilikum würzen.'},
+  {id:'de120', name:'Rotkohl mit Apfel', kategorie:'Beilage', kcal:140, zeit:'45 min', portionen:6,
+   zutaten:['1 Rotkohl','2 Äpfel','1 Zwiebel','Butter','Essig','Zucker','Lorbeer','Nelken','Zimt'],
+   anleitung:'Rotkohl hobeln. Mit Äpfeln und Zwiebeln in Butter anbraten. Mit Essig und Zucker schmoren. Gewürze dazugeben. 30 Min köcheln.'},
+  {id:'de121', name:'Gebratene Champignons', kategorie:'Beilage', kcal:120, zeit:'15 min', portionen:4,
+   zutaten:['500g Champignons','3 Knoblauchzehen','Butter','Thymian','Petersilie','Sojasoße','Salz, Pfeffer'],
+   anleitung:'Pilze in Butter braten bis goldbraun. Knoblauch und Kräuter dazugeben. Mit Sojasoße würzen.'},
+  {id:'de122', name:'Ratatouille', kategorie:'Vegetarisch', kcal:160, zeit:'60 min', portionen:6,
+   zutaten:['2 Zucchini','1 Aubergine','3 Tomaten','1 Paprika','1 Zwiebel','Knoblauch','Olivenöl','Kräuter der Provence'],
+   anleitung:'Gemüse in Scheiben schneiden. In Auflaufform schichten. Mit Öl und Kräutern. 40 Min bei 180°C backen.'},
+  {id:'de123', name:'Gebratene Polenta', kategorie:'Beilage', kcal:220, zeit:'30 min', portionen:4,
+   zutaten:['250g Polenta','1L Gemüsebrühe','50g Parmesan','30g Butter','Salz, Pfeffer','Olivenöl'],
+   anleitung:'Polenta in Brühe kochen. Butter und Parmesan einrühren. Abkühlen. In Scheiben schneiden und braten.'},
+  {id:'de124', name:'Spargel Hollandaise', kategorie:'Beilage', kcal:280, zeit:'30 min', portionen:4,
+   zutaten:['1 kg Spargel','3 Eigelb','150g Butter','Zitronensaft','Salz','Pfeffer','Zucker'],
+   anleitung:'Spargel kochen. Hollandaise aus Eigelb, Butter und Zitronensaft schlagen. Über Spargel geben.'},
+  {id:'de125', name:'Blaubeeren Muffins', kategorie:'Backen', kcal:240, zeit:'35 min', portionen:12,
+   zutaten:['300g Mehl','100g Zucker','2 Eier','120ml Öl','200ml Milch','200g Blaubeeren','1 TL Backpulver','Vanille'],
+   anleitung:'Trockene und feuchte Zutaten trennen mischen. Zusammenrühren. Blaubeeren unterheben. In Förmchen füllen. 20 Min bei 180°C backen.'},
+  {id:'de126', name:'Knoblauchbrot', kategorie:'Beilage', kcal:280, zeit:'15 min', portionen:4,
+   zutaten:['1 Baguette','100g Butter','6 Knoblauchzehen','Petersilie','Salz'],
+   anleitung:'Butter mit Knoblauch und Petersilie vermengen. Baguette einschneiden. Butter hineingeben. In Folie einwickeln. 10 Min bei 200°C backen.'},
+  {id:'de127', name:'Tomaten Bruschetta', kategorie:'Snack', kcal:220, zeit:'15 min', portionen:4,
+   zutaten:['1 Baguette','4 Tomaten','4 Knoblauchzehen','Basilikum','Olivenöl','Balsamico','Salz, Pfeffer'],
+   anleitung:'Brot toasten und mit Knoblauch einreiben. Tomaten würfeln. Mit Basilikum, Öl und Balsamico anmachen. Auf Brot geben.'},
+  {id:'de128', name:'Spicy Ramen', kategorie:'International', kcal:480, zeit:'45 min', portionen:4,
+   zutaten:['400g Ramennudeln','1L Hühnerbrühe','Miso','Gochujang','Hähnchen','Eier','Frühlingszwiebeln','Nori','Sesam'],
+   anleitung:'Brühe mit Miso und Gochujang würzen. Hähnchen garen. Eier weich kochen. Nudeln kochen. In Schüssel anrichten.'},
+  {id:'de129', name:'Pad Thai', kategorie:'International', kcal:460, zeit:'30 min', portionen:4,
+   zutaten:['400g Reisnudeln','300g Garnelen','3 Eier','Sojasprossen','Frühlingszwiebeln','Erdnüsse','Fischsoße','Tamarinde','Limette'],
+   anleitung:'Nudeln einweichen. Garnelen anbraten. Eier dazugeben. Nudeln einrühren. Soße aus Fischsoße und Tamarinde. Mit Erdnüssen servieren.'},
+  {id:'de130', name:'Bircher Müsli', kategorie:'Frühstück', kcal:360, zeit:'5 min', portionen:2,
+   zutaten:['100g Haferflocken','200ml Milch','150g Joghurt','1 Apfel','Nüsse','Leinsamen','Honig','Beeren'],
+   anleitung:'Haferflocken über Nacht in Milch einweichen. Morgens Joghurt, geriebenen Apfel und Nüsse dazugeben. Mit Honig und Beeren servieren.'},
+  {id:'de131', name:'Grünes Detox Curry', kategorie:'Vegan', kcal:320, zeit:'35 min', portionen:4,
+   zutaten:['Brokkoli','Spinat','Zucchini','Erbsen','400ml Kokosmilch','Grüne Currypaste','Ingwer','Limette','Koriander'],
+   anleitung:'Currypaste anbraten. Gemüse dazugeben. Kokosmilch einrühren. 15 Min köcheln. Mit Limette und Koriander servieren.'},
+  {id:'de132', name:'Kaisergemüse', kategorie:'Beilage', kcal:180, zeit:'30 min', portionen:4,
+   zutaten:['Karotten','Brokkoli','Zuckerschoten','Champignons','Knoblauch','Ingwer','Sojasoße','Sesamöl','Sesam'],
+   anleitung:'Gemüse in Streifen schneiden. Im Wok in Sesamöl anbraten. Knoblauch und Ingwer einrühren. Sojasoße dazugeben.'},
+  {id:'de133', name:'Blumenkohl Suppe', kategorie:'Suppe', kcal:180, zeit:'35 min', portionen:4,
+   zutaten:['1 Blumenkohl','1 Zwiebel','2 Knoblauchzehen','600ml Gemüsebrühe','100ml Sahne','Curry','Salz','Olivenöl'],
+   anleitung:'Blumenkohl und Zwiebeln anbraten. Curry einrühren. Mit Brühe aufgießen. 20 Min kochen. Pürieren. Sahne einrühren.'},
+  {id:'de134', name:'Rote Bete Salat', kategorie:'Salat', kcal:200, zeit:'20 min', portionen:4,
+   zutaten:['500g Rote Bete (gekocht)','Feldsalat','100g Ziegenkäse','Walnüsse','Balsamico','Olivenöl','Honig','Salz'],
+   anleitung:'Rote Bete würfeln. Mit Feldsalat anrichten. Ziegenkäse und Walnüsse drüber. Dressing aus Balsamico, Öl und Honig.'},
+  {id:'de135', name:'Auberginen Parmigiana', kategorie:'Vegetarisch', kcal:380, zeit:'70 min', portionen:6,
+   zutaten:['3 Auberginen','500g Tomatensoße','200g Mozzarella','100g Parmesan','Basilikum','Olivenöl','Salz'],
+   anleitung:'Auberginen in Scheiben braten. Schichten: Tomatensoße, Aubergine, Mozzarella. Mit Parmesan. 30 Min backen.'},
+  {id:'de136', name:'Kürbis Risotto', kategorie:'Vegetarisch', kcal:440, zeit:'45 min', portionen:4,
+   zutaten:['400g Risotto-Reis','500g Kürbis','150ml Weißwein','1L Gemüsebrühe','1 Zwiebel','50g Parmesan','Butter','Salz'],
+   anleitung:'Zwiebeln anbraten. Reis einrühren. Mit Wein ablöschen. Brühe schrittweise dazugeben. Kürbis und Parmesan einrühren.'},
+  {id:'de137', name:'Hähnchen Fajitas', kategorie:'International', kcal:460, zeit:'25 min', portionen:4,
+   zutaten:['600g Hähnchenbrust','3 Paprika','1 Zwiebel','Tortillas','Guacamole','Sauerrahm','Käse','Fajita-Gewürz'],
+   anleitung:'Hähnchen mit Gewürz marinieren. Mit Paprika und Zwiebeln anbraten. In Tortillas einrollen. Mit Toppings servieren.'},
+  {id:'de138', name:'Mexikanische Enchiladas', kategorie:'International', kcal:520, zeit:'50 min', portionen:4,
+   zutaten:['400g Hähnchenfleisch','8 Tortillas','400g Enchiladasoße','200g Käse','1 Dose Bohnen','Zwiebeln','Knoblauch'],
+   anleitung:'Hähnchen garen und zupfen. Mit Bohnen mischen. In Tortillas rollen. Mit Soße und Käse überbacken. 25 Min backen.'},
+  {id:'de139', name:'Soba Nudeln kalt', kategorie:'International', kcal:360, zeit:'20 min', portionen:4,
+   zutaten:['400g Soba-Nudeln','Gurke','Karotten','Edamame','Sojasoße','Sesamöl','Ingwer','Sesam','Frühlingszwiebeln'],
+   anleitung:'Nudeln kochen und kalt abspülen. Gemüse würfeln. Dressing aus Sojasoße, Sesamöl und Ingwer. Vermengen.'},
+  {id:'de140', name:'Afrikanischer Erdnuss Eintopf', kategorie:'International', kcal:440, zeit:'45 min', portionen:4,
+   zutaten:['400g Hähnchen','2 EL Erdnussmus','1 Dose Tomaten','400ml Kokosmilch','Spinat','Zwiebeln','Knoblauch','Ingwer','Chili'],
+   anleitung:'Hähnchen anbraten. Zwiebeln und Gewürze dazugeben. Tomaten, Kokosmilch und Erdnussmus einrühren. 25 Min köcheln. Spinat dazugeben.'},
+  {id:'de141', name:'Bao Buns Hähnchen', kategorie:'International', kcal:420, zeit:'60 min', portionen:4,
+   zutaten:['Bao-Teig','400g Hähnchen','Hoisin-Soße','Gurke','Karotten','Frühlingszwiebeln','Sesam','Koriander'],
+   anleitung:'Teig zubereiten. Hähnchen mit Hoisin marinieren und grillen. Buns dämpfen. Befüllen und servieren.'},
+  {id:'de142', name:'Polentaauflauf', kategorie:'Vegetarisch', kcal:360, zeit:'50 min', portionen:4,
+   zutaten:['250g Polenta','500ml Brühe','200g Spinat','150g Käse','2 Eier','50g Parmesan','Olivenöl','Salz'],
+   anleitung:'Polenta kochen. Spinat einrühren. In Form geben. Eier und Käse drüber. 20 Min backen.'},
+  {id:'de143', name:'Gazpacho grün', kategorie:'Suppe', kcal:140, zeit:'15 min', portionen:4,
+   zutaten:['2 Gurken','1 Avocado','Spinat','Petersilie','Knoblauch','Limettensaft','Olivenöl','Salz'],
+   anleitung:'Alle Zutaten mixen. Kalt stellen. Mit Olivenöl und Kräutern servieren.'},
+  {id:'de144', name:'Tahini Nudeln', kategorie:'Pasta', kcal:440, zeit:'20 min', portionen:4,
+   zutaten:['400g Spaghetti','4 EL Tahini','Sojasoße','Sesamöl','Knoblauch','Ingwer','Gurke','Frühlingszwiebeln','Sesam'],
+   anleitung:'Nudeln kochen. Soße aus Tahini, Sojasoße, Öl, Knoblauch und Ingwer. Über Nudeln geben. Mit Gemüse servieren.'},
+  {id:'de145', name:'Japanisches Omelette', kategorie:'Frühstück', kcal:240, zeit:'15 min', portionen:2,
+   zutaten:['4 Eier','2 EL Mirin','1 TL Sojasoße','Sesam','Öl'],
+   anleitung:'Eier mit Mirin und Sojasoße verquirlen. In geölter Pfanne in dünnen Schichten ausbacken. Aufrollen. In Scheiben schneiden.'},
+  {id:'de146', name:'Cauliflower Rice Bowl', kategorie:'Vegetarisch', kcal:280, zeit:'25 min', portionen:2,
+   zutaten:['1 Blumenkohl','Kichererbsen','Tahini','Zitrone','Cumin','Paprika','Knoblauch','Petersilie'],
+   anleitung:'Blumenkohl grob reiben und in Pfanne braten. Kichererbsen würzen und backen. Bowl zusammenstellen. Mit Tahini-Dressing servieren.'},
+  {id:'de147', name:'Matcha Overnight Oats', kategorie:'Frühstück', kcal:340, zeit:'5 min', portionen:1,
+   zutaten:['80g Haferflocken','200ml Hafermilch','1 TL Matcha','1 EL Honig','1 EL Chiasamen','Beeren','Kokosflocken'],
+   anleitung:'Haferflocken mit Milch, Matcha und Honig vermengen. Chiasamen dazugeben. Über Nacht kühlen. Mit Beeren servieren.'},
+  {id:'de148', name:'Kimchi Fried Rice', kategorie:'International', kcal:420, zeit:'20 min', portionen:2,
+   zutaten:['300g Reis','200g Kimchi','2 Eier','Sojasoße','Sesamöl','Knoblauch','Frühlingszwiebeln','Sesam'],
+   anleitung:'Öl erhitzen. Kimchi und Knoblauch braten. Reis dazugeben. Eier einrühren. Sojasoße und Sesamöl dazugeben.'},
+  {id:'de149', name:'Acai Bowl', kategorie:'Frühstück', kcal:380, zeit:'10 min', portionen:1,
+   zutaten:['100g Acai Pulver','1 Banane','100g Beeren','100ml Kokosmilch','Granola','Kokosflocken','Honig','Früchte'],
+   anleitung:'Acai mit Banane und Kokosmilch mixen. In Schüssel geben. Mit Granola, Früchten und Kokosflocken belegen.'},
+  {id:'de150', name:'Rote Bete Hummus', kategorie:'Snack', kcal:180, zeit:'15 min', portionen:6,
+   zutaten:['400g Kichererbsen','200g Rote Bete','3 EL Tahini','2 Knoblauchzehen','Zitronensaft','Olivenöl','Salz','Cumin'],
+   anleitung:'Alle Zutaten mixen. Mit Olivenöl und Sesam servieren.'},
+  {id:'de151', name:'Vegetarische Paella', kategorie:'Vegetarisch', kcal:420, zeit:'55 min', portionen:6,
+   zutaten:['400g Paellareis','Paprika','Zucchini','Artischocken','Tomaten','Safran','Paprikapulver','Olivenöl','Gemüsebrühe'],
+   anleitung:'Gemüse anbraten. Reis einrühren. Gewürze dazugeben. Brühe angießen. 20 Min köcheln ohne zu rühren.'},
+  {id:'de152', name:'Kokos Hähnchen', kategorie:'Geflügel', kcal:400, zeit:'35 min', portionen:4,
+   zutaten:['800g Hähnchenbrust','400ml Kokosmilch','Knoblauch','Ingwer','Zitronengras','Limette','Koriander','Chili'],
+   anleitung:'Hähnchen anbraten. Kokosmilch mit Gewürzen einrühren. 20 Min köcheln. Mit Jasminreis und Koriander servieren.'},
+  {id:'de153', name:'Knusprige Tofu Bowl', kategorie:'Vegan', kcal:360, zeit:'40 min', portionen:2,
+   zutaten:['400g Tofu','200g Reis','Brokkoli','Karotten','Edamame','Sojasoße','Sesamöl','Sesam','Frühlingszwiebeln'],
+   anleitung:'Tofu pressen und in Würfel schneiden. Mit Sojasoße marinieren. Im Ofen 25 Min backen. Bowl zusammenstellen.'},
+  {id:'de154', name:'Kartoffel Wedges', kategorie:'Beilage', kcal:240, zeit:'40 min', portionen:4,
+   zutaten:['1 kg Kartoffeln','3 EL Olivenöl','Paprikapulver','Knoblauchpulver','Rosmarin','Salz'],
+   anleitung:'Kartoffeln in Spalten schneiden. Mit Öl und Gewürzen vermengen. Bei 220°C 30 Min backen.'},
+  {id:'de155', name:'Zucchini Suppe', kategorie:'Suppe', kcal:160, zeit:'30 min', portionen:4,
+   zutaten:['4 Zucchini','1 Zwiebel','2 Knoblauchzehen','600ml Gemüsebrühe','100ml Sahne','Basilikum','Salz, Pfeffer'],
+   anleitung:'Zucchini und Zwiebeln anbraten. Mit Brühe aufgießen. 15 Min kochen. Pürieren. Sahne einrühren.'},
+  {id:'de156', name:'Linsen Bolognese', kategorie:'Vegan', kcal:360, zeit:'45 min', portionen:4,
+   zutaten:['300g Linsen','2 Dosen Tomaten','1 Zwiebel','2 Karotten','Sellerie','Knoblauch','Oregano','Lorbeer','Pasta'],
+   anleitung:'Zwiebeln und Gemüse anbraten. Linsen dazugeben. Tomaten einrühren. 30 Min köcheln. Mit Pasta servieren.'},
+  {id:'de157', name:'Mexikanischer Reissalat', kategorie:'Salat', kcal:340, zeit:'25 min', portionen:4,
+   zutaten:['300g Reis','1 Dose Mais','1 Dose Bohnen','1 Paprika','Koriander','Limette','Olivenöl','Cumin','Chili'],
+   anleitung:'Reis kochen und abkühlen. Mit Mais, Bohnen und Paprika vermengen. Mit Limetten-Dressing anmachen.'},
+  {id:'de158', name:'Pho Suppe', kategorie:'International', kcal:380, zeit:'120 min', portionen:4,
+   zutaten:['1L Rinderbrühe','200g dünne Reisnudeln','200g Rindfleisch','Frühlingszwiebeln','Sprossen','Basilikum','Limette','Fischsoße'],
+   anleitung:'Brühe mit Gewürzen aromatisieren. Nudeln einweichen. Rindfleisch dünn schneiden. In Schüssel anrichten. Brühe drüber gießen.'},
+  {id:'de159', name:'Zatar Hähnchen', kategorie:'Geflügel', kcal:340, zeit:'45 min', portionen:4,
+   zutaten:['4 Hähnchenbrüste','3 EL Zaatar','Olivenöl','Knoblauch','Zitrone','Salz'],
+   anleitung:'Hähnchen mit Zaatar, Öl und Zitrone marinieren. Im Ofen 35 Min bei 200°C backen.'},
+  {id:'de160', name:'Paneer Tikka', kategorie:'Vegetarisch', kcal:360, zeit:'40 min', portionen:4,
+   zutaten:['400g Paneer','Joghurt','Tikka-Gewürz','Paprika','Zwiebeln','Knoblauch','Ingwer','Zitrone'],
+   anleitung:'Paneer würfeln. Mit Joghurt und Gewürzen marinieren. Auf Spieße stecken. 20 Min grillen.'},
+  {id:'de161', name:'Pfannkuchen Beeren', kategorie:'Frühstück', kcal:380, zeit:'20 min', portionen:4,
+   zutaten:['200g Mehl','2 Eier','300ml Buttermilch','Backpulver','200g Beeren','Honig','Joghurt','Puderzucker'],
+   anleitung:'Teig mit Buttermilch zubereiten. Mit Beeren backen. Mit Joghurt und Honig servieren.'},
+  {id:'de162', name:'Keto Hähnchen Bowl', kategorie:'Meal Prep', kcal:420, zeit:'35 min', portionen:4,
+   zutaten:['800g Hähnchenbrust','4 Avocados','200g Kirschtomaten','Salatblätter','Olivenöl','Zitrone','Salz, Pfeffer'],
+   anleitung:'Hähnchen würzen und braten. Avocado würfeln. Bowl aus Salat, Tomaten, Hähnchen und Avocado.'},
+  {id:'de163', name:'Griechische Lammspieße', kategorie:'Fleisch', kcal:460, zeit:'35 min', portionen:4,
+   zutaten:['600g Lammhackfleisch','1 Zwiebel','Knoblauch','Petersilie','Minze','Kreuzkümmel','Paprikapulver','Pita','Tzatziki'],
+   anleitung:'Hackfleisch mit Gewürzen vermengen. Um Spieße formen. Grillen. Mit Pita und Tzatziki servieren.'},
+  {id:'de164', name:'Ente à lOrange', kategorie:'Fleisch', kcal:580, zeit:'120 min', portionen:4,
+   zutaten:['1 Ente','3 Orangen','200ml Rotwein','50g Butter','Honig','Thymian','Salz, Pfeffer'],
+   anleitung:'Ente würzen. Im Ofen 90 Min braten. Soße aus Orangensaft, Wein und Honig. Über Ente geben.'},
+  {id:'de165', name:'Spinat Feta Pie', kategorie:'Vegetarisch', kcal:380, zeit:'60 min', portionen:6,
+   zutaten:['400g Spinat','250g Feta','4 Eier','Phyllo-Teig','1 Zwiebel','Olivenöl','Dill','Muskat'],
+   anleitung:'Spinat blanchieren. Mit Feta, Eiern und Gewürzen mischen. In Phyllo-Teig einwickeln. 35 Min bei 180°C backen.'},
+  {id:'de166', name:'Teriyaki Lachs', kategorie:'Fisch', kcal:400, zeit:'25 min', portionen:4,
+   zutaten:['4 Lachsfilets','4 EL Sojasoße','2 EL Honig','1 EL Mirin','Knoblauch','Ingwer','Sesam'],
+   anleitung:'Lachs in Teriyaki-Marinade einlegen. In Pfanne oder Ofen garen. Mit Sesam und Reis servieren.'},
+  {id:'de167', name:'Avocado Lachs Toast', kategorie:'Frühstück', kcal:380, zeit:'10 min', portionen:2,
+   zutaten:['2 Scheiben Vollkornbrot','1 Avocado','100g Räucherlachs','1 Ei','Zitrone','Chili','Sesam','Salz'],
+   anleitung:'Brot toasten. Avocado zerdrücken und würzen. Ei pochieren. Auflegen und servieren.'},
+  {id:'de168', name:'Zucchini Rollen mit Käse', kategorie:'Vegetarisch', kcal:280, zeit:'30 min', portionen:4,
+   zutaten:['3 Zucchini','200g Ricotta','100g Spinat','50g Parmesan','Knoblauch','400g Tomatensoße','Mozzarella'],
+   anleitung:'Zucchini in Längsstreifen schneiden. Ricotta-Spinat-Füllung auftragen. Aufrollen. In Soße setzen. Mit Käse überbacken.'},
+  {id:'de169', name:'Ramen Eier', kategorie:'Snack', kcal:180, zeit:'15 min', portionen:4,
+   zutaten:['6 Eier','4 EL Sojasoße','2 EL Mirin','1 TL Zucker','Wasser','Knoblauch','Ingwer'],
+   anleitung:'Eier 7 Min kochen und abschrecken. Schälen. In Marinade 4-8 Std einlegen.'},
+  {id:'de170', name:'Naan Brot', kategorie:'Backen', kcal:220, zeit:'60 min', portionen:8,
+   zutaten:['300g Mehl','1 TL Hefe','150ml Joghurt','50ml Wasser','1 EL Öl','Salz','Butter','Knoblauch'],
+   anleitung:'Teig kneten und 30 Min gehen lassen. Rund ausrollen. In trockener Pfanne braten. Mit Knoblauchbutter bestreichen.'},
+  {id:'de171', name:'Kürbis Gnocchi', kategorie:'Pasta', kcal:420, zeit:'60 min', portionen:4,
+   zutaten:['500g Kürbis','250g Mehl','1 Ei','Parmesan','Butter','Salbei','Muskat','Salz'],
+   anleitung:'Kürbis rösten und pürieren. Mit Mehl und Ei zu Teig verkneten. Gnocchi formen. In Wasser kochen. In Salbeibutter schwenken.'},
+  {id:'de172', name:'Ingwer Möhren Suppe', kategorie:'Suppe', kcal:160, zeit:'35 min', portionen:4,
+   zutaten:['600g Karotten','1 Zwiebel','2 cm Ingwer','600ml Gemüsebrühe','100ml Kokosmilch','Kurkuma','Salz','Olivenöl'],
+   anleitung:'Karotten und Zwiebeln anbraten. Ingwer und Kurkuma dazugeben. Mit Brühe aufgießen. 20 Min kochen. Pürieren. Kokosmilch einrühren.'},
+  {id:'de173', name:'Hähnchengeschnetzeltes Sahne', kategorie:'Geflügel', kcal:420, zeit:'30 min', portionen:4,
+   zutaten:['600g Hähnchenbrust','200ml Sahne','200g Pilze','1 Zwiebel','Weißwein','Petersilie','Salz, Pfeffer'],
+   anleitung:'Hähnchen anbraten. Pilze dazugeben. Mit Wein ablöschen. Sahne einrühren. 10 Min köcheln. Mit Nudeln servieren.'},
+  {id:'de174', name:'Flammkuchen', kategorie:'Backen', kcal:380, zeit:'30 min', portionen:4,
+   zutaten:['250g Pizzateig','200ml Crème fraîche','200g Speck','2 Zwiebeln','Schnittlauch','Salz, Pfeffer'],
+   anleitung:'Teig dünn ausrollen. Mit Crème fraîche bestreichen. Speck und Zwiebeln drauflegen. 15 Min bei 250°C backen.'},
+  {id:'de175', name:'Weißkohl Gemüse', kategorie:'Beilage', kcal:140, zeit:'30 min', portionen:4,
+   zutaten:['1 Weißkohl','1 Zwiebel','Olivenöl','Kümmel','Paprikapulver','Salz, Pfeffer','Apfelessig'],
+   anleitung:'Kohl in Streifen schneiden. Zwiebeln anbraten. Kohl dazugeben. Gewürzen einrühren. 20 Min schmoren.'},
+  {id:'de176', name:'Gyros', kategorie:'International', kcal:460, zeit:'35 min', portionen:4,
+   zutaten:['800g Schweinefleisch','Gyros-Gewürz','Zwiebeln','Olivenöl','Tzatziki','Pita','Tomaten','Salat'],
+   anleitung:'Fleisch in Streifen schneiden und mit Gewürzen marinieren. Mit Zwiebeln braten. In Pita einwickeln.'},
+  {id:'de177', name:'Kichererbsen Spinat Curry', kategorie:'Vegan', kcal:340, zeit:'30 min', portionen:4,
+   zutaten:['2 Dosen Kichererbsen','300g Spinat','1 Dose Tomaten','200ml Kokosmilch','Curry','Ingwer','Knoblauch','Zwiebeln'],
+   anleitung:'Zwiebeln und Gewürze anbraten. Kichererbsen dazugeben. Tomaten und Kokosmilch einrühren. 15 Min köcheln. Spinat dazugeben.'},
+  {id:'de178', name:'Hähnchen Souvlaki', kategorie:'Geflügel', kcal:360, zeit:'30 min', portionen:4,
+   zutaten:['800g Hähnchenbrust','Zitrone','Knoblauch','Oregano','Olivenöl','Tzatziki','Pita','Zwiebeln'],
+   anleitung:'Hähnchen würfeln und marinieren. Auf Spieße stecken. Grillen. Mit Pita und Tzatziki servieren.'},
+  {id:'de179', name:'Süßkartoffel Curry', kategorie:'Vegan', kcal:380, zeit:'40 min', portionen:4,
+   zutaten:['600g Süßkartoffeln','400ml Kokosmilch','1 Dose Tomaten','Rote Currypaste','Spinat','Knoblauch','Ingwer','Koriander'],
+   anleitung:'Süßkartoffeln würfeln. Currypaste anbraten. Kokosmilch und Tomaten dazugeben. Süßkartoffeln einrühren. 20 Min köcheln.'},
+  {id:'de180', name:'Sushi Bowls', kategorie:'International', kcal:440, zeit:'30 min', portionen:4,
+   zutaten:['300g Sushireis','Lachs','Avocado','Gurke','Karotten','Nori','Sojasoße','Sesam','Wasabi','Ingwer'],
+   anleitung:'Reis kochen mit Reisessig. Zutaten vorbereiten. Bowl anrichten.'},
+  {id:'de181', name:'Gegrillter Halloumi Salat', kategorie:'Salat', kcal:340, zeit:'20 min', portionen:4,
+   zutaten:['400g Halloumi','Kirschtomaten','Rucola','Wassermelone','Minze','Olivenöl','Zitrone','Honig'],
+   anleitung:'Halloumi grillen. Wassermelone würfeln. Mit Rucola und Tomaten anrichten. Mit Dressing beträufeln.'},
+  {id:'de182', name:'Miso Glasierter Auberginen', kategorie:'Vegan', kcal:220, zeit:'30 min', portionen:4,
+   zutaten:['2 Auberginen','3 EL Miso','2 EL Mirin','1 EL Sojasoße','1 EL Sesamöl','Sesam','Frühlingszwiebeln'],
+   anleitung:'Auberginen halbieren. Mit Miso-Glasur bestreichen. 20 Min bei 200°C backen. Mit Sesam servieren.'},
+  {id:'de183', name:'Käsespätzle', kategorie:'Pasta', kcal:580, zeit:'45 min', portionen:4,
+   zutaten:['400g Spätzle','200g Bergkäse','200g Emmentaler','2 Zwiebeln','Butter','Salz, Pfeffer','Schnittlauch'],
+   anleitung:'Spätzle kochen. Käse reiben. Zwiebeln in Butter goldbraun braten. Schichten. Im Ofen überbacken.'},
+  {id:'de184', name:'Flank Steak mit Chimichurri', kategorie:'Fleisch', kcal:480, zeit:'30 min', portionen:4,
+   zutaten:['800g Flanksteak','Petersilie','Knoblauch','Olivenöl','Rotweinessig','Chili','Oregano','Salz'],
+   anleitung:'Steak scharf anbraten. 5 Min ruhen lassen. Chimichurri aus Petersilie, Knoblauch, Öl und Essig. Servieren.'},
+  {id:'de185', name:'Polenta Pommes', kategorie:'Beilage', kcal:260, zeit:'40 min', portionen:4,
+   zutaten:['250g Polenta','1L Brühe','50g Parmesan','Rosmarinöl','Salz, Pfeffer'],
+   anleitung:'Polenta kochen. Abkühlen und in Stifte schneiden. Im Ofen oder in Pfanne knusprig braten.'},
+  {id:'de186', name:'Persischer Reistopf', kategorie:'International', kcal:420, zeit:'60 min', portionen:6,
+   zutaten:['400g Basmati-Reis','200g Linsen','Zwiebeln','Safran','Rosinen','Walnüsse','Granatapfel','Butter'],
+   anleitung:'Reis und Linsen getrennt kochen. Zwiebeln karamellisieren. Safranreis zubereiten. Mit Trockenfrüchten und Nüssen servieren.'},
+  {id:'de187', name:'Shakshuka Harissa', kategorie:'Vegetarisch', kcal:300, zeit:'30 min', portionen:4,
+   zutaten:['6 Eier','2 Dosen Tomaten','2 EL Harissa','1 Paprika','1 Zwiebel','Knoblauch','Petersilie','Feta'],
+   anleitung:'Tomatensoße mit Harissa kochen. Eier hineingeben. 8 Min garen. Mit Feta und Petersilie servieren.'},
+  {id:'de188', name:'Hähnchenspieße Erdnuss', kategorie:'International', kcal:420, zeit:'35 min', portionen:4,
+   zutaten:['800g Hähnchen','4 EL Erdnussmus','Sojasoße','Kokosmilch','Chili','Knoblauch','Ingwer','Limette'],
+   anleitung:'Hähnchen marinieren. Aufspießen und grillen. Erdnusssoße zubereiten. Mit Jasminreis servieren.'},
+  {id:'de189', name:'Möhren Ingwer Aufstrich', kategorie:'Snack', kcal:120, zeit:'20 min', portionen:8,
+   zutaten:['500g Karotten','2 cm Ingwer','2 Knoblauchzehen','2 EL Olivenöl','Zitronensaft','Cumin','Salz'],
+   anleitung:'Karotten kochen. Mit Ingwer, Knoblauch und Öl mixen. Mit Cumin abschmecken.'},
+  {id:'de190', name:'Gedämpfter Brokkoli Sesamsoße', kategorie:'Beilage', kcal:140, zeit:'15 min', portionen:4,
+   zutaten:['1 Brokkoli','3 EL Tahini','Sojasoße','Zitrone','Knoblauch','Sesamöl','Sesam'],
+   anleitung:'Brokkoli dämpfen. Tahini-Soße aus Tahini, Sojasoße, Zitrone und Knoblauch. Über Brokkoli geben.'},
+  {id:'de191', name:'Lemon Chicken Orzo', kategorie:'Pasta', kcal:460, zeit:'35 min', portionen:4,
+   zutaten:['400g Orzo','600g Hähnchen','2 Zitronen','Knoblauch','Spinat','Parmesan','Olivenöl','Thymian'],
+   anleitung:'Orzo kochen. Hähnchen anbraten. Knoblauch dazugeben. Zitrone und Spinat einrühren. Mit Orzo und Parmesan servieren.'},
+  {id:'de192', name:'Hähnchen Shawarma Bowl', kategorie:'International', kcal:480, zeit:'40 min', portionen:4,
+   zutaten:['800g Hähnchen','Shawarma-Gewürz','Reis','Hummus','Gurke','Tomaten','Tzatziki','Petersilie'],
+   anleitung:'Hähnchen marinieren und braten. Bowl aus Reis, Hummus, Gemüse und Hähnchen zusammenstellen.'},
+  {id:'de193', name:'Spinat Süßkartoffel Curry', kategorie:'Vegan', kcal:360, zeit:'40 min', portionen:4,
+   zutaten:['500g Süßkartoffeln','300g Spinat','400ml Kokosmilch','Curry','Zwiebeln','Knoblauch','Ingwer','Koriander'],
+   anleitung:'Süßkartoffeln würfeln und anbraten. Curry und Gewürze dazugeben. Kokosmilch einrühren. 20 Min köcheln. Spinat dazugeben.'},
+  {id:'de194', name:'Hausgemachte Pizza', kategorie:'International', kcal:540, zeit:'60 min', portionen:4,
+   zutaten:['Pizzateig','Tomatensoße','Mozzarella','Toppings nach Wahl','Olivenöl','Basilikum','Oregano'],
+   anleitung:'Teig dünn ausrollen. Mit Soße bestreichen. Käse und Toppings drauflegen. Bei 250°C 12-15 Min backen.'},
+  {id:'de195', name:'Süßkartoffel Püree', kategorie:'Beilage', kcal:180, zeit:'30 min', portionen:4,
+   zutaten:['800g Süßkartoffeln','50ml Kokosmilch','Butter','Muskat','Salz','Zimt'],
+   anleitung:'Süßkartoffeln kochen. Mit Kokosmilch und Butter stampfen. Mit Muskat und Salz abschmecken.'},
+  {id:'de196', name:'Kohl Apfel Salat', kategorie:'Salat', kcal:180, zeit:'15 min', portionen:4,
+   zutaten:['1 Weißkohl','2 Äpfel','Karotten','Essig','Öl','Zucker','Kümmel','Salz'],
+   anleitung:'Kohl und Karotten raspeln. Äpfel würfeln. Dressing aus Essig, Öl und Zucker. Alles vermengen.'},
+  {id:'de197', name:'Gemüse Tempura', kategorie:'International', kcal:320, zeit:'25 min', portionen:4,
+   zutaten:['Gemüse nach Wahl','100g Mehl','1 Ei','150ml Eiswasser','Sesamöl zum Frittieren','Sojasoße','Dashi'],
+   anleitung:'Tempurateig anrühren. Gemüse tauchen. In heißem Öl frittieren. Mit Dipping-Soße servieren.'},
+  {id:'de198', name:'Brokkoli Cheddar Suppe', kategorie:'Suppe', kcal:320, zeit:'35 min', portionen:4,
+   zutaten:['1 Brokkoli','200g Cheddar','1 Zwiebel','600ml Brühe','200ml Sahne','Knoblauch','Senf','Salz'],
+   anleitung:'Brokkoli und Zwiebeln anbraten. Mit Brühe aufgießen. 15 Min kochen. Pürieren. Sahne und Käse einrühren.'},
+  {id:'de199', name:'Mediterraner Hähncheneintopf', kategorie:'Geflügel', kcal:400, zeit:'55 min', portionen:6,
+   zutaten:['1 kg Hähnchen','2 Dosen Tomaten','Oliven','Kapern','Knoblauch','Rosmarin','Thymian','Weißwein'],
+   anleitung:'Hähnchen anbraten. Knoblauch und Kräuter dazugeben. Tomaten, Oliven und Kapern einrühren. Mit Wein ablöschen. 35 Min schmoren.'},
+  {id:'de200', name:'Schokoladen Avocado Mousse', kategorie:'Dessert', kcal:320, zeit:'10 min', portionen:4,
+   zutaten:['2 Avocados','4 EL Kakaopulver','4 EL Ahornsirup','2 EL Kokosmilch','Vanille','Prise Salz','Beeren'],
+   anleitung:'Alle Zutaten cremig mixen. In Gläser füllen. Kühlen. Mit Beeren servieren.'},
 ];
 
 // ================================================================
@@ -1290,7 +1998,7 @@ function showTab(id) {
   if (id === 'supplemente') renderSupplements();
   if (id === 'tipps') renderTipps();
   if (id === 'training') { renderTraining(); showMuscle('brust'); renderMyPlan(); }
-  if (id === 'rezepte') loadRezeptOfDay();
+  if (id === 'rezepte') { loadRezeptOfDay(); renderDeutscheRezepte(deutscheRezepte.slice(0,20)); }
   if (id === 'schritte') { stepsToday=load('fh_steps_'+today(),0); stepsGoal=load('fh_steps_goal',10000); renderSteps(); }
   if (id === 'fasten') { fastGoalHours=load('fh_fast_goal',16); fastHistory=load('fh_fast_history',[]); fastStart=load('fh_fast_start',null); setText('fast-goal-display',fastGoalHours); if(fastStart)startFastTimer(); renderFastHistory(); }
   if (id === 'einkauf') { renderEinkauf(); }
@@ -1548,6 +2256,8 @@ function addManualFood() {
   save('fh_food_log_' + today(), foodLog);
 
   ['manual-name','manual-kcal','manual-protein','manual-carbs','manual-fat'].forEach(id => document.getElementById(id).value = '');
+  const mealSel = document.getElementById('manual-meal');
+  if (mealSel) mealSel.selectedIndex = 0;
   renderFoodLog();
   updateDashboard();
   status('✓ ' + name + ' hinzugefügt');
@@ -2509,22 +3219,35 @@ async function loadRezeptOfDay() {
 }
 
 async function searchRezepte() {
-  let q = document.getElementById('rezept-search').value.trim();
+  let q = document.getElementById('rezept-search').value.trim().toLowerCase();
   if (!q) return;
+  
+  // Erst in deutschen Rezepten suchen
+  const lokal = deutscheRezepte.filter(r => 
+    r.name.toLowerCase().includes(q) || 
+    r.kategorie.toLowerCase().includes(q) ||
+    r.zutaten.some(z => z.toLowerCase().includes(q))
+  );
+  
+  if (lokal.length > 0) {
+    renderDeutscheRezepte(lokal);
+    return;
+  }
+  
+  // Wenn nichts gefunden — online suchen
   showRezeptLoading();
   try {
-    // Deutschen Begriff ins Englische übersetzen
     const transUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=de&tl=en&dt=t&q=${encodeURIComponent(q)}`;
+    let qEn = q;
     try {
       const transRes = await fetch(transUrl);
       const transData = await transRes.json();
-      if (transData && transData[0]) q = transData[0].map(p => (p&&p[0])||'').join('');
+      if (transData && transData[0]) qEn = transData[0].map(p => (p&&p[0])||'').join('');
     } catch(e) {}
-    
-    const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(q)}`);
+    const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(qEn)}`);
     const data = await res.json();
     renderRezeptGrid(data.meals || []);
-  } catch(e) { status('Kein Internet'); }
+  } catch(e) { status('Kein Internet — nur Offline-Rezepte verfügbar'); }
 }
 
 async function rezeptKategorie(cat) {
@@ -2568,6 +3291,50 @@ async function rezeptZufall() {
     const data = await res.json();
     if (data.meals) showRezeptDetail(data.meals[0]);
   } catch(e) { status('Kein Internet'); }
+}
+
+function renderDeutscheRezepte(rezepte) {
+  const el = document.getElementById('rezept-results');
+  document.getElementById('rezept-detail').style.display = 'none';
+  if (!rezepte.length) { el.innerHTML = '<div style="color:var(--muted);padding:20px;text-align:center;">Keine Rezepte gefunden</div>'; return; }
+  el.innerHTML = '<div style="font-size:.65rem;color:var(--accent2);padding:4px 0 8px;letter-spacing:1px;">🇩🇪 DEUTSCHE OFFLINE-REZEPTE</div>' +
+    rezepte.map(r => `
+    <div onclick="showDeutschesRezept('${r.id}')" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s;padding:12px;" onmouseover="this.style.borderColor='var(--accent2)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="font-size:.78rem;font-weight:700;margin-bottom:4px;">${r.name}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:.62rem;color:var(--accent2);">🍽️ ${r.kategorie}</span>
+        <span style="font-size:.62rem;color:var(--muted);">⏱️ ${r.zeit}</span>
+        <span style="font-size:.62rem;color:var(--green);">🔥 ${r.kcal} kcal</span>
+        <span style="font-size:.62rem;color:var(--muted);">👥 ${r.portionen} Port.</span>
+      </div>
+    </div>`).join('');
+}
+
+function showDeutschesRezept(id) {
+  const r = deutscheRezepte.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('rezept-results').innerHTML = '';
+  const detail = document.getElementById('rezept-detail');
+  detail.style.display = 'block';
+  window._lastZutaten = r.zutaten.map(z => ({ing: z, meas: ''}));
+  detail.innerHTML = `
+    <div class="card">
+      <button class="btn outline small" onclick="document.getElementById('rezept-detail').style.display='none';document.getElementById('rezept-results').innerHTML='';" style="margin-bottom:14px;">← Zurück</button>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;margin-bottom:6px;">${r.name}</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+        <span style="font-size:.72rem;color:var(--accent2);">🍽️ ${r.kategorie}</span>
+        <span style="font-size:.72rem;color:var(--muted);">⏱️ ${r.zeit}</span>
+        <span style="font-size:.72rem;color:var(--green);">🔥 ${r.kcal} kcal/Portion</span>
+        <span style="font-size:.72rem;color:var(--muted);">👥 ${r.portionen} Portionen</span>
+      </div>
+      <div style="font-size:.65rem;color:var(--accent2);letter-spacing:1px;margin-bottom:6px;">ZUTATEN</div>
+      <ul style="list-style:none;padding:0;margin:0 0 14px;">
+        ${r.zutaten.map(z => `<li style="font-size:.8rem;padding:4px 0;border-bottom:1px solid var(--border);">• ${z}</li>`).join('')}
+      </ul>
+      <div style="font-size:.65rem;color:var(--accent2);letter-spacing:1px;margin-bottom:6px;">ZUBEREITUNG</div>
+      <div style="font-size:.82rem;line-height:1.7;margin-bottom:14px;">${r.anleitung}</div>
+      <button class="btn green" onclick="addRezeptToEinkauf(window._lastZutaten.map(z=>z.ing))">🛒 Zur Einkaufsliste</button>
+    </div>`;
 }
 
 function showRezeptLoading() {
