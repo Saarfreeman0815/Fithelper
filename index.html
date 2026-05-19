@@ -3880,12 +3880,12 @@ function gpsStop() {
   document.getElementById('gps-status').textContent = '✓ Gespeichert: ' + eintrag.km + ' km · ' + eintrag.dauer;
   status('✓ Strecke gespeichert: ' + eintrag.km + ' km');
 
-  // AUTO-RESET — Anzeige nach 3 Sekunden zurücksetzen
+  // AUTO-RESET — sofort auf Null
+  document.getElementById('gps-km').textContent = '0.00';
+  document.getElementById('gps-time').textContent = '00:00';
+  document.getElementById('gps-pace').textContent = '--:--';
+  document.getElementById('gps-kcal').textContent = '0';
   setTimeout(() => {
-    document.getElementById('gps-km').textContent = '0.00';
-    document.getElementById('gps-time').textContent = '00:00';
-    document.getElementById('gps-pace').textContent = '--:--';
-    document.getElementById('gps-kcal').textContent = '0';
     document.getElementById('gps-status').textContent = 'GPS bereit — drücke Start';
   }, 3000);
 }
