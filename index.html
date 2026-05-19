@@ -414,6 +414,8 @@ select.inp { cursor: pointer; }
 .category-btn .cat-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -964,6 +966,8 @@ select.inp { cursor: pointer; }
           <button class="btn outline" id="gps-pause-btn" onclick="gpsPause()" style="display:none;min-height:52px;font-size:1rem;padding:12px 24px;">⏸ PAUSE</button>
         </div>
       </div>
+      <!-- LIVE KARTE -->
+      <div id="gps-map" style="display:none;height:280px;border-radius:10px;overflow:hidden;margin-top:12px;border:1px solid var(--border);"></div>
     </div>
 
     <!-- MEINE STRECKEN -->
@@ -3734,6 +3738,10 @@ let gpsPauseTime = 0;
 let gpsPauseStart = null;
 let gpsTimerInterval = null;
 let gpsStrecken = JSON.parse(localStorage.getItem('fh_gps_strecken') || '[]');
+let gpsMap = null;
+let gpsPolyline = null;
+let gpsMarker = null;
+let gpsRouteCoords = [];
 
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371;
@@ -3754,6 +3762,7 @@ function gpsStart() {
   gpsPaused = false;
   gpsPoints = [];
   gpsTotalKm = 0;
+  gpsRouteCoords = [];
   gpsStartTime = Date.now();
   gpsPauseTime = 0;
 
@@ -3790,7 +3799,7 @@ function gpsStart() {
     if (gpsPoints.length > 0) {
       const last = gpsPoints[gpsPoints.length - 1];
       const dist = haversine(last.lat, last.lon, lat, lon);
-      if (dist > 0.003) { // Mindestens 3 Meter
+      if (dist > 0.003) {
         gpsTotalKm += dist;
         document.getElementById('gps-km').textContent = gpsTotalKm.toFixed(2);
         gpsUpdateKcal();
@@ -3798,9 +3807,43 @@ function gpsStart() {
       }
     }
     gpsPoints.push({lat, lon, t: Date.now()});
-    // Punkte im localStorage sichern — Schutz gegen Browser-Hintergrund-Pause
+    gpsRouteCoords.push([lat, lon]);
+
+    // Karte initialisieren beim ersten Punkt
+    if (gpsRouteCoords.length === 1) {
+      const mapEl = document.getElementById('gps-map');
+      mapEl.style.display = 'block';
+      if (!gpsMap) {
+        gpsMap = L.map('gps-map', {zoomControl: true, attributionControl: false}).setView([lat, lon], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19
+        }).addTo(gpsMap);
+      } else {
+        gpsMap.setView([lat, lon], 16);
+      }
+    }
+
+    // Route live zeichnen
+    if (gpsMap) {
+      if (gpsPolyline) {
+        gpsPolyline.setLatLngs(gpsRouteCoords);
+      } else {
+        gpsPolyline = L.polyline(gpsRouteCoords, {color: '#00ffcc', weight: 4, opacity: 0.85}).addTo(gpsMap);
+      }
+      // Marker aktualisieren
+      if (gpsMarker) {
+        gpsMarker.setLatLng([lat, lon]);
+      } else {
+        gpsMarker = L.circleMarker([lat, lon], {
+          radius: 8, fillColor: '#00ffcc', color: '#fff',
+          weight: 2, opacity: 1, fillOpacity: 1
+        }).addTo(gpsMap);
+      }
+      gpsMap.panTo([lat, lon]);
+    }
+
     localStorage.setItem('fh_gps_aktiv', JSON.stringify({
-      punkte: gpsPoints.slice(-100), // Letzte 100 Punkte
+      punkte: gpsPoints.slice(-100),
       km: gpsTotalKm,
       start: gpsStartTime,
       pause: gpsPauseTime
@@ -3885,6 +3928,10 @@ function gpsStop() {
   document.getElementById('gps-time').textContent = '00:00';
   document.getElementById('gps-pace').textContent = '--:--';
   document.getElementById('gps-kcal').textContent = '0';
+  gpsRouteCoords = [];
+  if (gpsPolyline) { gpsPolyline.remove(); gpsPolyline = null; }
+  if (gpsMarker) { gpsMarker.remove(); gpsMarker = null; }
+  document.getElementById('gps-map').style.display = 'none';
   setTimeout(() => {
     document.getElementById('gps-status').textContent = 'GPS bereit — drücke Start';
   }, 3000);
