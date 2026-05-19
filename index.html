@@ -567,7 +567,14 @@ select.inp { cursor: pointer; }
     
     <!-- MAKROS -->
     <div class="card">
-      <div class="card-title">MAKRONÄHRSTOFFE HEUTE</div>
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>MAKRONÄHRSTOFFE HEUTE</span>
+        <div style="display:flex;gap:4px;">
+          <button onclick="setMakroFokus('standard')" id="fokus-btn-standard" class="btn outline small" style="font-size:.6rem;padding:4px 8px;">⚖️</button>
+          <button onclick="setMakroFokus('high_protein')" id="fokus-btn-high_protein" class="btn outline small" style="font-size:.6rem;padding:4px 8px;">💪</button>
+          <button onclick="setMakroFokus('low_carb')" id="fokus-btn-low_carb" class="btn outline small" style="font-size:.6rem;padding:4px 8px;">🥑</button>
+        </div>
+      </div>
       <div class="grid3">
         <div class="macro-circle">
           <div class="macro-val" style="color:#ef4444;" id="dash-protein">0g</div>
@@ -2291,6 +2298,10 @@ function updateDashboard() {
   const eaten = todayKcal();
   const remaining = Math.max(0, kcalTarget - eaten);
 
+  // Dynamische Makro-Ziele nach Fokus-Modus
+  const makroZiele = getMakroZiele();
+  updateFokusBtns();
+
   const h = new Date().getHours();
   const gruss = h < 12 ? 'GUTEN MORGEN' : h < 18 ? 'GUTEN TAG' : 'GUTEN ABEND';
   setText('dash-greeting', gruss + ', ' + (profile?.name?.toUpperCase() || '') + '!');
@@ -2310,10 +2321,10 @@ function updateDashboard() {
   setText('dash-protein', p + 'g');
   setText('dash-carbs', c + 'g');
   setText('dash-fat', f + 'g');
-  setWidth('dash-protein-bar', Math.min(100, (p / proteinTarget) * 100));
-  setText('dash-protein-target', p + '/' + proteinTarget + 'g');
-  setWidth('dash-carbs-bar', Math.min(100, (c / 250) * 100));
-  setWidth('dash-fat-bar', Math.min(100, (f / 70) * 100));
+  setWidth('dash-protein-bar', Math.min(100, (p / makroZiele.protein) * 100));
+  setText('dash-protein-target', p + '/' + makroZiele.protein + 'g');
+  setWidth('dash-carbs-bar', Math.min(100, (c / makroZiele.kh) * 100));
+  setWidth('dash-fat-bar', Math.min(100, (f / makroZiele.fett) * 100));
 
   setText('dash-water', waterCount + ' / ' + waterGoal);
   setWidth('dash-water-bar', Math.min(100, (waterCount / waterGoal) * 100));
@@ -4419,7 +4430,27 @@ function verarbeiteSprachAktivitaet(text) {
 // ================================================================
 // FEATURE 3: DYNAMISCHE MAKRO-ZIELE
 // ================================================================
-function berechneMakroZiele(kalorienZiel, fokusModus) {
+function setMakroFokus(fokus) {
+  profile = load('fh_profile', {});
+  profile.makroFokus = fokus;
+  save('fh_profile', profile);
+  updateDashboard();
+  const namen = {standard:'⚖️ Standard', high_protein:'💪 High Protein', low_carb:'🥑 Low Carb'};
+  status('✓ Makro-Fokus: ' + (namen[fokus] || fokus));
+}
+
+function updateFokusBtns() {
+  const fokus = load('fh_profile', {}).makroFokus || 'standard';
+  ['standard','high_protein','low_carb'].forEach(f => {
+    const btn = document.getElementById('fokus-btn-' + f);
+    if (!btn) return;
+    btn.style.background = f === fokus ? 'var(--accent2)' : 'transparent';
+    btn.style.color = f === fokus ? '#fff' : '';
+    btn.style.borderColor = f === fokus ? 'var(--accent2)' : '';
+  });
+}
+
+
   let proteinZiel, khZiel, fettZiel;
   if (fokusModus === 'high_protein') {
     proteinZiel = Math.round((kalorienZiel * 0.40) / 4);
