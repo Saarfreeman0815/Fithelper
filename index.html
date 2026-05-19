@@ -629,7 +629,9 @@ select.inp { cursor: pointer; }
       </div>
       <!-- BARCODE SCANNER -->
       <div id="barcode-area" style="display:none;margin-bottom:12px;">
-        <video id="barcode-video" style="width:100%;border-radius:8px;max-height:200px;background:#000;" autoplay playsinline muted></video>
+        <div id="barcode-container" style="width:100%;border-radius:8px;overflow:hidden;background:#000;max-height:220px;position:relative;">
+          <video id="barcode-video" style="width:100%;max-height:220px;display:block;" autoplay playsinline muted></video>
+        </div>
         <canvas id="barcode-canvas" style="display:none;"></canvas>
         <div style="display:flex;gap:8px;margin-top:8px;">
           <div style="font-size:.72rem;color:var(--muted);flex:1;" id="barcode-status">Kamera wird gestartet...</div>
@@ -3170,7 +3172,7 @@ async function startBarcode() {
         inputStream: {
           name: 'Live',
           type: 'LiveStream',
-          target: video,
+          target: document.getElementById('barcode-container'),
           constraints: {
             facingMode: 'environment',
             width: { ideal: 1280 },
@@ -3180,14 +3182,17 @@ async function startBarcode() {
         decoder: {
           readers: ['ean_reader','ean_8_reader','upc_reader','upc_e_reader']
         },
-        locate: true
+        locate: true,
+        numOfWorkers: 2,
+        frequency: 10
       }, err => {
         if (err) {
-          statusEl.textContent = '✗ Kamera nicht verfügbar';
+          statusEl.textContent = '✗ Kamera nicht verfügbar: ' + (err.message || err);
           quaggaRunning = false;
           return;
         }
         Quagga.start();
+        statusEl.textContent = '📷 Barcode vor die Kamera halten...';
       });
       Quagga.onDetected(async result => {
         if (!quaggaRunning) return;
