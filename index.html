@@ -977,7 +977,7 @@ select.inp { cursor: pointer; }
         <button class="btn outline small" onclick="gpsLoeschen()" style="color:var(--red);">🗑 Alle löschen</button>
       </div>
       <!-- Route Karte Vorschau -->
-      <div id="gps-route-preview" style="display:none;width:100%;height:300px;border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid var(--border);"></div>
+      <div id="gps-route-preview" style="display:none;width:100%;height:180px !important;border-radius:8px;overflow:hidden;margin-bottom:10px;border:1px solid var(--border);"></div>
       <div id="gps-history">
         <div style="text-align:center;padding:16px;color:var(--muted);font-size:.8rem;">Noch keine Strecken gespeichert</div>
       </div>
@@ -3822,7 +3822,7 @@ function gpsStart() {
         mapEl.innerHTML = '';
       }
       gpsMap = L.map('gps-map', {zoomControl: true, attributionControl: false}).setView([lat, lon], 16);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19
       }).addTo(gpsMap);
       setTimeout(() => { gpsMap.invalidateSize(); }, 400);
@@ -3997,11 +3997,11 @@ function gpsZeigeRoute(id) {
     // Alte Karte entfernen falls vorhanden
     preview.innerHTML = '';
     const mapDiv = document.createElement('div');
-    mapDiv.style.cssText = 'width:100%;height:300px;';
+    mapDiv.style.cssText = 'width:100%;height:180px;';
     preview.appendChild(mapDiv);
 
     const m = L.map(mapDiv, {zoomControl:true, attributionControl:false});
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19}).addTo(m);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(m);
     const poly = L.polyline(strecke.coords, {color:'#00ffcc', weight:4, opacity:.9}).addTo(m);
     m.fitBounds(poly.getBounds(), {padding:[20,20]});
 
