@@ -998,6 +998,22 @@ select.inp { cursor: pointer; }
         </button>
         <div id="voice-steps-status" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:6px;min-height:20px;"></div>
       </div>
+
+      <!-- LIVE SCHRITTZÄHLER -->
+      <div style="border-top:1px solid var(--border);padding-top:12px;margin-bottom:12px;">
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">📱 LIVE SCHRITTZÄHLER (SENSOR)</div>
+        <div style="text-align:center;margin-bottom:10px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;color:#00ffcc;" id="live-steps-count">0</div>
+          <div style="font-size:.7rem;color:var(--muted);">gezählte Schritte diese Session</div>
+        </div>
+        <button id="live-steps-btn" onclick="liveStepsToggle()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:rgba(0,255,204,.15);border:2px solid #00ffcc;color:#00ffcc;border-radius:10px;cursor:pointer;margin-bottom:6px;">
+          👟 LIVE-ZÄHLER STARTEN
+        </button>
+        <button id="live-steps-save" onclick="liveStepsSave()" style="display:none;width:100%;padding:10px;font-size:.85rem;font-weight:700;background:var(--green);border:none;color:#fff;border-radius:8px;cursor:pointer;">
+          💾 Schritte übernehmen & stoppen
+        </button>
+        <div id="live-steps-status" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:6px;min-height:18px;">Sensor bereit</div>
+      </div>
       <div style="border-top:1px solid var(--border);padding-top:12px;">
         <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">TAGESZIEL & PROFIL</div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
@@ -1483,6 +1499,112 @@ const deutscheLebensmittel = [
   {name:'Tzatziki (50g)', kcal:50, protein:2, carbs:3, fat:4},
   {name:'Pesto (20g)', kcal:96, protein:2, carbs:2, fat:10},
   {name:'Tomatensoße (100g)', kcal:35, protein:1, carbs:7, fat:1},
+
+  // Brot & Brötchen
+  {name:'Brötchen (Weizenbrötchen)', kcal:270, protein:9, carbs:53, fat:2},
+  {name:'Brötchen (Vollkorn)', kcal:250, protein:10, carbs:46, fat:3},
+  {name:'Kürbiskernbrötchen', kcal:290, protein:11, carbs:48, fat:7},
+  {name:'Sesambrötchen', kcal:280, protein:10, carbs:50, fat:5},
+  {name:'Laugenbrezel', kcal:340, protein:10, carbs:65, fat:3},
+  {name:'Laugenbrötchen', kcal:280, protein:9, carbs:52, fat:3},
+  {name:'Croissant', kcal:406, protein:8, carbs:46, fat:21},
+  {name:'Toastbrot (1 Scheibe)', kcal:67, protein:2, carbs:13, fat:1},
+  {name:'Vollkorntoast (1 Scheibe)', kcal:60, protein:3, carbs:11, fat:1},
+  {name:'Weißbrot (1 Scheibe)', kcal:70, protein:2, carbs:14, fat:1},
+  {name:'Roggenbrot (1 Scheibe)', kcal:55, protein:2, carbs:11, fat:1},
+  {name:'Vollkornbrot (1 Scheibe)', kcal:50, protein:2, carbs:9, fat:1},
+  {name:'Baguette (100g)', kcal:270, protein:9, carbs:54, fat:1},
+  {name:'Ciabatta (100g)', kcal:260, protein:9, carbs:50, fat:3},
+  {name:'Pumpernickel (1 Scheibe)', kcal:55, protein:2, carbs:11, fat:1},
+  {name:'Knäckebrot (1 Scheibe)', kcal:33, protein:1, carbs:7, fat:0},
+
+  // Käse
+  {name:'Gouda (30g)', kcal:111, protein:8, carbs:0, fat:9},
+  {name:'Emmentaler (30g)', kcal:117, protein:9, carbs:0, fat:9},
+  {name:'Camembert (30g)', kcal:87, protein:6, carbs:0, fat:7},
+  {name:'Brie (30g)', kcal:101, protein:6, carbs:0, fat:8},
+  {name:'Mozzarella (100g)', kcal:254, protein:18, carbs:2, fat:20},
+  {name:'Parmesan (20g)', kcal:83, protein:7, carbs:0, fat:6},
+  {name:'Feta (30g)', kcal:67, protein:4, carbs:0, fat:5},
+  {name:'Hüttenkäse (100g)', kcal:98, protein:12, carbs:3, fat:4},
+  {name:'Frischkäse (30g)', kcal:66, protein:2, carbs:1, fat:6},
+  {name:'Schmelzkäse (1 Scheibe)', kcal:60, protein:3, carbs:2, fat:5},
+  {name:'Bergkäse (30g)', kcal:120, protein:9, carbs:0, fat:9},
+  {name:'Cheddar (30g)', kcal:120, protein:7, carbs:0, fat:10},
+
+  // Aufschnitt & Wurst
+  {name:'Kochschinken (1 Scheibe)', kcal:35, protein:5, carbs:0, fat:1},
+  {name:'Salami (1 Scheibe)', kcal:45, protein:3, carbs:0, fat:4},
+  {name:'Mortadella (1 Scheibe)', kcal:55, protein:3, carbs:1, fat:5},
+  {name:'Bierschinken (1 Scheibe)', kcal:40, protein:4, carbs:1, fat:2},
+  {name:'Putenbrust Aufschnitt (1 Scheibe)', kcal:25, protein:5, carbs:0, fat:0},
+  {name:'Schwarzwälder Schinken (1 Scheibe)', kcal:30, protein:5, carbs:0, fat:1},
+  {name:'Lyoner (1 Scheibe)', kcal:50, protein:4, carbs:1, fat:4},
+  {name:'Fleischwurst (1 Scheibe)', kcal:60, protein:4, carbs:1, fat:5},
+
+  // Getränke
+  {name:'Kaffee (schwarz)', kcal:2, protein:0, carbs:0, fat:0},
+  {name:'Kaffee mit Milch', kcal:30, protein:2, carbs:3, fat:1},
+  {name:'Latte Macchiato', kcal:120, protein:5, carbs:12, fat:5},
+  {name:'Cappuccino', kcal:80, protein:4, carbs:8, fat:3},
+  {name:'Espresso', kcal:5, protein:0, carbs:1, fat:0},
+  {name:'Orangensaft (200ml)', kcal:88, protein:1, carbs:21, fat:0},
+  {name:'Apfelsaft (200ml)', kcal:96, protein:0, carbs:24, fat:0},
+  {name:'Multivitaminsaft (200ml)', kcal:90, protein:1, carbs:22, fat:0},
+  {name:'Cola (330ml)', kcal:139, protein:0, carbs:35, fat:0},
+  {name:'Cola Zero (330ml)', kcal:2, protein:0, carbs:0, fat:0},
+  {name:'Fanta (330ml)', kcal:140, protein:0, carbs:35, fat:0},
+  {name:'Bier (500ml)', kcal:215, protein:2, carbs:18, fat:0},
+  {name:'Wein weiß (150ml)', kcal:108, protein:0, carbs:3, fat:0},
+  {name:'Wein rot (150ml)', kcal:120, protein:0, carbs:4, fat:0},
+  {name:'Apfelschorle (200ml)', kcal:50, protein:0, carbs:12, fat:0},
+  {name:'Eistee (500ml)', kcal:100, protein:0, carbs:25, fat:0},
+  {name:'Red Bull (250ml)', kcal:113, protein:1, carbs:28, fat:0},
+  {name:'Proteinshake (fertig, 330ml)', kcal:170, protein:25, carbs:8, fat:4},
+
+  // Müsli & Frühstück
+  {name:'Cornflakes (50g)', kcal:188, protein:4, carbs:42, fat:1},
+  {name:'Müsli (50g)', kcal:185, protein:5, carbs:33, fat:4},
+  {name:'Granola (50g)', kcal:220, protein:5, carbs:32, fat:8},
+  {name:'Nutella (20g)', kcal:118, protein:1, carbs:12, fat:7},
+  {name:'Marmelade (20g)', kcal:50, protein:0, carbs:13, fat:0},
+  {name:'Butter (10g)', kcal:74, protein:0, carbs:0, fat:8},
+  {name:'Margarine (10g)', kcal:72, protein:0, carbs:0, fat:8},
+
+  // Fertigprodukte & Snacks
+  {name:'Tiefkühlpizza (350g)', kcal:840, protein:35, carbs:98, fat:32},
+  {name:'Currywurst mit Pommes', kcal:650, protein:22, carbs:65, fat:32},
+  {name:'Döner Kebab', kcal:550, protein:28, carbs:52, fat:24},
+  {name:'Hamburger (McDonald\'s)', kcal:250, protein:13, carbs:30, fat:8},
+  {name:'Big Mac', kcal:503, protein:26, carbs:44, fat:25},
+  {name:'Pommes Frites (200g)', kcal:540, protein:7, carbs:68, fat:26},
+  {name:'Chips (100g)', kcal:536, protein:6, carbs:55, fat:32},
+  {name:'Salzstangen (30g)', kcal:114, protein:3, carbs:24, fat:1},
+  {name:'Brezel (Snack, 30g)', kcal:112, protein:3, carbs:23, fat:1},
+  {name:'Gummibärchen (100g)', kcal:343, protein:6, carbs:80, fat:0},
+  {name:'Schokolade Vollmilch (30g)', kcal:159, protein:2, carbs:17, fat:9},
+  {name:'Schokolade Zartbitter (30g)', kcal:163, protein:2, carbs:16, fat:10},
+  {name:'Keks (1 Stück)', kcal:50, protein:1, carbs:7, fat:2},
+  {name:'Muffin', kcal:340, protein:5, carbs:50, fat:14},
+  {name:'Donut', kcal:300, protein:4, carbs:38, fat:15},
+
+  // Milchprodukte
+  {name:'Vollmilch (200ml)', kcal:122, protein:6, carbs:9, fat:7},
+  {name:'Halbfettmilch (200ml)', kcal:92, protein:7, carbs:10, fat:3},
+  {name:'Magermilch (200ml)', kcal:68, protein:7, carbs:10, fat:0},
+  {name:'Naturjoghurt 3,5% (150g)', kcal:87, protein:6, carbs:7, fat:5},
+  {name:'Griechischer Joghurt (150g)', kcal:133, protein:10, carbs:5, fat:9},
+  {name:'Quark (mager, 100g)', kcal:67, protein:12, carbs:4, fat:0},
+  {name:'Speisequark 20% (100g)', kcal:100, protein:12, carbs:4, fat:3},
+  {name:'Sahne (30ml)', kcal:103, protein:1, carbs:1, fat:11},
+  {name:'Schmand (30g)', kcal:66, protein:1, carbs:1, fat:7},
+
+  // Süßes & Backen
+  {name:'Apfelkuchen (1 Stück)', kcal:280, protein:4, carbs:42, fat:11},
+  {name:'Käsekuchen (1 Stück)', kcal:320, protein:8, carbs:35, fat:17},
+  {name:'Schwarzwälder Kirschtorte (1 Stück)', kcal:380, protein:4, carbs:40, fat:22},
+  {name:'Pfannkuchen (1 Stück)', kcal:180, protein:5, carbs:26, fat:6},
+  {name:'Waffel (1 Stück)', kcal:150, protein:3, carbs:22, fat:6},
 ];
 
 // ================================================================
@@ -2477,8 +2599,17 @@ function setWidth(id, pct) { const el = document.getElementById(id); if (el) el.
 let searchTimeout = null;
 
 function searchGermanDB(query) {
-  const q = query.toLowerCase();
-  return deutscheLebensmittel.filter(f => f.name.toLowerCase().includes(q)).slice(0, 5);
+  const q = query.toLowerCase().trim();
+  const results = deutscheLebensmittel.filter(f => f.name.toLowerCase().includes(q));
+  // Exakte Treffer am Anfang, dann Teiltreff
+  results.sort((a, b) => {
+    const aName = a.name.toLowerCase();
+    const bName = b.name.toLowerCase();
+    const aExact = aName.startsWith(q) ? 0 : aName.split('(')[0].trim() === q ? 1 : 2;
+    const bExact = bName.startsWith(q) ? 0 : bName.split('(')[0].trim() === q ? 1 : 2;
+    return aExact - bExact;
+  });
+  return results.slice(0, 8);
 }
 
 async function searchFood(query) {
@@ -4413,7 +4544,97 @@ function koerperLoeschen(index) {
 }
 
 // ================================================================
-// MODUL 2: REZEPT TEILEN & IMPORTIEREN
+// LIVE SCHRITTZÄHLER (DeviceMotion / Beschleunigungssensor)
+// ================================================================
+let liveStepsCount = 0;
+let liveStepsActive = false;
+let liveStepsLastMag = 0;
+let liveStepsThreshold = 12;
+let liveStepsCooldown = false;
+
+function liveStepsToggle() {
+  if (liveStepsActive) {
+    liveStepsStop();
+  } else {
+    liveStepsStart();
+  }
+}
+
+function liveStepsStart() {
+  if (!window.DeviceMotionEvent) {
+    document.getElementById('live-steps-status').textContent = '✗ Sensor nicht verfügbar auf diesem Gerät';
+    return;
+  }
+
+  // iOS 13+ braucht Permission
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission().then(state => {
+      if (state === 'granted') {
+        liveStepsInit();
+      } else {
+        document.getElementById('live-steps-status').textContent = '✗ Sensor-Zugriff verweigert';
+      }
+    }).catch(() => {
+      document.getElementById('live-steps-status').textContent = '✗ Sensor-Zugriff Fehler';
+    });
+  } else {
+    liveStepsInit();
+  }
+}
+
+function liveStepsInit() {
+  liveStepsCount = 0;
+  liveStepsActive = true;
+  document.getElementById('live-steps-count').textContent = '0';
+  document.getElementById('live-steps-btn').textContent = '⏹ ZÄHLER STOPPEN';
+  document.getElementById('live-steps-btn').style.background = 'rgba(248,113,113,.15)';
+  document.getElementById('live-steps-btn').style.borderColor = 'var(--red)';
+  document.getElementById('live-steps-btn').style.color = 'var(--red)';
+  document.getElementById('live-steps-save').style.display = 'block';
+  document.getElementById('live-steps-status').textContent = '📱 Läuft — Handy in die Tasche!';
+  window.addEventListener('devicemotion', liveStepsHandler);
+}
+
+function liveStepsHandler(e) {
+  if (!liveStepsActive || liveStepsCooldown) return;
+  const a = e.accelerationIncludingGravity;
+  if (!a) return;
+  const mag = Math.sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+  if (liveStepsLastMag > 0) {
+    const delta = Math.abs(mag - liveStepsLastMag);
+    if (delta > liveStepsThreshold) {
+      liveStepsCount++;
+      document.getElementById('live-steps-count').textContent = liveStepsCount;
+      // Cooldown 350ms — kein Doppelzählen
+      liveStepsCooldown = true;
+      setTimeout(() => { liveStepsCooldown = false; }, 350);
+    }
+  }
+  liveStepsLastMag = mag;
+}
+
+function liveStepsStop() {
+  liveStepsActive = false;
+  window.removeEventListener('devicemotion', liveStepsHandler);
+  document.getElementById('live-steps-btn').textContent = '👟 LIVE-ZÄHLER STARTEN';
+  document.getElementById('live-steps-btn').style.background = 'rgba(0,255,204,.15)';
+  document.getElementById('live-steps-btn').style.borderColor = '#00ffcc';
+  document.getElementById('live-steps-btn').style.color = '#00ffcc';
+  document.getElementById('live-steps-status').textContent = 'Gestoppt — ' + liveStepsCount + ' Schritte gezählt';
+}
+
+function liveStepsSave() {
+  if (liveStepsActive) liveStepsStop();
+  if (liveStepsCount === 0) { status('Noch keine Schritte gezählt!'); return; }
+  addSteps(liveStepsCount);
+  status('✓ ' + liveStepsCount + ' Schritte übernommen!');
+  liveStepsCount = 0;
+  document.getElementById('live-steps-count').textContent = '0';
+  document.getElementById('live-steps-save').style.display = 'none';
+  document.getElementById('live-steps-status').textContent = 'Sensor bereit';
+}
+
+
 // ================================================================
 let eigeneRezepte = JSON.parse(localStorage.getItem('fithelper_user_rezepte') || '[]');
 
