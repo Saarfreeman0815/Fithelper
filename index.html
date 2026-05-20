@@ -95,7 +95,8 @@ body {
 .tab.on { color: var(--accent2); border-bottom-color: var(--accent2); }
 
 /* PANELS */
-.panel { display: none; flex: 1; overflow: hidden; min-height: 0; max-height: 100%; }
+.panel { display: none; flex: 1; overflow: hidden; min-height: 0; max-height: 100%; flex-direction: column; }
+.panel.on { display: flex; }
 .panel.on { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
 
 .panel-content {
@@ -2225,28 +2226,35 @@ const SUB_MAP = {
 };
 
 function showMainTab(id) {
-  // Alle Haupt-Panels verstecken
-  [...TABS, ...MAIN_TABS].forEach(t => {
+  // Alle panels verstecken außer dashboard das separat behandelt wird
+  ['ernaehrung','aktivitaet','mehr','dashboard',
+   'essen','wasser','gewicht','training','supplemente','tipps',
+   'rezepte','schritte','fasten','einkauf','koerper','vorrat'].forEach(t => {
     const p = document.getElementById('p-' + t);
     if (p) { p.style.display = 'none'; p.classList.remove('on'); }
   });
-  document.querySelectorAll('.tabbar .tab').forEach(b => b.classList.remove('on'));
 
-  // Aktives Panel zeigen
+  // Haupt-Tab Buttons
+  document.querySelectorAll('.tabbar .tab').forEach((b,i) => {
+    b.classList.toggle('on', MAIN_TABS[i] === id);
+  });
+
+  // Ziel-Panel anzeigen
   const panel = document.getElementById('p-' + id);
   if (panel) { panel.style.display = 'flex'; panel.classList.add('on'); }
 
-  // Aktiven Tab markieren
-  const tabs = document.querySelectorAll('.tabbar .tab');
-  const idx = MAIN_TABS.indexOf(id);
-  if (idx >= 0 && tabs[idx]) tabs[idx].classList.add('on');
+  // Dashboard
+  if (id === 'dashboard') {
+    try { updateDashboard(); } catch(e) {}
+    try { loadRezeptOfDay(); } catch(e) {}
+    return;
+  }
 
-  // Dashboard init
-  if (id === 'dashboard') { updateDashboard(); loadRezeptOfDay(); renderDashMeals(); }
-
-  // Sub-Panel: ersten Sub-Tab laden
+  // Sub-Tabs initialisieren
   if (SUB_MAP[id]) showSub(id, SUB_MAP[id][0]);
 }
+
+function renderFoodLogDash() { updateDashboard(); }
 
 function showSub(mainId, subId) {
   const container = document.getElementById('sub-content-' + mainId);
@@ -4558,7 +4566,7 @@ function updateFokusBtns() {
   });
 }
 
-
+function berechneMakroZiele(kalorienZiel, fokusModus) {
   let proteinZiel, khZiel, fettZiel;
   if (fokusModus === 'high_protein') {
     proteinZiel = Math.round((kalorienZiel * 0.40) / 4);
@@ -4578,7 +4586,7 @@ function updateFokusBtns() {
 
 function getMakroZiele() {
   const p = load('fh_profile', {});
-  const kcalZiel = berechneKcalZiel();
+  const kcalZiel = calcKcalTarget();
   return berechneMakroZiele(kcalZiel, p.makroFokus || 'standard');
 }
 
