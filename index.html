@@ -3535,10 +3535,15 @@ function stopBarcode() {
   document.getElementById('barcode-area').style.display = 'none';
 }
 
+let isFetching = false;
+
 async function lookupBarcode(code) {
-  if (!code) return;
+  if (!code || isFetching) return;
+  isFetching = true;
   try {
-    const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`);
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`, { signal: controller.signal });
     const data = await res.json();
     if (data.status === 1 && data.product) {
       const p = data.product;
@@ -3554,7 +3559,10 @@ async function lookupBarcode(code) {
       status('✗ Produkt nicht gefunden — bitte manuell eingeben');
     }
   } catch(e) {
-    status('✗ Verbindungsfehler');
+    if (e.name === 'AbortError') status('✗ Timeout — kein Internet?');
+    else status('✗ Verbindungsfehler');
+  } finally {
+    isFetching = false;
   }
 }
 
@@ -4329,8 +4337,13 @@ function speichereKoerperDaten() {
     rehaMin: rehaMin || '-'
   };
 
-  koerperStats.unshift(neuerEintrag);
-  if (koerperStats.length > 10) koerperStats.pop();
+  const indexHeute = koerperStats.findIndex(e => e.datum === neuerEintrag.datum);
+  if (indexHeute !== -1) {
+    koerperStats[indexHeute] = neuerEintrag;
+  } else {
+    koerperStats.unshift(neuerEintrag);
+    if (koerperStats.length > 10) koerperStats.pop();
+  }
   localStorage.setItem('fithelper_body_stats', JSON.stringify(koerperStats));
 
   ['stats-gewicht','stats-bauch','stats-bizeps','stats-oberschenkel','stats-schmerz','stats-reha-min']
@@ -4408,6 +4421,11 @@ function exportiereRezept(r) {
   }
 }
 
+function entschaerfeText(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function importiereRezept() {
   const shareCode = document.getElementById('import-code-input').value.trim();
   if (!shareCode) return;
@@ -4415,8 +4433,12 @@ function importiereRezept() {
     const jsonStr = decodeURIComponent(escape(atob(shareCode)));
     const r = JSON.parse(jsonStr);
     if (!r || !r.name || typeof r.name !== 'string') throw new Error('Kein gültiges Rezept');
-    // Neue ID vergeben
+    // XSS Schutz — alle Strings bereinigen
     r.id = 'user_' + Date.now();
+    r.name = entschaerfeText(r.name);
+    r.kategorie = entschaerfeText(r.kategorie || '');
+    r.anleitung = entschaerfeText(r.anleitung || '');
+    if (Array.isArray(r.zutaten)) r.zutaten = r.zutaten.map(z => entschaerfeText(z));
     eigeneRezepte.push(r);
     localStorage.setItem('fithelper_user_rezepte', JSON.stringify(eigeneRezepte));
     document.getElementById('import-code-input').value = '';
