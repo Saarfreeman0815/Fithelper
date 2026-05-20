@@ -2564,7 +2564,7 @@ function calcPortion() {
 
 function addManualFood() {
   const name = document.getElementById('manual-name').value.trim();
-  const kcal = parseInt(document.getElementById('manual-kcal').value) || 0;
+  const kcal = parseFloat(document.getElementById('manual-kcal').value) || 0;
   const protein = parseFloat(document.getElementById('manual-protein').value) || 0;
   const carbs = parseFloat(document.getElementById('manual-carbs').value) || 0;
   const fat = parseFloat(document.getElementById('manual-fat').value) || 0;
@@ -4681,7 +4681,7 @@ function checkSuppsReminder() {
     if (!s.time) return;
     if (s.time === aktuelleZeit && s.letzterAlarm !== heute) {
       s.letzterAlarm = heute;
-      geaendert = true;
+      save('fh_supplements', supps); // Sofort sichern vor Alarm!
       if ('vibrate' in navigator) navigator.vibrate([500, 300, 500]);
       setTimeout(() => triggerSuppsAlarm(s.name + (s.dose ? ' · ' + s.dose : '')), 100);
     }
