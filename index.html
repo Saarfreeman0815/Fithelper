@@ -1009,6 +1009,9 @@ select.inp { cursor: pointer; }
         <button id="live-steps-btn" onclick="liveStepsToggle()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:rgba(0,255,204,.15);border:2px solid #00ffcc;color:#00ffcc;border-radius:10px;cursor:pointer;margin-bottom:6px;">
           👟 LIVE-ZÄHLER STARTEN
         </button>
+        <button id="live-steps-permission" onclick="aktiviereSensor()" style="width:100%;padding:10px;font-size:.85rem;font-weight:700;background:rgba(251,191,36,.15);border:1px solid var(--gold);color:var(--gold);border-radius:8px;cursor:pointer;margin-bottom:6px;">
+          📱 Sensor freischalten (iOS)
+        </button>
         <button id="live-steps-save" onclick="liveStepsSave()" style="display:none;width:100%;padding:10px;font-size:.85rem;font-weight:700;background:var(--green);border:none;color:#fff;border-radius:8px;cursor:pointer;">
           💾 Schritte übernehmen & stoppen
         </button>
@@ -2348,6 +2351,8 @@ const SUB_MAP = {
 };
 
 function showMainTab(id) {
+  // Kamera immer stoppen beim Tab-Wechsel
+  try { stopBarcode(); } catch(e) {}
   // Alle panels verstecken außer dashboard das separat behandelt wird
   ['ernaehrung','aktivitaet','mehr','dashboard',
    'essen','wasser','gewicht','training','supplemente','tipps',
@@ -4552,6 +4557,25 @@ let liveStepsLastMag = 0;
 let liveStepsThreshold = 12;
 let liveStepsCooldown = false;
 
+function aktiviereSensor() {
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission().then(state => {
+      if (state === 'granted') {
+        document.getElementById('live-steps-permission').style.display = 'none';
+        document.getElementById('live-steps-status').textContent = '✓ Sensor freigegeben — jetzt Start drücken!';
+      } else {
+        document.getElementById('live-steps-status').textContent = '✗ Sensor verweigert — bitte in iOS Einstellungen freigeben';
+      }
+    }).catch(() => {
+      document.getElementById('live-steps-status').textContent = '✗ Fehler bei Sensor-Freigabe';
+    });
+  } else {
+    // Android oder Browser ohne Permission-Pflicht
+    document.getElementById('live-steps-permission').style.display = 'none';
+    document.getElementById('live-steps-status').textContent = '✓ Sensor bereit — kein Permission nötig!';
+  }
+}
+
 function liveStepsToggle() {
   if (liveStepsActive) {
     liveStepsStop();
@@ -4591,6 +4615,7 @@ function liveStepsInit() {
   document.getElementById('live-steps-btn').style.borderColor = 'var(--red)';
   document.getElementById('live-steps-btn').style.color = 'var(--red)';
   document.getElementById('live-steps-save').style.display = 'block';
+  document.getElementById('live-steps-permission').style.display = 'none';
   document.getElementById('live-steps-status').textContent = '📱 Läuft — Handy in die Tasche!';
   window.addEventListener('devicemotion', liveStepsHandler);
 }
