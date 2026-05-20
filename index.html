@@ -1167,7 +1167,7 @@ select.inp { cursor: pointer; }
         <button class="btn green" onclick="addShopItem()">+</button>
       </div>
       
-      <div id="shop-list" style="max-width:100%;box-sizing:border-box;overflow-x:hidden;">
+      <div id="einkauf-list" style="max-width:100%;box-sizing:border-box;overflow-x:hidden;">
         <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Artikel — Rezept öffnen und "Zur Einkaufsliste" klicken 🛒</div>
       </div>
     </div>
@@ -2707,7 +2707,7 @@ function addManualFood() {
   const meal = document.getElementById('manual-meal').value;
 
   if (!name) { alert('Bitte einen Namen eingeben!'); return; }
-  if (kcal > 20000) { alert('Osterhase, so viel kannst du gar nicht essen! 😄'); return; }
+  if (kcal > 20000) { alert('Wert zu hoch — bitte prüfen!'); return; }
   if (protein > 1000 || carbs > 2000 || fat > 1000) { alert('Wert zu hoch — bitte prüfen!'); return; }
 
   foodLog.push({ id: Date.now(), name, kcal, protein, carbs, fat, meal, time: new Date().toLocaleTimeString('de-DE', {hour:'2-digit',minute:'2-digit'}) });
@@ -3444,17 +3444,27 @@ function addEinkaufItem(name) {
 
 function addRezeptToEinkauf(zutaten) {
   if (!zutaten || !zutaten.length) {
-    // Fallback: direkt aus window._lastZutaten
     zutaten = window._lastZutaten;
   }
   if (!zutaten || !zutaten.length) { status('✗ Keine Zutaten gefunden'); return; }
+  einkaufItems = load('fh_einkauf', []);
   zutaten.forEach((z, i) => {
-    const text = (z.meas ? z.meas + ' ' : '') + z.ing;
-    einkaufItems.push({ id: Date.now() + i, text, done: false });
+    let text = '';
+    if (typeof z === 'string') {
+      text = z; // Deutscher Rezept String
+    } else if (z.ing) {
+      text = (z.meas ? z.meas + ' ' : '') + z.ing; // TheMealDB Objekt
+    } else if (z.name) {
+      text = z.name;
+    } else {
+      text = String(z);
+    }
+    if (text) einkaufItems.push({ id: Date.now() + i, text, done: false });
   });
   save('fh_einkauf', einkaufItems);
-  showTab('einkauf');
-  status('✓ ' + zutaten.length + ' Zutaten in den Einkaufswagen!');
+  showMainTab('ernaehrung');
+  setTimeout(() => showSub('ernaehrung','einkauf'), 100);
+  status('✓ Zutaten in den Einkaufswagen!');
 }
 
 function toggleEinkaufItem(id) {
@@ -3479,21 +3489,22 @@ function clearAllItems() {
 }
 
 function renderEinkauf() {
-  const el = document.getElementById('einkauf-list');
+  einkaufItems = load('fh_einkauf', []);
+  const el = document.getElementById('einkauf-list') || document.getElementById('shop-list');
   if (!el) return;
   if (!einkaufItems.length) {
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Artikel 🛒<br>Rezept öffnen und auf "In Einkaufsliste" klicken!</div>';
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Artikel 🛒<br>Artikel oben eingeben oder Rezept öffnen!</div>';
     return;
   }
   const open = einkaufItems.filter(i => !i.done);
   const done = einkaufItems.filter(i => i.done);
-  
   let html = '';
   if (open.length) {
     html += open.map(i => `
       <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--surface2);border-radius:8px;margin-bottom:6px;width:100%;box-sizing:border-box;">
         <input type="checkbox" onchange="toggleEinkaufItem(${i.id})" style="width:22px;height:22px;cursor:pointer;flex-shrink:0;">
-        <span style="flex:1;font-size:.85rem;word-wrap:break-word;overflow-wrap:break-word;white-space:normal;min-width:0;">${i.text}</span>
+        <span style="flex:1;font-size:.85rem;word-wrap:break-word;overflow-wrap:break-word;white-space:normal;min-width:0;">${i.text || i.name || '?'}</span>
+        <button onclick="einkaufLoeschen(${i.id})" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;flex-shrink:0;">✕</button>
       </div>`).join('');
   }
   if (done.length) {
@@ -3501,10 +3512,17 @@ function renderEinkauf() {
     html += done.map(i => `
       <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface2);border-radius:8px;margin-bottom:4px;opacity:.5;width:100%;box-sizing:border-box;">
         <input type="checkbox" checked onchange="toggleEinkaufItem(${i.id})" style="width:22px;height:22px;cursor:pointer;flex-shrink:0;">
-        <span style="flex:1;font-size:.8rem;text-decoration:line-through;color:var(--muted);word-wrap:break-word;overflow-wrap:break-word;white-space:normal;min-width:0;">${i.text}</span>
+        <span style="flex:1;font-size:.8rem;text-decoration:line-through;color:var(--muted);word-wrap:break-word;min-width:0;">${i.text || i.name || '?'}</span>
+        <button onclick="einkaufLoeschen(${i.id})" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;flex-shrink:0;">✕</button>
       </div>`).join('');
   }
   el.innerHTML = html;
+}
+
+function einkaufLoeschen(id) {
+  einkaufItems = einkaufItems.filter(i => i.id !== id);
+  save('fh_einkauf', einkaufItems);
+  renderEinkauf();
 }
 // ================================================================
 // BACKUP / RESTORE
@@ -3983,7 +4001,7 @@ function einkaufVomRezept() {
   save('fh_einkauf', einkaufItems);
   
   // Tab wechseln
-  showTab('einkauf');
+  showMainTab('ernaehrung');setTimeout(()=>showSub('ernaehrung','einkauf'),100);
   
   // HTML direkt in einkauf-list schreiben nach kurzem Delay
   setTimeout(() => {
@@ -4025,20 +4043,20 @@ function addToShoppingList(m) {
   }
   
   save('fh_shopping', shoppingList);
-  showTab('einkauf');
+  showMainTab('ernaehrung');setTimeout(()=>showSub('ernaehrung','einkauf'),100);
   status('✓ Zutaten von ' + m.strMeal + ' zur Einkaufsliste hinzugefügt!');
 }
 
 function addShopItem() {
   const name = document.getElementById('shop-inp').value.trim();
-  const amount = document.getElementById('shop-amount').value.trim();
+  const amount = document.getElementById('shop-amount')?.value.trim() || '';
   if (!name) return;
-  shoppingList = load('fh_shopping', []);
-  shoppingList.push({ id: Date.now(), type:'item', name, amount, bought: false });
-  save('fh_shopping', shoppingList);
+  einkaufItems = load('fh_einkauf', []);
+  einkaufItems.push({ id: Date.now(), text: name + (amount ? ' (' + amount + ')' : ''), done: false });
+  save('fh_einkauf', einkaufItems);
   document.getElementById('shop-inp').value = '';
-  document.getElementById('shop-amount').value = '';
-  renderShoppingList();
+  if (document.getElementById('shop-amount')) document.getElementById('shop-amount').value = '';
+  renderEinkauf();
   status('✓ ' + name + ' hinzugefügt');
 }
 
@@ -4466,7 +4484,7 @@ function speichereKoerperDaten() {
   const rehaMin = document.getElementById('stats-reha-min')?.value || '';
 
   if (!gewicht && !bauch && !bizeps && !oberschenkel && !schmerz && !rehaMin) {
-    alert('Bitte trag mindestens einen Wert ein, Osterhase! 😄');
+    alert('Bitte mindestens einen Wert eintragen!');
     return;
   }
   if (parseFloat(gewicht) > 500) { alert('Gewicht zu hoch — bitte prüfen!'); return; }
@@ -4669,7 +4687,7 @@ function exportiereRezept(r) {
     const jsonStr = JSON.stringify(r);
     const shareCode = btoa(unescape(encodeURIComponent(jsonStr)));
     navigator.clipboard.writeText(shareCode).then(() => {
-      alert('✓ Rezept-Code kopiert, Osterhase! 🐰\nSchick ihn per WhatsApp an deinen Kumpel!');
+      alert('✓ Rezept-Code kopiert! Per WhatsApp teilen!');
     }).catch(() => {
       prompt('Code kopieren:', shareCode);
     });
@@ -4945,7 +4963,7 @@ function triggerSuppsAlarm(suppName) {
   if ('vibrate' in navigator) {
     navigator.vibrate([500, 300, 500, 300, 500]);
   }
-  alert('🚨 ZEIT FÜR DEINE SUPPLEMENTS!\n\n' + suppName + ' einnehmen, Osterhase! 💊');
+  alert('🚨 ZEIT FÜR DEINE SUPPLEMENTS!\n\n' + suppName + ' einnehmen! 💊');
 }
 
 function checkSuppsReminder() {
