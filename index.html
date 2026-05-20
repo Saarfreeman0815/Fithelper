@@ -2571,6 +2571,8 @@ function addManualFood() {
   const meal = document.getElementById('manual-meal').value;
 
   if (!name) { alert('Bitte einen Namen eingeben!'); return; }
+  if (kcal > 20000) { alert('Osterhase, so viel kannst du gar nicht essen! 😄'); return; }
+  if (protein > 1000 || carbs > 2000 || fat > 1000) { alert('Wert zu hoch — bitte prüfen!'); return; }
 
   foodLog.push({ id: Date.now(), name, kcal, protein, carbs, fat, meal, time: new Date().toLocaleTimeString('de-DE', {hour:'2-digit',minute:'2-digit'}) });
   save('fh_food_log_' + today(), foodLog);
@@ -2639,7 +2641,13 @@ function renderWater() {
   setWidth('water-bar', Math.min(100, (waterCount / waterGoal) * 100));
 }
 
-function addWater() { if (waterCount < waterGoal) { waterCount++; saveWater(); renderWater(); updateDashboard(); } }
+let isWaterClickBlocked = false;
+function addWater() {
+  if (isWaterClickBlocked) return;
+  isWaterClickBlocked = true;
+  setTimeout(() => { isWaterClickBlocked = false; }, 300);
+  if (waterCount < waterGoal) { waterCount++; saveWater(); renderWater(); updateDashboard(); }
+}
 function removeWater() { if (waterCount > 0) { waterCount--; saveWater(); renderWater(); updateDashboard(); } }
 function resetWater() { waterCount = 0; saveWater(); renderWater(); updateDashboard(); }
 function saveWater() { save('fh_water_' + today(), waterCount); }
@@ -4325,6 +4333,9 @@ function speichereKoerperDaten() {
     alert('Bitte trag mindestens einen Wert ein, Osterhase! 😄');
     return;
   }
+  if (parseFloat(gewicht) > 500) { alert('Gewicht zu hoch — bitte prüfen!'); return; }
+  if (parseFloat(bauch) > 300 || parseFloat(bizeps) > 100 || parseFloat(oberschenkel) > 200) { alert('Umfang zu hoch — bitte prüfen!'); return; }
+  if (parseFloat(schmerz) > 10) { alert('Schmerzlevel max. 10!'); return; }
 
   const neuerEintrag = {
     datum: new Date().toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit', year:'numeric'}),
