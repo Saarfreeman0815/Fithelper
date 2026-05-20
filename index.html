@@ -2564,10 +2564,10 @@ function calcPortion() {
 
 function addManualFood() {
   const name = document.getElementById('manual-name').value.trim();
-  const kcal = parseFloat(document.getElementById('manual-kcal').value) || 0;
-  const protein = parseFloat(document.getElementById('manual-protein').value) || 0;
-  const carbs = parseFloat(document.getElementById('manual-carbs').value) || 0;
-  const fat = parseFloat(document.getElementById('manual-fat').value) || 0;
+  const kcal = parseFloat(document.getElementById('manual-kcal').value.trim()) || 0;
+  const protein = parseFloat(document.getElementById('manual-protein').value.trim()) || 0;
+  const carbs = parseFloat(document.getElementById('manual-carbs').value.trim()) || 0;
+  const fat = parseFloat(document.getElementById('manual-fat').value.trim()) || 0;
   const meal = document.getElementById('manual-meal').value;
 
   if (!name) { alert('Bitte einen Namen eingeben!'); return; }
@@ -4670,7 +4670,8 @@ function triggerSuppsAlarm(suppName) {
 }
 
 function checkSuppsReminder() {
-  const supps = load('fh_supplements', []);
+  const raw = localStorage.getItem('fh_supplements');
+  const supps = raw ? JSON.parse(raw) : [];
   if (!supps.length) return;
   const jetzt = new Date();
   const aktuelleZeit = jetzt.toTimeString().slice(0, 5); // "HH:MM"
