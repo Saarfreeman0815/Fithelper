@@ -2564,10 +2564,10 @@ function calcPortion() {
 
 function addManualFood() {
   const name = document.getElementById('manual-name').value.trim();
-  const kcal = parseFloat(document.getElementById('manual-kcal').value.trim()) || 0;
-  const protein = parseFloat(document.getElementById('manual-protein').value.trim()) || 0;
-  const carbs = parseFloat(document.getElementById('manual-carbs').value.trim()) || 0;
-  const fat = parseFloat(document.getElementById('manual-fat').value.trim()) || 0;
+  const kcal = parseFloat(document.getElementById('manual-kcal').value.trim().replace(',','.')) || 0;
+  const protein = parseFloat(document.getElementById('manual-protein').value.trim().replace(',','.')) || 0;
+  const carbs = parseFloat(document.getElementById('manual-carbs').value.trim().replace(',','.')) || 0;
+  const fat = parseFloat(document.getElementById('manual-fat').value.trim().replace(',','.')) || 0;
   const meal = document.getElementById('manual-meal').value;
 
   if (!name) { alert('Bitte einen Namen eingeben!'); return; }
@@ -3545,10 +3545,10 @@ async function lookupBarcode(code) {
       const n = p.nutriments || {};
       const name = p.product_name || p.product_name_de || 'Unbekannt';
       document.getElementById('manual-name').value = name;
-      document.getElementById('manual-kcal').value = Math.round(n['energy-kcal_100g'] || 0);
-      document.getElementById('manual-protein').value = Math.round(n['proteins_100g'] || 0);
-      document.getElementById('manual-carbs').value = Math.round(n['carbohydrates_100g'] || 0);
-      document.getElementById('manual-fat').value = Math.round(n['fat_100g'] || 0);
+      document.getElementById('manual-kcal').value = n['energy-kcal_100g'] !== undefined ? Math.round(n['energy-kcal_100g']) : 0;
+      document.getElementById('manual-protein').value = n['proteins_100g'] !== undefined ? Math.round(n['proteins_100g']) : 0;
+      document.getElementById('manual-carbs').value = n['carbohydrates_100g'] !== undefined ? Math.round(n['carbohydrates_100g']) : 0;
+      document.getElementById('manual-fat').value = n['fat_100g'] !== undefined ? Math.round(n['fat_100g']) : 0;
       status('✓ ' + name + ' gefunden! Menge anpassen und hinzufügen.');
     } else {
       status('✗ Produkt nicht gefunden — bitte manuell eingeben');
