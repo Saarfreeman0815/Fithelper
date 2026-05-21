@@ -426,56 +426,57 @@ select.inp { cursor: pointer; }
     <div class="setup-title">FITHELPER</div>
     <div class="setup-sub">Dein kostenloser Ernährungs- und Fitness-Begleiter. Einmalig einrichten — los gehts.</div>
     
-    <label id="lbl-name" style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">DEIN NAME</label>
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">DEIN NAME</label>
     <input class="inp" id="setup-name" placeholder="Name eingeben..." style="margin-top:6px;">
     
-    <label id="lbl-alter" style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">ALTER</label>
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">ALTER</label>
     <input class="inp" id="setup-age" type="number" placeholder="z.B. 35" style="margin-top:6px;">
     
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div>
-        <label id="lbl-gewicht" style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">GEWICHT (KG)</label>
+        <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">GEWICHT (KG)</label>
         <input class="inp" id="setup-weight" type="number" placeholder="z.B. 85" style="margin-top:6px;">
       </div>
       <div>
-        <label id="lbl-groesse" style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">GRÖSSE (CM)</label>
+        <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">GRÖSSE (CM)</label>
         <input class="inp" id="setup-height" type="number" placeholder="z.B. 178" style="margin-top:6px;">
       </div>
     </div>
     
-    <label id="lbl-ziel" style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">ZIEL</label>
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">ZIEL</label>
     <select class="inp" id="setup-goal" style="margin-top:6px;">
-      <option value="abnehmen" id="goal-abnehmen">Abnehmen</option>
-      <option value="zunehmen" id="goal-zunehmen">Zunehmen / Masse aufbauen</option>
-      <option value="halten" id="goal-halten">Gewicht halten</option>
-      <option value="muskel" id="goal-muskel">Muskelaufbau</option>
-      <option value="gesund" id="goal-gesund">Gesund ernähren</option>
+      <option value="abnehmen">Abnehmen</option>
+      <option value="zunehmen">Zunehmen / Masse aufbauen</option>
+      <option value="halten">Gewicht halten</option>
+      <option value="muskel">Muskelaufbau</option>
+      <option value="gesund">Gesund ernähren</option>
     </select>
 
-    <label id="lbl-makro" style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">MAKRO-FOKUS</label>
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">MAKRO-FOKUS</label>
     <select class="inp" id="setup-makro" style="margin-top:6px;">
-      <option value="standard" id="makro-standard">⚖️ Standard (ausgewogen)</option>
-      <option value="high_protein" id="makro-protein">💪 High Protein (40% Eiweiß)</option>
-      <option value="low_carb" id="makro-lowcarb">🥑 Low Carb (15% KH)</option>
+      <option value="standard">⚖️ Standard (ausgewogen)</option>
+      <option value="high_protein">💪 High Protein (40% Eiweiß)</option>
+      <option value="low_carb">🥑 Low Carb (15% KH)</option>
     </select>
     
-    <label id="lbl-geschlecht" style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">GESCHLECHT</label>
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">WER BIST DU?</label>
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">GESCHLECHT</label>
     <select class="inp" id="setup-gender" style="margin-top:6px;">
-      <option value="m" id="gender-m">♂ Männlich</option>
-      <option value="f" id="gender-f">♀ Weiblich</option>
+      <option value="m">♂ Männlich</option>
+      <option value="f">♀ Weiblich</option>
     </select>
-    <label id="lbl-kategorie" style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">WER BIST DU?</label>
+    <label style="font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-top:8px;display:block;">WER BIST DU?</label>
     <select class="inp" id="setup-cat" style="margin-top:6px;">
-      <option value="" id="cat-waehlen">-- Bitte auswählen --</option>
-      <option value="kraftsportler" id="cat-kraft">💪 Kraftsportler</option>
-      <option value="ausdauer" id="cat-ausdauer">🏃 Ausdauersport</option>
-      <option value="normalo" id="cat-normalo">🧑 Normalo</option>
-      <option value="senioren" id="cat-senioren">👴 55+</option>
-      <option value="hausfrau" id="cat-haus">🏠 Zuhause aktiv</option>
-      <option value="reha" id="cat-reha">♿ Reha / Eingeschränkt</option>
+      <option value="">-- Bitte auswählen --</option>
+      <option value="kraftsportler">💪 Kraftsportler</option>
+      <option value="ausdauer">🏃 Ausdauersport</option>
+      <option value="normalo">🧑 Normalo</option>
+      <option value="senioren">👴 55+</option>
+      <option value="hausfrau">🏠 Zuhause aktiv</option>
+      <option value="reha">♿ Reha / Eingeschränkt</option>
     </select>
     
-    <button class="btn" id="btn-losgehts" onclick="saveSetup()" style="width:100%;margin-top:14px;padding:14px;">LOS GEHT'S →</button>
+    <button class="btn" onclick="saveSetup()" style="width:100%;margin-top:14px;padding:14px;">LOS GEHT'S →</button>
   </div>
 </div>
 
@@ -487,7 +488,6 @@ select.inp { cursor: pointer; }
   <div class="header-user">
     <span id="header-name">Erik</span> · 
     <span id="header-kcal">0 / 0 kcal</span>
-    
     <button class="btn outline small" onclick="resetProfile()">Profil</button>
   </div>
 </div>
@@ -542,25 +542,25 @@ select.inp { cursor: pointer; }
     <div class="card" style="padding:12px 16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div>
-          <div id="sport-toggle-label" style="font-size:.75rem;font-weight:700;">🏋️ Heute Sport?</div>
-          <div style="font-size:.62rem;color:var(--muted);" id="sport-kcal-info" id="txt-sport-kcal">Kein Sport — normaler Bedarf</div>
+          <div style="font-size:.75rem;font-weight:700;">🏋️ Heute Sport?</div>
+          <div style="font-size:.62rem;color:var(--muted);" id="sport-kcal-info">Kein Sport — normaler Bedarf</div>
         </div>
         <div style="display:flex;gap:8px;">
           <button id="btn-kein-sport" onclick="setSport(0)" 
             style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:6px 14px;border-radius:6px;cursor:pointer;">
-            😴 <span id="txt-sport-nein">Nein</span>
+            😴 Nein
           </button>
           <button id="btn-leicht" onclick="setSport(1)"
             style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:6px 14px;border-radius:6px;cursor:pointer;">
-            🚶 <span id="txt-sport-leicht">Leicht</span>
+            🚶 Leicht
           </button>
           <button id="btn-mittel" onclick="setSport(2)"
             style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:6px 14px;border-radius:6px;cursor:pointer;">
-            🏃 <span id="txt-sport-mittel">Mittel</span>
+            🏃 Mittel
           </button>
           <button id="btn-intensiv" onclick="setSport(3)"
             style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:.72rem;padding:6px 14px;border-radius:6px;cursor:pointer;">
-            💪 <span id="txt-sport-intensiv">Intensiv</span>
+            💪 Intensiv
           </button>
         </div>
       </div>
@@ -568,11 +568,11 @@ select.inp { cursor: pointer; }
 
     <!-- KALORIEN RING -->
     <div class="card">
-      <div class="card-title" id="txt-tages-kcal">TAGES-KALORIEN</div>
+      <div class="card-title">TAGES-KALORIEN</div>
       <div style="display:flex;align-items:center;gap:20px;">
         <div style="text-align:center;">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--accent2);" id="dash-eaten">0</div>
-          <div id="txt-gegessen" style="font-size:.6rem;color:var(--muted);">GEGESSEN</div>
+          <div style="font-size:.6rem;color:var(--muted);">GEGESSEN</div>
         </div>
         <div style="flex:1;">
           <div class="progress-bar" style="height:14px;">
@@ -585,7 +585,7 @@ select.inp { cursor: pointer; }
         </div>
         <div style="text-align:center;">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;" id="dash-remaining">0</div>
-          <div id="txt-verbleibend" style="font-size:.6rem;color:var(--muted);">VERBLEIBEND</div>
+          <div style="font-size:.6rem;color:var(--muted);">VERBLEIBEND</div>
         </div>
       </div>
     </div>
@@ -593,7 +593,7 @@ select.inp { cursor: pointer; }
     <!-- MAKROS -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span id="txt-makros">MAKRONÄHRSTOFFE HEUTE</span>
+        <span>MAKRONÄHRSTOFFE HEUTE</span>
         <div style="display:flex;gap:4px;">
           <button onclick="setMakroFokus('standard')" id="fokus-btn-standard" class="btn outline small" style="font-size:.6rem;padding:4px 8px;">⚖️</button>
           <button onclick="setMakroFokus('high_protein')" id="fokus-btn-high_protein" class="btn outline small" style="font-size:.6rem;padding:4px 8px;">💪</button>
@@ -603,18 +603,18 @@ select.inp { cursor: pointer; }
       <div class="grid3">
         <div class="macro-circle">
           <div class="macro-val" style="color:#ef4444;" id="dash-protein">0g</div>
-          <div class="macro-label" id="txt-protein">PROTEIN</div>
+          <div class="macro-label">PROTEIN</div>
           <div class="progress-bar" style="margin-top:6px;"><div class="progress-fill" id="dash-protein-bar" style="background:var(--red);width:0%"></div></div>
           <div style="font-size:.58rem;color:var(--muted);margin-top:2px;" id="dash-protein-target"></div>
         </div>
         <div class="macro-circle">
           <div class="macro-val" style="color:#f59e0b;" id="dash-carbs">0g</div>
-          <div class="macro-label" id="txt-carbs">KOHLENHYDRATE</div>
+          <div class="macro-label">KOHLENHYDRATE</div>
           <div class="progress-bar" style="margin-top:6px;"><div class="progress-fill" id="dash-carbs-bar" style="background:var(--gold);width:0%"></div></div>
         </div>
         <div class="macro-circle">
           <div class="macro-val" style="color:#3b82f6;" id="dash-fat">0g</div>
-          <div class="macro-label" id="txt-fat">FETT</div>
+          <div class="macro-label">FETT</div>
           <div class="progress-bar" style="margin-top:6px;"><div class="progress-fill" id="dash-fat-bar" style="background:var(--blue);width:0%"></div></div>
         </div>
       </div>
@@ -624,7 +624,7 @@ select.inp { cursor: pointer; }
     <div class="grid2" style="margin-bottom:0;">
       <!-- WASSER DIREKT-LOG -->
       <div class="card" style="text-align:center;cursor:pointer;" onclick="addWater()">
-        <div id="txt-wasser-tap" style="font-size:.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">WASSER TIPPEN = +1 GLAS</div>
+        <div style="font-size:.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">WASSER TIPPEN = +1 GLAS</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--blue);" id="dash-water">0 / 8</div>
         <div class="progress-bar" style="margin:6px 0;"><div class="progress-fill" id="dash-water-bar" style="background:var(--blue);width:0%"></div></div>
         <div style="display:flex;gap:6px;justify-content:center;margin-top:6px;">
@@ -634,17 +634,17 @@ select.inp { cursor: pointer; }
       </div>
       <!-- GEWICHT MINI -->
       <div class="card" style="text-align:center;">
-        <div id="txt-letztes-gewicht" style="font-size:.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">LETZTES GEWICHT</div>
+        <div style="font-size:.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">LETZTES GEWICHT</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--green);" id="dash-weight-val">--</div>
         <div style="font-size:.62rem;color:var(--muted);" id="dash-weight-date">Noch kein Eintrag</div>
-        <button id="txt-eintragen-btn" class="btn outline small" onclick="showMainTab('aktivitaet')" style="margin-top:8px;width:100%;">Eintragen</button>
+        <button class="btn outline small" onclick="showMainTab('aktivitaet')" style="margin-top:8px;width:100%;">Eintragen</button>
       </div>
     </div>
 
     <!-- VOICE QUICK-LOG -->
     <div class="card" style="padding:12px;">
       <button id="voice-steps-btn" onclick="voiceStepsStart()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:rgba(0,255,204,.15);border:2px solid #00ffcc;color:#00ffcc;border-radius:10px;cursor:pointer;">
-        🎤 <span id="txt-voice-hint">Sag: "6000 Schritte" oder "30 Minuten Kurbeln"</span>
+        🎤 Sag: "6000 Schritte" oder "30 Minuten Kurbeln"
       </button>
       <div id="voice-steps-status" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:6px;min-height:18px;"></div>
     </div>
@@ -652,8 +652,8 @@ select.inp { cursor: pointer; }
     <!-- REZEPT DES TAGES -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;">
-        <span id="txt-rezept-tag">👨‍🍳 REZEPT DES TAGES</span>
-        <button id="txt-mehr-rezepte" class="btn outline small" onclick="showMainTab('ernaehrung');setTimeout(()=>showSub('ernaehrung','rezepte'),100)">Mehr Rezepte</button>
+        <span>👨‍🍳 REZEPT DES TAGES</span>
+        <button class="btn outline small" onclick="showMainTab('ernaehrung');setTimeout(()=>showSub('ernaehrung','rezepte'),100)">Mehr Rezepte</button>
       </div>
       <div id="dash-rezept">
         <div style="text-align:center;padding:10px;color:var(--muted);font-size:.8rem;">Wird geladen...</div>
@@ -663,11 +663,11 @@ select.inp { cursor: pointer; }
     <!-- HEUTIGE MAHLZEITEN -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;">
-        <span id="txt-heutige-mahlzeiten">HEUTIGE MAHLZEITEN</span>
-        <button id="txt-hinzufuegen-btn" class="btn small" onclick="showMainTab('ernaehrung')">+ Hinzufügen</button>
+        <span>HEUTIGE MAHLZEITEN</span>
+        <button class="btn small" onclick="showMainTab('ernaehrung')">+ Hinzufügen</button>
       </div>
       <div id="dash-meals">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;" id="txt-noch-nichts">Noch nichts gegessen heute 🍽️</div>
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch nichts gegessen heute 🍽️</div>
       </div>
     </div>
   </div>
@@ -677,9 +677,9 @@ select.inp { cursor: pointer; }
 <div class="panel" id="p-essen">
   <div class="panel-content">
     <div class="card">
-      <div class="card-title" id="txt-mahlzeit-add">MAHLZEIT HINZUFÜGEN</div>
+      <div class="card-title">MAHLZEIT HINZUFÜGEN</div>
       <div style="display:flex;gap:10px;margin-bottom:12px;">
-        <input class="inp" id="food-search" id="food-search-inp" placeholder="Lebensmittel suchen (z.B. Hähnchenbrust)..." style="flex:1;margin:0;" oninput="searchFood(this.value)">
+        <input class="inp" id="food-search" placeholder="Lebensmittel suchen (z.B. Hähnchenbrust)..." style="flex:1;margin:0;" oninput="searchFood(this.value)">
         <button class="btn" onclick="searchFood(document.getElementById('food-search').value)">🔍</button>
         <button class="btn outline" onclick="startBarcode()" title="Barcode scannen">📷</button>
       </div>
@@ -691,44 +691,44 @@ select.inp { cursor: pointer; }
         <canvas id="barcode-canvas" style="display:none;"></canvas>
         <div style="display:flex;gap:8px;margin-top:8px;">
           <div style="font-size:.72rem;color:var(--muted);flex:1;" id="barcode-status">Kamera wird gestartet...</div>
-          <button id="txt-kamera-schliessen" class="btn outline small" onclick="stopBarcode()">✕ Schließen</button>
+          <button class="btn outline small" onclick="stopBarcode()">✕ Schließen</button>
         </div>
       </div>
       <div id="search-results" style="margin-bottom:12px;"></div>
       
       <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px;">
-        <div id="txt-manuell" style="font-size:.65rem;color:var(--muted);margin-bottom:10px;letter-spacing:1px;">ODER MANUELL EINGEBEN</div>
-        <input class="inp" id="manual-name" id="manual-name-inp" placeholder="Bezeichnung (z.B. Schnitzel mit Pommes)">
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:10px;letter-spacing:1px;">ODER MANUELL EINGEBEN</div>
+        <input class="inp" id="manual-name" placeholder="Bezeichnung (z.B. Schnitzel mit Pommes)">
         <div class="grid4">
           <div>
-            <div id="txt-portion" style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">PORTION (G)</div>
+            <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">PORTION (G)</div>
             <input class="inp" id="manual-portion" type="number" placeholder="100" style="margin:0;" oninput="calcPortion()">
           </div>
           <div>
-          <div id="txt-kcal-lbl" style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">KCAL</div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">KCAL</div>
             <input class="inp" id="manual-kcal" type="number" placeholder="0" style="margin:0;">
           </div>
           <div>
-            <div id="txt-protein-lbl" style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">PROTEIN (G)</div>
+            <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">PROTEIN (G)</div>
             <input class="inp" id="manual-protein" type="number" placeholder="0" style="margin:0;">
           </div>
           <div>
-            <div id="txt-carbs-lbl" style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">KOHLENHYDRATE (G)</div>
+            <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">KOHLENHYDRATE (G)</div>
             <input class="inp" id="manual-carbs" type="number" placeholder="0" style="margin:0;">
           </div>
           <div>
-            <div id="txt-fat-lbl" style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">FETT (G)</div>
+            <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;">FETT (G)</div>
             <input class="inp" id="manual-fat" type="number" placeholder="0" style="margin:0;">
           </div>
         </div>
         <div style="display:flex;gap:10px;margin-top:10px;">
           <select class="inp" id="manual-meal" style="margin:0;flex:1;">
-            <option value="frühstück" id="meal-frueh">Frühstück</option>
-            <option value="mittagessen" id="meal-mittag">Mittagessen</option>
-            <option value="abendessen" id="meal-abend">Abendessen</option>
-            <option value="snack" id="meal-snack">Snack</option>
+            <option value="frühstück">Frühstück</option>
+            <option value="mittagessen">Mittagessen</option>
+            <option value="abendessen">Abendessen</option>
+            <option value="snack">Snack</option>
           </select>
-          <button id="txt-add-food-btn" class="btn green" onclick="addManualFood()">+ Hinzufügen</button>
+          <button class="btn green" onclick="addManualFood()">+ Hinzufügen</button>
         </div>
       </div>
     </div>
@@ -736,7 +736,7 @@ select.inp { cursor: pointer; }
     <!-- HEUTIGE EINTRÄGE -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;">
-        <span id="txt-heute-gegessen">HEUTE GEGESSEN</span>
+        <span>HEUTE GEGESSEN</span>
         <span id="today-total" style="color:var(--accent2);font-size:.75rem;"></span>
       </div>
       <div id="food-log"></div>
@@ -748,7 +748,7 @@ select.inp { cursor: pointer; }
 <div class="panel" id="p-wasser">
   <div class="panel-content">
     <div class="card">
-      <div class="card-title" id="txt-wasser-titel">WASSERAUFNAHME HEUTE</div>
+      <div class="card-title">WASSERAUFNAHME HEUTE</div>
       <div style="text-align:center;margin-bottom:16px;">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:4rem;color:var(--blue);" id="water-count">0</div>
         <div style="font-size:.8rem;color:var(--muted);">von <span id="water-goal-display">8</span> Gläsern (à 250ml = <span id="water-ml">0</span> ml)</div>
@@ -760,21 +760,21 @@ select.inp { cursor: pointer; }
       <div style="display:flex;gap:10px;margin-top:16px;justify-content:center;flex-wrap:wrap;">
         <button class="btn green" onclick="addWater()" style="min-height:52px;font-size:1rem;padding:12px 24px;font-weight:700;">💧 + 1 Glas</button>
         <button class="btn outline" onclick="removeWater()" style="min-height:52px;font-size:1rem;padding:12px 24px;">− 1 Glas</button>
-        <button id="txt-reset-water" class="btn outline" onclick="resetWater()" style="min-height:52px;font-size:.85rem;padding:12px 20px;">Zurücksetzen</button>
+        <button class="btn outline" onclick="resetWater()" style="min-height:52px;font-size:.85rem;padding:12px 20px;">Zurücksetzen</button>
       </div>
       <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
-        <div id="txt-tagesziel" style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">TAGESZIEL ANPASSEN</div>
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">TAGESZIEL ANPASSEN</div>
         <div style="display:flex;align-items:center;gap:10px;">
           <input class="inp" id="water-goal-inp" type="number" value="8" min="1" max="20" style="width:80px;margin:0;">
-          <span id="txt-glaeser-taeglich" style="color:var(--muted);font-size:.8rem;">Gläser täglich</span>
-          <button id="txt-wasser-save" class="btn small" onclick="setWaterGoal()">Speichern</button>
+          <span style="color:var(--muted);font-size:.8rem;">Gläser täglich</span>
+          <button class="btn small" onclick="setWaterGoal()">Speichern</button>
         </div>
       </div>
     </div>
     
     <div class="card">
-      <div class="card-title" id="txt-wasser-info">WARUM WASSER WICHTIG IST</div>
-      <div class="tip-item" id="txt-wasser-tipp">💧 Mindestens 1,5-2 Liter täglich — bei Sport und Hitze mehr. Wasser reguliert Körpertemperatur, transportiert Nährstoffe und schützt Gelenke.</div>
+      <div class="card-title">WARUM WASSER WICHTIG IST</div>
+      <div class="tip-item">💧 Mindestens 1,5-2 Liter täglich — bei Sport und Hitze mehr. Wasser reguliert Körpertemperatur, transportiert Nährstoffe und schützt Gelenke.</div>
       <div class="tip-item">🧠 Schon 2% Flüssigkeitsverlust beeinträchtigt Konzentration und Leistung spürbar.</div>
     </div>
   </div>
@@ -784,13 +784,13 @@ select.inp { cursor: pointer; }
 <div class="panel" id="p-gewicht">
   <div class="panel-content">
     <div class="card">
-      <div class="card-title" id="txt-gewicht-add">GEWICHT EINTRAGEN</div>
+      <div class="card-title">GEWICHT EINTRAGEN</div>
       <div style="display:flex;gap:10px;align-items:flex-end;">
         <div style="flex:1;">
-          <div id="txt-gewicht-lbl" style="font-size:.62rem;color:var(--muted);margin-bottom:6px;">GEWICHT IN KG</div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:6px;">GEWICHT IN KG</div>
           <input class="inp" id="weight-inp" type="number" step="0.1" placeholder="z.B. 84.5" style="margin:0;">
         </div>
-        <button id="txt-gewicht-btn" class="btn green" onclick="addWeight()" style="height:40px;">Eintragen</button>
+        <button class="btn green" onclick="addWeight()" style="height:40px;">Eintragen</button>
       </div>
     </div>
     
@@ -802,7 +802,7 @@ select.inp { cursor: pointer; }
     </div>
     
     <div class="card">
-      <div class="card-title" id="txt-bmi">BMI RECHNER</div>
+      <div class="card-title">BMI RECHNER</div>
       <div id="bmi-display" style="text-align:center;padding:10px;">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;" id="bmi-val">--</div>
         <div style="font-size:.8rem;color:var(--muted);" id="bmi-label">Gewicht und Größe im Profil hinterlegen</div>
@@ -817,18 +817,18 @@ select.inp { cursor: pointer; }
     
     <!-- STUDIO TAGE -->
     <div class="card">
-      <div class="card-title" id="txt-studio-tage">STUDIO TAGE EINRICHTEN</div>
-      <div id="txt-training-einmalig" style="font-size:.78rem;color:var(--muted);margin-bottom:12px;">Einmalig eintragen — wiederholt sich automatisch.</div>
+      <div class="card-title">STUDIO TAGE EINRICHTEN</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:12px;">Einmalig eintragen — wiederholt sich automatisch.</div>
       <div style="margin-bottom:10px;">
-        <div id="txt-trainingstage" style="font-size:.65rem;color:var(--muted);margin-bottom:6px;">TRAININGSTAGE</div>
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:6px;">TRAININGSTAGE</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="weekday-picker">
-          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,0)" id="txt-mo">Mo</button>
-          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,1)" id="txt-di">Di</button>
-          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,2)" id="txt-mi">Mi</button>
-          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,3)" id="txt-do">Do</button>
-          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,4)" id="txt-fr">Fr</button>
-          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,5)" id="txt-sa">Sa</button>
-          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,6)" id="txt-so">So</button>
+          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,0)">Mo</button>
+          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,1)">Di</button>
+          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,2)">Mi</button>
+          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,3)">Do</button>
+          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,4)">Fr</button>
+          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,5)">Sa</button>
+          <button class="category-btn" style="padding:10px;min-width:48px;" onclick="toggleDay(this,6)">So</button>
         </div>
       </div>
       <div class="grid2" style="margin-bottom:10px;">
@@ -847,25 +847,25 @@ select.inp { cursor: pointer; }
           </select>
         </div>
       </div>
-      <input class="inp" id="training-name" id="training-name-inp" placeholder="Bezeichnung (z.B. Push-Tag, Rücken-Tag...)">
-      <button class="btn green" onclick="saveTrainingDays()" style="width:100%;" id="txt-termine-btn">📅 Termine eintragen</button>
+      <input class="inp" id="training-name" placeholder="Bezeichnung (z.B. Push-Tag, Rücken-Tag...)">
+      <button class="btn green" onclick="saveTrainingDays()" style="width:100%;">📅 Termine eintragen</button>
     </div>
 
     <!-- TRAININGSPLAN ERSTELLEN -->
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span id="txt-trainingsplan">TRAININGSPLAN</span>
+        <span>TRAININGSPLAN</span>
         <button class="btn small" onclick="generiereplan()">⚡ Plan generieren lassen</button>
       </div>
       
       <!-- MUSKELGRUPPEN TABS -->
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="muscle-tabs">
-        <button class="btn outline small on-muscle" onclick="showMuscle('brust')" id="mt-brust" id="txt-mt-brust">💪 Brust</button>
-        <button class="btn outline small" onclick="showMuscle('ruecken')" id="mt-ruecken" id="txt-mt-ruecken">🏋️ Rücken</button>
-        <button class="btn outline small" onclick="showMuscle('schulter')" id="mt-schulter" id="txt-mt-schulter">🎯 Schulter</button>
-        <button class="btn outline small" onclick="showMuscle('arme')" id="mt-arme" id="txt-mt-arme">💪 Arme</button>
-        <button class="btn outline small" onclick="showMuscle('bauch')" id="mt-bauch" id="txt-mt-bauch">🔥 Bauch</button>
-        <button class="btn outline small" onclick="showMuscle('beine')" id="mt-beine" id="txt-mt-beine">🦵 Beine</button>
+        <button class="btn outline small on-muscle" onclick="showMuscle('brust')" id="mt-brust">💪 Brust</button>
+        <button class="btn outline small" onclick="showMuscle('ruecken')" id="mt-ruecken">🏋️ Rücken</button>
+        <button class="btn outline small" onclick="showMuscle('schulter')" id="mt-schulter">🎯 Schulter</button>
+        <button class="btn outline small" onclick="showMuscle('arme')" id="mt-arme">💪 Arme</button>
+        <button class="btn outline small" onclick="showMuscle('bauch')" id="mt-bauch">🔥 Bauch</button>
+        <button class="btn outline small" onclick="showMuscle('beine')" id="mt-beine">🦵 Beine</button>
         <button class="btn outline small" onclick="showMuscle('ausdauer')" id="mt-ausdauer">🏃 Ausdauer</button>
       </div>
       
@@ -880,7 +880,7 @@ select.inp { cursor: pointer; }
     </div>
 
     <div class="card">
-      <div class="card-title" id="txt-naechste-termine">NÄCHSTE TERMINE</div>
+      <div class="card-title">NÄCHSTE TERMINE</div>
       <div id="next-training" style="font-size:.8rem;color:var(--muted);">Keine Studio-Tage eingetragen</div>
     </div>
   </div>
@@ -890,7 +890,7 @@ select.inp { cursor: pointer; }
 <div class="panel" id="p-supplemente">
   <div class="panel-content">
     <div class="card">
-      <div class="card-title" id="txt-supp-add">SUPPLEMENT HINZUFÜGEN</div>
+      <div class="card-title">SUPPLEMENT HINZUFÜGEN</div>
       <input class="inp" id="supp-name" placeholder="Name (z.B. Vitamin D3 + K2)">
       <div class="grid2">
         <div>
@@ -907,7 +907,7 @@ select.inp { cursor: pointer; }
     </div>
     
     <div class="card">
-      <div class="card-title" id="txt-supp-plan">MEIN SUPPLEMENT-PLAN</div>
+      <div class="card-title">MEIN SUPPLEMENT-PLAN</div>
       <div id="supp-list">
         <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Supplemente eingetragen 💊</div>
       </div>
@@ -927,30 +927,30 @@ select.inp { cursor: pointer; }
 <div class="panel" id="p-rezepte">
   <div class="panel-content">
     <div class="card">
-      <div class="card-title" id="txt-rezept-suchen">REZEPT SUCHEN</div>
+      <div class="card-title">REZEPT SUCHEN</div>
       <div style="display:flex;gap:10px;">
-        <input class="inp" id="rezept-search" id="rezept-search-inp" placeholder="Zutat oder Gericht suchen (z.B. Chicken, Pasta)..." style="flex:1;margin:0;">
+        <input class="inp" id="rezept-search" placeholder="Zutat oder Gericht suchen (z.B. Chicken, Pasta)..." style="flex:1;margin:0;">
         <button class="btn" onclick="searchRezepte()">🔍</button>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-        <button id="txt-kat-hahnchen" class="btn outline small" onclick="rezeptKategorie('Chicken')">🍗 Hähnchen</button>
-        <button id="txt-kat-rind" class="btn outline small" onclick="rezeptKategorie('Beef')">🥩 Rind</button>
-        <button class="btn outline small" onclick="rezeptKategorie('Pork')" id="txt-kat-schwein">🐷 Schwein</button>
-        <button class="btn outline small" onclick="rezeptKategorie('Pasta')" id="txt-kat-pasta">🍝 Pasta</button>
+        <button class="btn outline small" onclick="rezeptKategorie('Chicken')">🍗 Hähnchen</button>
+        <button class="btn outline small" onclick="rezeptKategorie('Beef')">🥩 Rind</button>
+        <button class="btn outline small" onclick="rezeptKategorie('Pork')">🐷 Schwein</button>
+        <button class="btn outline small" onclick="rezeptKategorie('Pasta')">🍝 Pasta</button>
         <button class="btn outline small" onclick="rezeptKategorie('Seafood')">🐟 Fisch</button>
         <button class="btn outline small" onclick="rezeptKategorie('Vegetarian')">🥗 Vegetarisch</button>
         <button class="btn outline small" onclick="rezeptKategorie('Dessert')">🍰 Dessert</button>
-        <button class="btn outline small" onclick="rezeptKategorie('Breakfast')" id="txt-kat-frueh">🍳 Frühstück</button>
-        <button class="btn outline small" onclick="rezeptKategorie('Lamb')" id="txt-kat-lamm">🐑 Lamm</button>
-        <button class="btn outline small" onclick="rezeptKategorie('Side')" id="txt-kat-beilage">🥙 Beilagen</button>
-        <button class="btn outline small" onclick="rezeptZufall()" id="txt-kat-zufall">🎲 Zufalls-Rezept</button>
+        <button class="btn outline small" onclick="rezeptKategorie('Breakfast')">🍳 Frühstück</button>
+        <button class="btn outline small" onclick="rezeptKategorie('Lamb')">🐑 Lamm</button>
+        <button class="btn outline small" onclick="rezeptKategorie('Side')">🥙 Beilagen</button>
+        <button class="btn outline small" onclick="rezeptZufall()">🎲 Zufalls-Rezept</button>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center;">
         <span style="font-size:.65rem;color:var(--muted);letter-spacing:1px;">NACH KALORIEN:</span>
-        <button class="btn outline small" onclick="filterKcal(0,300)" id="txt-kcal-leicht">🥗 Leicht &lt;300</button>
-        <button class="btn outline small" onclick="filterKcal(300,500)" id="txt-kcal-mittel">🍽️ Mittel 300-500</button>
-        <button class="btn outline small" onclick="filterKcal(500,800)" id="txt-kcal-saettigend">🍖 Sättigend 500-800</button>
-        <button class="btn outline small" onclick="filterKcal(800,9999)" id="txt-kcal-reich">💪 Kalorienreich 800+</button>
+        <button class="btn outline small" onclick="filterKcal(0,300)">🥗 Leicht &lt;300</button>
+        <button class="btn outline small" onclick="filterKcal(300,500)">🍽️ Mittel 300-500</button>
+        <button class="btn outline small" onclick="filterKcal(500,800)">🍖 Sättigend 500-800</button>
+        <button class="btn outline small" onclick="filterKcal(800,9999)">💪 Kalorienreich 800+</button>
       </div>
     </div>
     <div id="rezept-results" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;"></div>
@@ -958,7 +958,7 @@ select.inp { cursor: pointer; }
 
     <!-- REZEPT TEILEN / IMPORTIEREN -->
     <div class="card" style="margin-top:14px;">
-      <div class="card-title" id="txt-rezept-teilen">🔗 REZEPT TEILEN & IMPORTIEREN</div>
+      <div class="card-title">🔗 REZEPT TEILEN & IMPORTIEREN</div>
       <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px;">Rezept-Code per WhatsApp teilen — Kumpel fügt ihn einfach ein!</div>
       <div style="display:flex;gap:8px;">
         <input class="inp" id="import-code-input" placeholder="Rezept-Code hier einfügen..." style="flex:1;margin:0;font-size:.8rem;">
@@ -973,22 +973,22 @@ select.inp { cursor: pointer; }
 <div class="panel" id="p-schritte">
   <div class="panel-content">
     <div class="card">
-      <div class="card-title" id="txt-schritte-add">SCHRITTE EINTRAGEN</div>
+      <div class="card-title">SCHRITTE EINTRAGEN</div>
       <div style="text-align:center;margin-bottom:20px;">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:4rem;color:var(--green);" id="steps-today">0</div>
-        <div id="txt-schritte-heute" style="font-size:.8rem;color:var(--muted);">Schritte heute</div>
+        <div style="font-size:.8rem;color:var(--muted);">Schritte heute</div>
         <div style="font-size:.9rem;color:var(--accent2);margin-top:6px;font-weight:700;" id="steps-kcal">≈ 0 kcal verbraucht</div>
         <div class="progress-bar" style="margin:12px 0;height:14px;">
           <div class="progress-fill" id="steps-bar" style="background:linear-gradient(90deg,var(--green),#34d399);width:0%"></div>
         </div>
-        <div id="txt-schritte-zieltext" style="font-size:.7rem;color:var(--muted);">Ziel: <span id="steps-goal-display">10.000</span> Schritte</div>
+        <div style="font-size:.7rem;color:var(--muted);">Ziel: <span id="steps-goal-display">10.000</span> Schritte</div>
       </div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;">
         <button class="btn green" onclick="addSteps(1000)">+ 1.000</button>
         <button class="btn green" onclick="addSteps(2000)">+ 2.000</button>
         <button class="btn green" onclick="addSteps(5000)">+ 5.000</button>
-        <button id="txt-eigene-zahl" class="btn outline" onclick="addStepsCustom()">Eigene Zahl</button>
-        <button id="txt-reset-schritte" class="btn outline" onclick="resetSteps()">Zurücksetzen</button>
+        <button class="btn outline" onclick="addStepsCustom()">Eigene Zahl</button>
+        <button class="btn outline" onclick="resetSteps()">Zurücksetzen</button>
       </div>
       <!-- VOICE DIKTAT -->
       <div style="border-top:1px solid var(--border);padding-top:12px;margin-bottom:12px;">
@@ -1004,7 +1004,7 @@ select.inp { cursor: pointer; }
         <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">📱 LIVE SCHRITTZÄHLER (SENSOR)</div>
         <div style="text-align:center;margin-bottom:10px;">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;color:#00ffcc;" id="live-steps-count">0</div>
-          <div id="txt-session-schritte" style="font-size:.7rem;color:var(--muted);">gezählte Schritte diese Session</div>
+          <div style="font-size:.7rem;color:var(--muted);">gezählte Schritte diese Session</div>
         </div>
         <button id="live-steps-btn" onclick="liveStepsToggle()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:rgba(0,255,204,.15);border:2px solid #00ffcc;color:#00ffcc;border-radius:10px;cursor:pointer;margin-bottom:6px;">
           👟 LIVE-ZÄHLER STARTEN
@@ -1013,16 +1013,16 @@ select.inp { cursor: pointer; }
           📱 Sensor freischalten (iOS)
         </button>
         <button id="live-steps-save" onclick="liveStepsSave()" style="display:none;width:100%;padding:10px;font-size:.85rem;font-weight:700;background:var(--green);border:none;color:#fff;border-radius:8px;cursor:pointer;">
-          💾 <span id="txt-schritte-save">Schritte übernehmen & stoppen</span>
+          💾 Schritte übernehmen & stoppen
         </button>
         <div id="live-steps-status" style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:6px;min-height:18px;">Sensor bereit</div>
       </div>
       <div style="border-top:1px solid var(--border);padding-top:12px;">
-        <div id="txt-schritte-ziel" style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">TAGESZIEL & PROFIL</div>
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">TAGESZIEL & PROFIL</div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
           <input class="inp" id="steps-goal-inp" type="number" value="10000" style="width:120px;margin:0;">
           <select class="inp" id="steps-weight-sel" style="margin:0;flex:1;">
-            <option id="txt-gewicht-profil" value="">Gewicht aus Profil</option>
+            <option value="">Gewicht aus Profil</option>
           </select>
           <button class="btn small" onclick="setStepsGoal()">Speichern</button>
         </div>
@@ -1031,7 +1031,7 @@ select.inp { cursor: pointer; }
 
     <!-- GPS STRECKEN TRACKER -->
     <div class="card">
-      <div class="card-title" id="txt-gps-titel">📍 GPS STRECKEN-TRACKER</div>
+      <div class="card-title">📍 GPS STRECKEN-TRACKER</div>
       <div style="text-align:center;margin-bottom:16px;">
         <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:12px;">
           <div style="text-align:center;">
@@ -1076,7 +1076,7 @@ select.inp { cursor: pointer; }
     </div>
 
     <div class="card">
-      <div class="card-title" id="txt-verlauf-7">VERLAUF (LETZTE 7 TAGE)</div>
+      <div class="card-title">VERLAUF (LETZTE 7 TAGE)</div>
       <div id="steps-history">
         <div style="text-align:center;padding:16px;color:var(--muted);font-size:.8rem;">Noch keine Einträge</div>
       </div>
@@ -1151,10 +1151,10 @@ select.inp { cursor: pointer; }
   <div class="panel-content">
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span id="txt-einkauf-titel">🛒 EINKAUFSLISTE</span>
+        <span>🛒 EINKAUFSLISTE</span>
         <div style="display:flex;gap:6px;">
-          <button id="txt-drucken" class="btn outline small" onclick="printShoppingList()">🖨️ Drucken</button>
-          <button id="txt-sortieren" class="btn outline small" onclick="sortiereUndRenderEinkauf()">🗂️ Sortieren</button>
+          <button class="btn outline small" onclick="printShoppingList()">🖨️ Drucken</button>
+          <button class="btn outline small" onclick="sortiereUndRenderEinkauf()">🗂️ Sortieren</button>
           <button class="btn outline small" onclick="clearBought()">✓ Erledigte löschen</button>
           <button class="btn red small" onclick="clearShoppingList()">🗑 Alles</button>
         </div>
@@ -1163,12 +1163,12 @@ select.inp { cursor: pointer; }
       <!-- Eigenen Artikel hinzufügen -->
       <div style="display:flex;gap:8px;margin-bottom:14px;">
         <input class="inp" id="shop-inp" placeholder="Artikel hinzufügen..." style="flex:1;margin:0;" onkeydown="if(event.key==='Enter')addShopItem()">
-        <input class="inp" id="shop-amount" id="shop-amount-inp" placeholder="Menge" style="width:80px;margin:0;">
+        <input class="inp" id="shop-amount" placeholder="Menge" style="width:80px;margin:0;">
         <button class="btn green" onclick="addShopItem()">+</button>
       </div>
       
       <div id="einkauf-list" style="max-width:100%;box-sizing:border-box;overflow-x:hidden;">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;" id="txt-keine-artikel">Noch keine Artikel — Rezept öffnen und "Zur Einkaufsliste" klicken 🛒</div>
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:.8rem;">Noch keine Artikel — Rezept öffnen und "Zur Einkaufsliste" klicken 🛒</div>
       </div>
     </div>
   </div>
@@ -1182,7 +1182,7 @@ select.inp { cursor: pointer; }
 
     <!-- EINGABE -->
     <div class="card">
-      <div class="card-title" id="txt-koerper-add">📊 KÖRPERWERTE EINTRAGEN</div>
+      <div class="card-title">📊 KÖRPERWERTE EINTRAGEN</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
         <div>
           <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">GEWICHT (KG)</div>
@@ -1235,7 +1235,7 @@ select.inp { cursor: pointer; }
 <div class="panel" id="p-vorrat">
   <div class="panel-content">
     <div class="card">
-      <div class="card-title" id="txt-vorrat-titel">📦 MEAL PREP & VORRATS-TRACKER</div>
+      <div class="card-title">📦 MEAL PREP & VORRATS-TRACKER</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
         <div>
           <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">ARTIKEL / BOX</div>
@@ -1256,12 +1256,12 @@ select.inp { cursor: pointer; }
           <input class="inp" type="number" id="vorrat-kcal" placeholder="z.B. 450" style="margin:0;">
         </div>
       </div>
-      <button onclick="vorratSpeichern()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:#00ffcc;color:#000;border-radius:10px;border:none;cursor:pointer;" id="txt-box-save">📦 BOX SPEICHERN</button>
+      <button onclick="vorratSpeichern()" style="width:100%;padding:14px;font-size:1rem;font-weight:700;background:#00ffcc;color:#000;border-radius:10px;border:none;cursor:pointer;">📦 BOX SPEICHERN</button>
     </div>
 
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span id="txt-mein-vorrat">🧊 MEIN VORRAT</span>
+        <span>🧊 MEIN VORRAT</span>
         <button class="btn outline small" onclick="vorratAllesLoeschen()" style="color:var(--red);">🗑 Alles löschen</button>
       </div>
       <div id="vorrat-liste">
@@ -2323,7 +2323,6 @@ function startApp() {
   setTimeout(() => {
     try { updateAll(); } catch(e) { console.error('updateAll:', e); }
     showMainTab('dashboard');
-    setTimeout(() => applyLanguage(), 100);
   }, 50);
 }
 
@@ -2421,9 +2420,6 @@ function showSub(mainId, subId) {
   if (subId === 'einkauf') renderEinkauf();
   if (subId === 'koerper') { renderKoerperVerlauf(); koerperRehaCheck(); }
   if (subId === 'vorrat') renderVorrat();
-
-  // Sprache auf geklontem Panel anwenden
-  if (currentLang === 'en') setTimeout(() => applyLanguage(), 50);
 }
 
 function showTab(id) {
@@ -2550,16 +2546,8 @@ function updateDashboard() {
   updateFokusBtns();
 
   const h = new Date().getHours();
-  const isEN = currentLang === 'en';
-  const gruss = h < 12
-    ? (isEN ? 'GOOD MORNING' : 'GUTEN MORGEN')
-    : h < 18
-    ? (isEN ? 'GOOD AFTERNOON' : 'GUTEN TAG')
-    : (isEN ? 'GOOD EVENING' : 'GUTEN ABEND');
+  const gruss = h < 12 ? 'GUTEN MORGEN' : h < 18 ? 'GUTEN TAG' : 'GUTEN ABEND';
   setText('dash-greeting', gruss + ', ' + (profile?.name?.toUpperCase() || '') + '!');
-
-  const sportLabel2 = document.getElementById('sport-toggle-label');
-  if (sportLabel2) sportLabel2.textContent = isEN ? '🏋️ Sport today?' : '🏋️ Heute Sport?';
 
   const tage = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
   const monate = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
@@ -4584,7 +4572,7 @@ function koerperLoeschen(index) {
 let liveStepsCount = 0;
 let liveStepsActive = false;
 let liveStepsLastMag = 0;
-let liveStepsThreshold = 6;
+let liveStepsThreshold = 12;
 let liveStepsCooldown = false;
 
 function aktiviereSensor() {
@@ -4688,159 +4676,6 @@ function liveStepsSave() {
   document.getElementById('live-steps-save').style.display = 'none';
   document.getElementById('live-steps-status').textContent = 'Sensor bereit';
 }
-
-
-// ================================================================
-// MULTILINGUAL DEUTSCH / ENGLISCH
-// ================================================================
-let currentLang = localStorage.getItem('fh_lang') || 'de';
-
-const i18n = {
-  de: {
-    tab_start: '🏠 Start', tab_ernaehrung: '🥗 Ernährung',
-    tab_aktivitaet: '🏃 Sport & Körper', tab_mehr: '⚙️ Mehr',
-    sub_essen: '🍽️ Essen', sub_rezepte: '👨‍🍳 Rezepte',
-    sub_einkauf: '🛒 Einkauf', sub_wasser: '💧 Wasser',
-    sub_schritte: '👟 GPS & Schritte', sub_koerper: '📊 Körper',
-    sub_gewicht: '⚖️ Gewicht', sub_training: '🏋️ Training',
-    sub_fasten: '⏱️ Fasten', sub_supplemente: '💊 Supps',
-    sub_vorrat: '📦 Vorrat', sub_tipps: '💡 Tipps',
-    profil: 'Profil', noch_keine: 'Noch keine Einträge',
-    gps_bereit: 'GPS bereit — drücke Start',
-  },
-  en: {
-    tab_start: '🏠 Home', tab_ernaehrung: '🥗 Nutrition',
-    tab_aktivitaet: '🏃 Sport & Body', tab_mehr: '⚙️ More',
-    sub_essen: '🍽️ Food', sub_rezepte: '👨‍🍳 Recipes',
-    sub_einkauf: '🛒 Shopping', sub_wasser: '💧 Water',
-    sub_schritte: '👟 GPS & Steps', sub_koerper: '📊 Body',
-    sub_gewicht: '⚖️ Weight', sub_training: '🏋️ Training',
-    sub_fasten: '⏱️ Fasting', sub_supplemente: '💊 Supps',
-    sub_vorrat: '📦 Stock', sub_tipps: '💡 Tips',
-    profil: 'Profile', noch_keine: 'No entries yet',
-    gps_bereit: 'GPS ready — press Start',
-  }
-};
-
-function setTxt(id, text) {
-  // Setzt Text auf ALLE Elemente mit dieser ID (Original + Clone)
-  document.querySelectorAll('#' + id).forEach(el => el.textContent = text);
-}
-
-function setPlaceholder(id, text) {
-  document.querySelectorAll('#' + id).forEach(el => el.placeholder = text);
-}
-
-function setSetupLang(lang) {
-  currentLang = lang;
-  localStorage.setItem('fh_lang', lang);
-  const isEN = lang === 'en';
-
-  // Buttons
-  const de = document.getElementById('setup-lang-de');
-  const en = document.getElementById('setup-lang-en');
-  if (de && en) {
-    de.style.background = !isEN ? 'var(--accent)' : 'transparent';
-    de.style.borderColor = !isEN ? 'var(--accent)' : 'var(--border)';
-    de.style.color = !isEN ? '#fff' : 'var(--muted)';
-    en.style.background = isEN ? 'var(--accent)' : 'transparent';
-    en.style.borderColor = isEN ? 'var(--accent)' : 'var(--border)';
-    en.style.color = isEN ? '#fff' : 'var(--muted)';
-  }
-
-  // Untertitel
-  const sub = document.getElementById('setup-sub-text');
-  if (sub) sub.textContent = isEN
-    ? 'Your free nutrition and fitness companion. Set up once — let\'s go.'
-    : 'Dein kostenloser Ernährungs- und Fitness-Begleiter. Einmalig einrichten — los gehts.';
-
-  // Labels
-  const labels = {
-    'lbl-name': isEN ? 'YOUR NAME' : 'DEIN NAME',
-    'lbl-alter': isEN ? 'AGE' : 'ALTER',
-    'lbl-gewicht': isEN ? 'WEIGHT (KG)' : 'GEWICHT (KG)',
-    'lbl-groesse': isEN ? 'HEIGHT (CM)' : 'GRÖSSE (CM)',
-    'lbl-ziel': isEN ? 'GOAL' : 'ZIEL',
-    'lbl-makro': isEN ? 'MACRO FOCUS' : 'MAKRO-FOKUS',
-    'lbl-geschlecht': isEN ? 'GENDER' : 'GESCHLECHT',
-    'lbl-kategorie': isEN ? 'WHO ARE YOU?' : 'WER BIST DU?',
-  };
-  Object.entries(labels).forEach(([id, text]) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  });
-
-  // Inputs placeholder
-  const nameInp = document.getElementById('setup-name');
-  if (nameInp) nameInp.placeholder = isEN ? 'Enter name...' : 'Name eingeben...';
-  const ageInp = document.getElementById('setup-age');
-  if (ageInp) ageInp.placeholder = isEN ? 'e.g. 35' : 'z.B. 35';
-
-  // Goal Options
-  const goals = {
-    'goal-abnehmen': isEN ? 'Lose weight' : 'Abnehmen',
-    'goal-zunehmen': isEN ? 'Gain mass / Build muscle' : 'Zunehmen / Masse aufbauen',
-    'goal-halten': isEN ? 'Maintain weight' : 'Gewicht halten',
-    'goal-muskel': isEN ? 'Muscle building' : 'Muskelaufbau',
-    'goal-gesund': isEN ? 'Eat healthy' : 'Gesund ernähren',
-  };
-  Object.entries(goals).forEach(([id, text]) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  });
-
-  // Makro Options
-  const makros = {
-    'makro-standard': isEN ? '⚖️ Standard (balanced)' : '⚖️ Standard (ausgewogen)',
-    'makro-protein': isEN ? '💪 High Protein (40% protein)' : '💪 High Protein (40% Eiweiß)',
-    'makro-lowcarb': isEN ? '🥑 Low Carb (15% carbs)' : '🥑 Low Carb (15% KH)',
-  };
-  Object.entries(makros).forEach(([id, text]) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  });
-
-  // Gender Options
-  const genders = {
-    'gender-m': isEN ? '♂ Male' : '♂ Männlich',
-    'gender-f': isEN ? '♀ Female' : '♀ Weiblich',
-  };
-  Object.entries(genders).forEach(([id, text]) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  });
-
-  // Kategorie Options
-  const cats = {
-    'cat-waehlen': isEN ? '-- Please select --' : '-- Bitte auswählen --',
-    'cat-kraft': isEN ? '💪 Strength athlete' : '💪 Kraftsportler',
-    'cat-ausdauer': isEN ? '🏃 Endurance sport' : '🏃 Ausdauersport',
-    'cat-normalo': isEN ? '🧑 Regular person' : '🧑 Normalo',
-    'cat-senioren': isEN ? '👴 55+' : '👴 55+',
-    'cat-haus': isEN ? '🏠 Active at home' : '🏠 Zuhause aktiv',
-    'cat-reha': isEN ? '♿ Rehab / Limited' : '♿ Reha / Eingeschränkt',
-  };
-  Object.entries(cats).forEach(([id, text]) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  });
-
-  // Los geht's Button
-  const losBtn = document.getElementById('btn-losgehts');
-  if (losBtn) losBtn.textContent = isEN ? 'LET\'S GO →' : 'LOS GEHT\'S →';
-}
-
-function toggleSprache() {
-  currentLang = currentLang === 'de' ? 'en' : 'de';
-  localStorage.setItem('fh_lang', currentLang);
-  applyLanguage();
-}
-
-function applyLanguage() {
-  const isEN = currentLang === 'en';
-
-  // Lang Button
-  document.querySelectorAll('#lang-btn').forEach(b => b.textContent = isEN ? '🌍 DE' : '🌍 EN');
 
 
 // ================================================================
@@ -5233,8 +5068,6 @@ function vorratAllesLoeschen() {
   localStorage.setItem('fithelper_vorrat', JSON.stringify(vorratListe));
   renderVorrat();
 }
-
-} // Ende applyLanguage Restcode
 
 </script>
 </body>
