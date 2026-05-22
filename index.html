@@ -4576,7 +4576,7 @@ function koerperLoeschen(index) {
 let liveStepsCount = 0;
 let liveStepsActive = false;
 let liveStepsLastMag = 0;
-let liveStepsThreshold = 6;
+let liveStepsThreshold = 5;
 let liveStepsCooldown = false;
 
 function aktiviereSensor() {
@@ -4654,7 +4654,7 @@ function liveStepsHandler(e) {
       document.getElementById('live-steps-count').textContent = liveStepsCount;
       // Cooldown 350ms — kein Doppelzählen
       liveStepsCooldown = true;
-      setTimeout(() => { liveStepsCooldown = false; }, 350);
+      setTimeout(() => { liveStepsCooldown = false; }, 250);
     }
   }
   liveStepsLastMag = mag;
