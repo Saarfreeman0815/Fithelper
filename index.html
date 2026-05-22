@@ -2958,24 +2958,28 @@ function addToMyPlan(name, sets, tipp) {
 }
 
 function renderMyPlan() {
-  const el = document.getElementById('my-plan');
-  if (!el) return;
-  if (!myPlan.length) {
-    el.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:.8rem;">Noch keine Übungen — oben auswählen</div>';
-    return;
-  }
-  el.innerHTML = myPlan.map(u => `
+  const els = document.querySelectorAll('#my-plan');
+  if (!els.length) return;
+  const html = !myPlan.length
+    ? '<div style="text-align:center;padding:16px;color:var(--muted);font-size:.8rem;">Noch keine Übungen — oben auswählen</div>'
+    : myPlan.map(u => `
     <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface2);border-radius:8px;margin-bottom:6px;">
       <div style="flex:1;">
         <div style="font-size:.78rem;font-weight:600;">${u.name}</div>
         <div style="font-size:.62rem;color:var(--accent2);">${u.sets}</div>
       </div>
       <button onclick="removeFromPlan(${u.id})" style="background:transparent;border:none;color:var(--red);cursor:pointer;font-size:.85rem;">✕</button>
-    </div>`).join('') + `
-    <div style="margin-top:10px;display:flex;gap:8px;">
-      <button class="btn outline small" onclick="myPlan=[];save('fh_my_plan',[]);renderMyPlan()">🗑 Alles löschen</button>
-      <button class="btn small green" onclick="exportPlan()">📋 Plan drucken</button>
-    </div>`;
+    </div>`).join('');
+  els.forEach(el => {
+    el.innerHTML = html;
+    if (myPlan.length) {
+      el.innerHTML += `
+      <div style="margin-top:10px;display:flex;gap:8px;">
+        <button class="btn outline small" onclick="myPlan=[];save('fh_my_plan',[]);renderMyPlan()">🗑 Alles löschen</button>
+        <button class="btn small green" onclick="exportPlan()">📋 Plan drucken</button>
+      </div>`;
+    }
+  });
 }
 
 function removeFromPlan(id) {
@@ -4572,7 +4576,7 @@ function koerperLoeschen(index) {
 let liveStepsCount = 0;
 let liveStepsActive = false;
 let liveStepsLastMag = 0;
-let liveStepsThreshold = 12;
+let liveStepsThreshold = 6;
 let liveStepsCooldown = false;
 
 function aktiviereSensor() {
